@@ -3,6 +3,7 @@ package Team6.Damoyeo.Post.Entity;
 import Team6.Damoyeo.User.Entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,6 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "posts")
 @Getter
+@Setter
 public class Post {
 
     @Id

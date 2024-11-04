@@ -6,10 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -40,5 +39,13 @@ public class PostController {
     public String createPost(Model model) {
         model.addAttribute("post", new Post());
         return "post/create";
+    }
+    
+    
+    // 아직 사용자의 id 값 가져오는건 구현 안했음 ㅈㅅ
+    @PostMapping("/create")
+    public String savePost(@ModelAttribute("post") Post post) {
+        postService.savePost(post);
+        return "redirect:/post/main";
     }
 }
