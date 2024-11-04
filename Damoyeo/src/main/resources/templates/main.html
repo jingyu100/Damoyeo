@@ -38,6 +38,13 @@
             color: #888;
         }
 
+        .post img {
+            width: 100%; /* 너비를 100%로 설정하여 게시물 폭에 맞추기 */
+            height: auto; /* 높이는 자동으로 조정 */
+            border-radius: 5px; /* 모서리를 부드럽게 처리 */
+            margin-bottom: 10px; /* 이미지와 게시물 내용 사이에 여백 추가 */
+        }
+
         .page-btn {
             position: fixed;
             bottom: 20px; /* 화면 하단에서 20px 위 */
@@ -72,6 +79,7 @@
 <div th:if="${nickName}" th:text="@{|닉네임 : ${nickName}|}"></div>
 <div class="post-container">
     <div th:each="post, iterStat : ${posts}" class="post">
+        <img th:src="@{/img/test.png}" alt="">
         <div class="post-title" th:text="${post.postTitle}">제목</div>
         <div class="post-content" th:text="${post.postContent}">내용</div>
         <div class="post-info">활동 지역: <span th:text="${post.postActivityArea}">지역</span></div>
@@ -79,7 +87,10 @@
         <div class="post-info">조회수: <span th:text="${post.postViewCount}">0</span></div>
         <div class="post-info">참여자: <span th:text="${post.postCurParticipants}">0</span>/<span
                 th:text="${post.postMaxParticipants}">0</span></div>
-        <div class="post-info">상태: <span th:text="${post.postStatus}">상태</span></div>
+        <div class="post-info"><span th:if="${post.postCurParticipants}==${post.postMaxParticipants}">상태: 모집완료</span>
+        </div>
+        <div class="post-info"><span th:if="${post.postCurParticipants}!=${post.postMaxParticipants}">상태: 모집중</span>
+        </div>
     </div>
 </div>
 <div><a th:href="@{/post/create}">게시글 작성</a></div>
