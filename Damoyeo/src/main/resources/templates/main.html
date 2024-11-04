@@ -37,23 +37,56 @@
             font-size: 0.8em;
             color: #888;
         }
+
+        .page-btn {
+            position: fixed;
+            bottom: 20px; /* 화면 하단에서 20px 위 */
+            left: 50%; /* 화면 왼쪽에서 50% */
+            transform: translateX(-50%); /* 가로축을 기준으로 중앙 정렬 */
+            background-color: white; /* 배경색 추가 (선택사항) */
+            padding: 10px; /* 여백 추가 */
+            border-radius: 8px; /* 둥근 모서리 (선택사항) */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 (선택사항) */
+        }
+
+        .page-btn a {
+            margin: 0 10px;
+            font-size: 1.2em;
+            text-decoration: none;
+            color: #333; /* 링크 색상 */
+        }
+
+        .page-btn a:hover {
+            color: #007bff; /* 호버 시 링크 색상 변경 */
+        }
+
+        .page-btn span {
+            margin: 0 10px;
+            font-size: 1.2em;
+            color: #333; /* 페이지 번호 색상 */
+        }
+
     </style>
 </head>
 <body>
 <div th:if="${nickName}" th:text="@{|닉네임 : ${nickName}|}"></div>
 <div class="post-container">
-    <div th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 6}" class="post">
+    <div th:each="post, iterStat : ${posts}" class="post">
         <div class="post-title" th:text="${post.postTitle}">제목</div>
         <div class="post-content" th:text="${post.postContent}">내용</div>
         <div class="post-info">활동 지역: <span th:text="${post.postActivityArea}">지역</span></div>
         <div class="post-info">분야: <span th:text="${post.postField}">분야</span></div>
         <div class="post-info">조회수: <span th:text="${post.postViewCount}">0</span></div>
-        <div class="post-info">참여자: <span th:text="${post.postCurParticipants}">0</span>/<span th:text="${post.postMaxParticipants}">0</span></div>
+        <div class="post-info">참여자: <span th:text="${post.postCurParticipants}">0</span>/<span
+                th:text="${post.postMaxParticipants}">0</span></div>
         <div class="post-info">상태: <span th:text="${post.postStatus}">상태</span></div>
     </div>
 </div>
-<div th:href="@{/post/create}">게시글 작성</div>
-<div> ◀ </div>
-<div> ▶ </div>
+<div><a th:href="@{/post/create}">게시글 작성</a></div>
+<div class="page-btn">
+    <a th:href="@{/post/main(page=${page - 1})}" th:if="${page > 0}"> ◀ </a>
+    <span th:text="${page + 1}">1</span> <!-- 페이지 번호 표시  -->
+    <a th:href="@{/post/main(page=${page + 1})}" th:if="${hasNextPage}"> ▶ </a>
+</div>
 </body>
 </html>
