@@ -16,7 +16,10 @@ public class CalendarEvent {
     @Column(name = "ce_event_id")
     private Long id;
 
+    @Column
     private String ceTitle;
+
+    @Column
     private String ceDescription;
 
     @Column(name = "ce_start_time")

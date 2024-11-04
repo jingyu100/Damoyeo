@@ -19,9 +19,16 @@ public class Post {
     @Column(name = "post_id")
     private Long id;
 
+    @Column
     private String postTitle;
+
+    @Column
     private String postContent;
+
+    @Column
     private String postActivityArea;
+
+    @Column
     private String postField;
 
     @Column(name = "post_created_at")
@@ -30,11 +37,22 @@ public class Post {
     @Column(name = "post_end_at")
     private LocalDateTime endAt;
 
+    @Column
     private String postStatus;
+
+    @Column
     private int postViewCount;
+
+    @Column
     private int postMaxParticipants;
+
+    @Column
     private int postCurParticipants;
+
+    @Column
     private BigDecimal postLatitude;
+
+    @Column
     private BigDecimal postLongitude;
 
     @ManyToOne(fetch = FetchType.LAZY)

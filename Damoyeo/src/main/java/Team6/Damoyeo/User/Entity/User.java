@@ -1,9 +1,7 @@
 package Team6.Damoyeo.User.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,7 +11,6 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-@RequiredArgsConstructor
 public class User {
 
     @Id
@@ -21,11 +18,22 @@ public class User {
     @Column(name = "user_id")
     private Integer id;
 
+    @Column
     private String userPassword;
+
+    @Column
     private String userName;
+
+    @Column
     private String userNickname;
+
+    @Column
     private String userPhoneNumber;
+
+    @Column
     private String userEmail;
+
+    @Column
     private String userGender;
 
     @Column(name = "user_enroll_date")
@@ -37,7 +45,10 @@ public class User {
     @Column(name = "user_last_login_date")
     private LocalDateTime lastLoginDate;
 
+    @Column
     private String userArea;
+
+    @Column
     private String userComment;
 
     @OneToMany(mappedBy = "user")

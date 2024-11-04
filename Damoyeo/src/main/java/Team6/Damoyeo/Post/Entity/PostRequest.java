@@ -16,7 +16,10 @@ public class PostRequest {
     @Column(name = "pr_request_id")
     private Long id;
 
+    @Column
     private String prMessage;
+
+    @Column
     private String prStatus;
 
     @Column(name = "pr_created_at")

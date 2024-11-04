@@ -16,6 +16,7 @@ public class ChatMessage {
     @Column(name = "cm_id")
     private Long id;
 
+    @Column
     private String cmContent;
 
     @Column(name = "cm_created_at")
