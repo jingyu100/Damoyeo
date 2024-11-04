@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,16 +23,9 @@ public class UserService {
         // 로그 추가
         System.out.println("Login attempt - Email: " + email);
 
-        List<User> allUsers = userRepository.findAll();
         User user = null;
 
-        // 모든 사용자 검색
-        for(User u : allUsers) {
-            if(u.getUserEmail() != null && u.getUserEmail().equals(email)) {
-                user = u;
-                break;
-            }
-        }
+        user = userRepository.findByUserEmail(email);
 
         // 사용자가 없는 경우
         if(user == null) {
