@@ -10,10 +10,12 @@
             gap: 20px;
             justify-content: center;
             margin-top: 20px;
+            margin-left: 10%;
+            margin-right: 10%;
         }
 
         .post {
-            width: 15%;
+            width: 30%;
             padding: 15px;
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -38,10 +40,9 @@
     </style>
 </head>
 <body>
-<h5>메인 화면</h5>
 <div th:if="${nickName}" th:text="@{|닉네임 : ${nickName}|}"></div>
 <div class="post-container">
-    <div th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 10}" class="post">
+    <div th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 6}" class="post">
         <div class="post-title" th:text="${post.postTitle}">제목</div>
         <div class="post-content" th:text="${post.postContent}">내용</div>
         <div class="post-info">활동 지역: <span th:text="${post.postActivityArea}">지역</span></div>
