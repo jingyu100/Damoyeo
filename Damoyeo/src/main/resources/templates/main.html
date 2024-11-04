@@ -38,7 +38,8 @@
     </style>
 </head>
 <body>
-<h1>메인 화면</h1>
+<h5>메인 화면</h5>
+<div th:if="${nickName}" th:text="@{|닉네임 : ${nickName}|}"></div>
 <div class="post-container">
     <div th:each="post, iterStat : ${posts}" th:if="${iterStat.index < 10}" class="post">
         <div class="post-title" th:text="${post.postTitle}">제목</div>

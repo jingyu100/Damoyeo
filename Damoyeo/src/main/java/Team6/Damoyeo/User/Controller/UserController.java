@@ -51,14 +51,15 @@ public class UserController {
             System.out.println("Login successful for user: " + user.getUserEmail());
 
             // 성공 메시지 추가
-            redirectAttributes.addFlashAttribute("Message", "로그인에 성공했습니다!");
+            redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
+            redirectAttributes.addFlashAttribute("nickName", user.getUserNickname());
 
             return "redirect:/post/main";
         } catch (Exception e) {
 
             // 에러 로그 출력
             System.out.println("Login error: " + e.getMessage());
-            redirectAttributes.addFlashAttribute("Message", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", e.getMessage());
             // 입력한 이메일 유지
             redirectAttributes.addFlashAttribute("userEmail", userEmail);
             return "redirect:/user/login";
