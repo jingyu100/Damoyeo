@@ -2,6 +2,8 @@ package Team6.Damoyeo.User.Entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -10,12 +12,14 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Getter
+@Setter
+@RequiredArgsConstructor
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    private Integer id;
 
     private String userPassword;
     private String userName;
