@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>새 글 작성</title>
+    <style>
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>새 글 작성</h2>
+
+    <form th:action="@{/post/create}" method="post" th:object="${post}">
+        <div class="form-group">
+            <label for="postTitle">제목:</label>
+            <input type="text" id="postTitle" th:field="*{postTitle}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="postContent">내용:</label>
+            <textarea id="postContent" th:field="*{postContent}" rows="5" required></textarea>
+        </div>
+    <!--    임시로 텍스트로 받음-->
+        <div class="form-group">
+            <label for="postActivityArea">활동 지역:</label>
+            <input type="text" id="postActivityArea" th:field="*{postActivityArea}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="postField">상세주소:</label>
+            <input type="text" id="postField" th:field="*{postField}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="endAt">마감 날짜:</label>
+            <input type="datetime-local" id="endAt" th:field="*{endAt}" required/>
+        </div>
+
+        <div class="form-group">
+            <label for="postMaxParticipants">최대 참가자 수:</label>
+            <input type="number" id="postMaxParticipants" th:field="*{postMaxParticipants}" min="1" required/>
+        </div>
+
+        <button type="submit">글 등록</button>
+    </form>
+</body>
+</html>

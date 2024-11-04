@@ -36,4 +36,9 @@ public class PostController {
 
         return "main";
     }
+    @GetMapping("/create")
+    public String createPost(Model model) {
+        model.addAttribute("post", new Post());
+        return "post/create";
+    }
 }
