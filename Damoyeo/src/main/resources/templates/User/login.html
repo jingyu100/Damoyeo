@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>로그인</title>
+</head>
+<body>
+<h1>로그인</h1>
+
+<!-- 로그인 시 성공/실패 여부 메세지 출력 -->
+<div th:if="${Message}" th:text="${Message}"></div>
+
+<form action="#" th:action="@{/user/login}" method="post">
+    <label for="userEmail">이메일:</label>
+    <input type="email" id="userEmail" name="userEmail" required th:value="${userEmail}"><br>
+
+    <label for="userPassword">비밀번호:</label>
+    <input type="password" id="userPassword" name="userPassword" required>
+
+    <button type="submit">로그인</button>
+</form>
+
+<a href="/user/register">회원가입</a>
+</body>
+</html>
