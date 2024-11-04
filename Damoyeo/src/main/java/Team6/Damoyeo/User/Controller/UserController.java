@@ -53,7 +53,7 @@ public class UserController {
             // 성공 메시지 추가
             redirectAttributes.addFlashAttribute("Message", "로그인에 성공했습니다!");
 
-            return "redirect:/user/login";
+            return "redirect:/post/main";
         } catch (Exception e) {
 
             // 에러 로그 출력
