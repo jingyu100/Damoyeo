@@ -63,14 +63,14 @@ input :focus{
   margin-top: 2rem;
   font-weight: bold;
   color: whitesmoke;
-  background-color: burlywood;  
+  background-color: #A7C7E7;
   border: none;
   border-radius: 0.5rem;
 }
 
 
 .login-btn > button:hover {
-    background-color: peru;
+    background-color: #87aed4;
 }
 
 .main-footer{
