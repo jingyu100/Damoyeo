@@ -89,7 +89,8 @@
             <div class="post-title" th:text="${post.postTitle}">제목</div>
             <div class="post-content" th:text="${post.postContent}">내용</div>
             <div class="post-info">활동 지역: <span th:text="${post.postActivityArea}">지역</span></div>
-            <div class="post-info">분야: <span th:text="${post.postField}">분야</span></div>
+            <div class="post-info">상세주소: <span th:text="${post.postField}">상세주소</span></div>
+            <div class="post-info">분야: <span th:text="${post.postTag}">분야</span></div>
             <div class="post-info">조회수: <span th:text="${post.postViewCount}">0</span></div>
             <div class="post-info">참여자: <span th:text="${post.postCurParticipants}">0</span>/<span
                     th:text="${post.postMaxParticipants}">0</span></div>
