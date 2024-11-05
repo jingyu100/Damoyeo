@@ -3,9 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../../static/css/loginStyle.css">
-    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
 
+    <style>
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        *{
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Pretendard-Regular','sans-serif';
+            height: 100vh;
+            margin: 0;
+            position: relative;
+        }
+
+        .section{
+            position: absolute;
+            left:50%;
+            width: 50%;
+            height: 100%;
+            transform: translateX(-50%);
+            display: flex;
+            justify-content: center;
+            max-width: 1200px;
+            min-width: 320px;
+        }
+
+        .inner{
+            width: 100%;
+            max-width: 400px;
+            height: 100%;
+        }
+
+        .main{
+            width: 100%;
+            height: 80%;
+            margin-top: 1rem;
+            position: relative;
+        }
+
+        .main-header{
+            width: 100%;
+            height: 30%;
+        }
+
+        input{
+            width: 100%;
+            height: 3rem;
+            border: 0.5px solid gray;
+            border-radius: 0.5rem;
+        }
+
+        input :focus{
+            border: 0.5px solid black;
+        }
+
+        .login-btn > button{
+            width: 100%;
+            height: 3rem;
+            margin-top: 2rem;
+            font-weight: bold;
+            color: whitesmoke;
+            background-color: #A7C7E7;
+            border: none;
+            border-radius: 0.5rem;
+        }
+
+
+        .login-btn > button:hover {
+            background-color: #87aed4;
+        }
+
+        .main-footer{
+            font-size: 13px;
+            color: gray;
+            margin-top: 2rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .c1,.c2{
+            border-left: 1px solid rgb(102, 102, 102);
+            margin: 0 6px;
+        }
+
+
+        .quick{
+            width: 100%;
+            display: flex;
+            font-size: 12px;
+            margin-top: 3rem;
+            margin-bottom: 2rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        a{
+            margin: 0;
+            text-decoration: none;
+            color: gray ;
+        }
+
+        .quick-title{
+            color: rgb(173, 181, 189);
+            font-size: 0.75rem;
+            text-decoration: none;
+            line-height: 1.5;
+            margin: 0 7px;
+        }
+
+        .l1,.l2{
+            content: "";
+            width: 8rem;
+            height: 1px;
+            background-color: rgb(233, 236, 239);
+        }
+
+        .quick-login{
+            text-align: center;
+            height: 2.6rem;
+            line-height: 2.6rem;
+            background-color: #FEE500;
+            font-weight: bold;
+            border-radius:0.5rem;
+            width: auto; /* 100%에서 auto로 변경하여 고정 크기 유지 */
+            min-width: 150px; /* 최소 너비 설정 */
+        }
+
+
+        @media screen and (max-width: 768px) {
+            .main {
+                width: 100%; /* 화면 크기가 작아지면 100% */
+                left: 0;
+                transform: none;
+            }
+
+            .quick-title{
+                color: rgb(173, 181, 189);
+                font-size: 0.6rem;
+                text-decoration: none;
+                line-height: 1.5;
+                margin: 0 7px;
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </style>
 </head>
 <body>
 <div class="section">

@@ -36,7 +36,7 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm(Model model) {
 
-        return "user/login";
+        return "user/loginpas";
     }
 
     @PostMapping("/login")
