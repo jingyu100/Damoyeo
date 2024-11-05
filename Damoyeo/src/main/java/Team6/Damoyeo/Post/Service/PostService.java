@@ -6,6 +6,7 @@ import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,7 +22,7 @@ public class PostService {
 
     // 특정 페이지에 해당하는 게시글 가져오기
     public Page<Post> findPostsByPage(int page, int pageSize) {
-        return postRepository.findAll(PageRequest.of(page, pageSize));
+        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
     }
 
     public void savePost(Post post) {
