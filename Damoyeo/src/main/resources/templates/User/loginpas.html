@@ -165,7 +165,7 @@
         <img src="" alt="">
       </div>
       <!-- 로그인 시 성공/실패 여부 메세지 출력 -->
-      <div th:if="${Message}" th:text="${Message}"></div>
+      <div th:if="${message}" th:text="${message}"></div>
 
       <form th:action="@{/user/login}" method="post">
         <h1>로그인</h1>
