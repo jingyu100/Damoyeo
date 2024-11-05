@@ -40,6 +40,11 @@
         </div>
 
         <div class="form-group">
+            <label for="postTag">분야:</label>
+            <input type="text" id="postTag" th:field="*{postTag}" required/>
+        </div>
+
+        <div class="form-group">
             <label for="endAt">마감 날짜:</label>
             <input type="datetime-local" id="endAt" th:field="*{endAt}" required/>
         </div>

@@ -32,6 +32,10 @@ public class Post {
 
     @Column
     private String postField;
+    
+    //포스트 분야태그
+    @Column
+    private String postTag;
 
     @Column(name = "post_created_at")
     private LocalDateTime createdAt;
@@ -56,6 +60,8 @@ public class Post {
 
     @Column
     private BigDecimal postLongitude;
+
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
