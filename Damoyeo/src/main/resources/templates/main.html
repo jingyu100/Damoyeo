@@ -81,23 +81,24 @@
     </style>
 </head>
 <body>
-<div th:if="${nickName}" th:text="@{|닉네임 : ${nickName}|}"></div>
+<div th:if="${nickname}" th:text="@{|닉네임 : ${nickname}|}"></div>
 <div class="post-container">
     <div th:each="post, iterStat : ${posts}" class="post">
-        <a th:href="@{|/post/detail${post.getId()}|}" class="post-detail">
+        <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
             <img th:src="@{/img/test.png}" alt="">
-            <div class="post-title" th:text="${post.postTitle}">제목</div>
-            <div class="post-content" th:text="${post.postContent}">내용</div>
-            <div class="post-info">활동 지역: <span th:text="${post.postActivityArea}">지역</span></div>
-            <div class="post-info">상세주소: <span th:text="${post.postField}">상세주소</span></div>
-            <div class="post-info">분야: <span th:text="${post.postTag}">분야</span></div>
-            <div class="post-info">조회수: <span th:text="${post.postViewCount}">0</span></div>
-            <div class="post-info">참여자: <span th:text="${post.postCurParticipants}">0</span>/<span
-                    th:text="${post.postMaxParticipants}">0</span></div>
+            <div class="post-title" th:text="${post.title}">제목</div>
+            <div class="post-content" th:text="${post.content}">내용</div>
+            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
+            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
+            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
+            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
+            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span
+                    th:text="${post.maxParticipants}">0</span></div>
             <div class="post-info"><span
-                    th:if="${post.postCurParticipants}==${post.postMaxParticipants}">상태: 모집완료</span>
+                    th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
             </div>
-            <div class="post-info"><span th:if="${post.postCurParticipants}!=${post.postMaxParticipants}">상태: 모집중</span>
+            <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">상태: 모집중</span>
             </div>
         </a>
     </div>

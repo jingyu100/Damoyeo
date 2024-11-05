@@ -1,6 +1,8 @@
 package Team6.Damoyeo.Chat.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -9,18 +11,19 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "chat_messages")
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ChatMessage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cm_id")
-    private Long id;
+    @Column
+    private Integer cmId;
 
     @Column
-    private String cmContent;
+    private String content;
 
-    @Column(name = "cm_created_at")
-    private LocalDateTime createdAt;
+    @Column
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cr_room_id")

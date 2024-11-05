@@ -18,37 +18,37 @@
 <form th:action="@{/user/register}" method="post" th:object="${user}">
     <div class="form-group">
         <label>이메일:</label>
-        <input type="email" th:field="*{userEmail}" required/>
-        <span class="error" th:if="${#fields.hasErrors('userEmail')}" th:errors="*{userEmail}"></span>
+        <input type="email" th:field="*{email}" required/>
+        <span class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
     </div>
 
     <div class="form-group">
         <label>비밀번호:</label>
-        <input type="password" th:field="*{userPassword}" required/>
-        <span class="error" th:if="${#fields.hasErrors('userPassword')}" th:errors="*{userPassword}"></span>
+        <input type="password" th:field="*{password}" required/>
+        <span class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
     </div>
 
     <div class="form-group">
         <label>이름:</label>
-        <input type="text" th:field="*{userName}" required/>
-        <span class="error" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></span>
+        <input type="text" th:field="*{name}" required/>
+        <span class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
     </div>
 
     <div class="form-group">
         <label>닉네임:</label>
-        <input type="text" th:field="*{userNickname}" required/>
-        <span class="error" th:if="${#fields.hasErrors('userNickname')}" th:errors="*{userNickname}"></span>
+        <input type="text" th:field="*{nickname}" required/>
+        <span class="error" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}"></span>
     </div>
 
     <div class="form-group">
         <label>전화번호:</label>
-        <input type="tel" th:field="*{userPhoneNumber}" required/>
-        <span class="error" th:if="${#fields.hasErrors('userPhoneNumber')}" th:errors="*{userPhoneNumber}"></span>
+        <input type="tel" th:field="*{phone}" required/>
+        <span class="error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
     </div>
 
     <div class="form-group">
         <label>성별:</label>
-        <select th:field="*{userGender}">
+        <select th:field="*{gender}">
             <option value="M">남성</option>
             <option value="F">여성</option>
         </select>
@@ -56,12 +56,12 @@
 
     <div class="form-group">
         <label>지역:</label>
-        <input type="text" th:field="*{userArea}"/>
+        <input type="text" th:field="*{area}"/>
     </div>
 
     <div class="form-group">
         <label>자기소개:</label>
-        <textarea th:field="*{userComment}"></textarea>
+        <textarea th:field="*{comment}"></textarea>
     </div>
 
     <button type="submit">가입하기</button>

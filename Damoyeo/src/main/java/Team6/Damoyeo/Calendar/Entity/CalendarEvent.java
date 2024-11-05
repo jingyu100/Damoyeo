@@ -1,6 +1,8 @@
 package Team6.Damoyeo.Calendar.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Getter;
 
@@ -9,27 +11,28 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "calendar_events")
 @Getter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CalendarEvent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ce_event_id")
-    private Long id;
+    @Column
+    private Integer ceId;
 
     @Column
-    private String ceTitle;
+    private String title;
 
     @Column
-    private String ceDescription;
+    private String description;
 
-    @Column(name = "ce_start_time")
+    @Column
     private LocalDateTime startTime;
 
-    @Column(name = "ce_end_time")
+    @Column
     private LocalDateTime endTime;
 
-    @Column(name = "ce_created_at")
-    private LocalDateTime createdAt;
+    @Column
+    private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

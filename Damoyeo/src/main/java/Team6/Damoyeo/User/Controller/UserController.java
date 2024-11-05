@@ -26,8 +26,7 @@ public class UserController {
     @PostMapping("/register")
     public String registerUser(@ModelAttribute("user") User user) {
         // 기본값 설정
-        user.setEnrollDate(LocalDateTime.now());
-        user.setLastLoginDate(LocalDateTime.now());
+        user.setJoinDate(LocalDateTime.now());
 
         userService.registerUser(user);
         return "redirect:/user/login";
@@ -48,11 +47,11 @@ public class UserController {
             System.out.println("Login attempt - Email: " + userEmail + ", Password: " + userPassword);
 
             User user = userService.loginUser(userEmail, userPassword);
-            System.out.println("Login successful for user: " + user.getUserEmail());
+            System.out.println("Login successful for user: " + user.getEmail());
 
             // 성공 메시지 추가
             redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
-            redirectAttributes.addFlashAttribute("nickName", user.getUserNickname());
+            redirectAttributes.addFlashAttribute("nickName", user.getNickname());
 
             return "redirect:/post/main";
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package Team6.Damoyeo.User.Entity;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,48 +13,46 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Integer id;
+    @Column
+    private Integer userId;
 
     @Column
-    private String userPassword;
+    private String password;
 
     @Column
-    private String userName;
+    private String name;
 
     @Column
-    private String userNickname;
+    private String nickname;
 
     @Column
-    private String userPhoneNumber;
+    private String phone;
 
     @Column
-    private String userEmail;
+    private String email;
 
     @Column
-    private String userGender;
-
-    @Column(name = "user_enroll_date")
-    private LocalDateTime enrollDate;
-
-    @Column(name = "user_withdrawal_date")
-    private LocalDateTime withdrawalDate;
-
-    @Column(name = "user_last_login_date")
-    private LocalDateTime lastLoginDate;
+    private String gender;
 
     @Column
-    private String userArea;
+    private LocalDateTime joinDate;
 
     @Column
-    private String userComment;
+    private LocalDateTime quitDate;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserProfile> profiles = new ArrayList<>();
+    @Column
+    private String area;
+
+    @Column
+    private String comment;
+
+    @Column
+    private String photoUrl;
 
     @OneToMany(mappedBy = "user")
     private List<UserInterest> interests = new ArrayList<>();

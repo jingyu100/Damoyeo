@@ -1,6 +1,8 @@
 package Team6.Damoyeo.Post.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,61 +16,58 @@ import java.util.List;
 @Table(name = "posts")
 @Getter
 @Setter
+@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
-    private Long id;
+    private Integer postId;
 
     @Column
-    private String postTitle;
+    private String title;
 
     @Column
-    private String postContent;
+    private String content;
+    
+    //도로명 주소
+    @Column
+    private String roadAddress;
 
     @Column
-    private String postActivityArea;
-
-    @Column
-    private String postField;
+    private String detailAddress;
     
     //포스트 분야태그
     @Column
-    private String postTag;
-
-    @Column(name = "post_created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "post_end_at")
-    private LocalDateTime endAt;
+    private String tag;
 
     @Column
-    private String postStatus;
+    private int likeCount;
 
     @Column
-    private int postViewCount;
+    private LocalDateTime createdDate;
 
     @Column
-    private int postMaxParticipants;
+    private LocalDateTime endDate;
 
     @Column
-    private int postCurParticipants;
+    private String status;
 
     @Column
-    private BigDecimal postLatitude;
+    private int viewCount;
 
     @Column
-    private BigDecimal postLongitude;
+    private int maxParticipants;
 
+    @Column
+    private int nowParticipants;
 
+    @Column
+    private String photoUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post")
-    private List<PostProfile> profiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "post")
     private List<PostRequest> requests = new ArrayList<>();

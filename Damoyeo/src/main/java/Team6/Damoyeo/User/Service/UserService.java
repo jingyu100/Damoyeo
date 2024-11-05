@@ -25,7 +25,7 @@ public class UserService {
 
         User user = null;
 
-        user = userRepository.findByUserEmail(email);
+        user = userRepository.findByEmail(email);
 
         // 사용자가 없는 경우
         if(user == null) {
@@ -33,11 +33,10 @@ public class UserService {
         }
 
         // 비밀번호 확인
-        if(!user.getUserPassword().equals(password)) {
+        if(!user.getPassword().equals(password)) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 
-        user.setLastLoginDate(LocalDateTime.now());
         return userRepository.save(user);
     }
 }

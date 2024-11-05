@@ -6,9 +6,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
-public interface PostRepository extends JpaRepository<Post, Long> {
+public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    @Query("SELECT p FROM Post p ORDER BY p.id DESC LIMIT :limit OFFSET :offset")
+    @Query("SELECT p FROM Post p ORDER BY p.postId DESC LIMIT :limit OFFSET :offset")
     List<Post> findPostsByPage(@Param("offset") int offset, @Param("limit") int limit);
 
 }

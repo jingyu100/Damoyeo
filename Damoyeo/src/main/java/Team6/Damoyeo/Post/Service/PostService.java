@@ -22,13 +22,13 @@ public class PostService {
 
     // 특정 페이지에 해당하는 게시글 가져오기
     public Page<Post> findPostsByPage(int page, int pageSize) {
-        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdAt")));
+        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
     }
 
     public void savePost(Post post) {
         //게시글 생성할때 현재 참가자 1
-        post.setPostCurParticipants(1);
-        post.setCreatedAt(LocalDateTime.now());
+        post.setNowParticipants(1);
+        post.setCreatedDate(LocalDateTime.now());
         postRepository.save(post);
     }
 }
