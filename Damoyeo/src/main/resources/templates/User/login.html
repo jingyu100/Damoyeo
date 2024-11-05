@@ -4,13 +4,32 @@
     <meta charset="UTF-8">
     <title>로그인</title>
 </head>
-<body>
-<h1>로그인</h1>
+<style>
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: rgb(208, 205, 205);
+    }
 
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+</style>
+<body>
 <!-- 로그인 시 성공/실패 여부 메세지 출력 -->
 <div th:if="${Message}" th:text="${Message}"></div>
-
 <form action="#" th:action="@{/user/login}" method="post">
+    <h1>로그인</h1>
     <label for="userEmail">이메일:</label>
     <input type="email" id="userEmail" name="userEmail" required th:value="${userEmail}"><br>
 
@@ -18,8 +37,9 @@
     <input type="password" id="userPassword" name="userPassword" required>
 
     <button type="submit">로그인</button>
+    <a href="/user/register">회원가입</a>
 </form>
 
-<a href="/user/register">회원가입</a>
+
 </body>
 </html>
