@@ -50,6 +50,9 @@
         </table>
         <div id="map" style="width:500px;height:400px;"></div>
 
+        <!-- Thymeleaf를 통해 Kakao Maps API 키를 script 태그의 src에 직접 바인딩 -->
+        <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey}}"></script>
+
         <script>
             var container = document.getElementById('map'); // 'map' id를 가진 div 요소를 가져옵니다.
             var options = { // 지도 옵션 설정
