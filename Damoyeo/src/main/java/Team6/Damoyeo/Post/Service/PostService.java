@@ -8,9 +8,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -30,5 +32,21 @@ public class PostService {
         post.setNowParticipants(1);
         post.setCreatedDate(LocalDateTime.now());
         postRepository.save(post);
+    }
+    
+    // 상세 페이지
+    public Post findById(Integer id) throws Exception {
+        Optional<Post> post = this.postRepository.findById(id);
+        if(post.isPresent()) {
+            return post.get();
+        }else {
+            throw new Exception("post not found");
+        }
+    }
+    
+    // 조회 수
+    @Transactional
+    public int updateView(Integer id) {
+        return postRepository.updateViews(id);
     }
 }

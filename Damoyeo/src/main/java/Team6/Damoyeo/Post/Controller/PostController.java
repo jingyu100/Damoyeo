@@ -24,8 +24,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
 
+    // 좋아요 버튼 기능
+    boolean like = false;
     private final PostService postService;
     private static final String UPLOAD_DIRECTORY = "C:/uploads/";
+
     // 메인 화면
     @GetMapping("/main")
     public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -49,10 +52,18 @@ public class PostController {
         return "post/create";
     }
 
+//    @GetMapping("/detail{id}")
+//    public String detailPost(Model model, @PathVariable int id) {
+//        return "post/detail";
+//    }
+
+    //상세 페이지
     @GetMapping("/detail{id}")
-    public String detailPost(Model model, @PathVariable int id) {
+    public String detailPost(Model model, @PathVariable("id") Integer id) throws Exception {
+        Post post = this.postService.findById(id);
+        postService.updateView(id);
+        model.addAttribute("post",post);
         return "post/detail";
-    
     }
     // 아직 사용자의 id 값 가져오는건 구현 안했음 ㅈㅅ
     @PostMapping("/create")

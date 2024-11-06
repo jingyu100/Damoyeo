@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/basic">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>상세 페이지</title>
 </head>
 <body>
-
+<!--    <div class="page_title">-->
+<!--        <img th:src="@{${post.photo}}">-->
+<!--    </div>-->
+    <div class="content">
+        <table>
+            <colgroup>
+                <col style="wi  dth:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
+            </colgroup>
+            <tbody>
+                <tr>
+                    <th scope="row">제목</th>
+                    <td th:text="${post.title}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">내용</th>
+                    <td th:text="${post.content}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">상세주소</th>
+                    <td th:text="${post.detailAddress}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">분야</th>
+                    <td th:text="${post.tag}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">참가자 수</th>
+                    <td th:text="${post.nowParticipants}"></td>/<td th:text="${post.maxParticipants}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">조회 수</th>
+                    <td th:text="${post.viewCount}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">좋아요</th>
+                    <td th:text="${post.likeCount}"></td>
+                </tr>
+                <tr>
+                    <th scope="row">상태</th>
+                    <td th:text="${post.status}"></td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="btn_set">
+            <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
+        </div>
+    </div>
 </body>
 </html>
