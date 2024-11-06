@@ -12,22 +12,21 @@
       font-style: normal;
     }
 
-    *{
+    * {
       box-sizing: border-box;
     }
 
-
-
     body {
-      font-family: 'Pretendard-Regular','sans-serif';
+      font-family: 'Pretendard-Regular', 'sans-serif';
       height: 100vh;
       margin: 0;
       position: relative;
+      background-color: rgb(208, 205, 205);
     }
 
-    .section{
+    .section {
       position: absolute;
-      left:50%;
+      left: 50%;
       width: 50%;
       height: 100%;
       transform: translateX(-50%);
@@ -37,36 +36,36 @@
       min-width: 320px;
     }
 
-    .inner{
+    .inner {
       width: 100%;
       max-width: 400px;
       height: 100%;
     }
 
-    .main{
+    .main {
       width: 100%;
       height: 80%;
       margin-top: 1rem;
       position: relative;
     }
 
-    .main-header{
+    .main-header {
       width: 100%;
       height: 30%;
     }
 
-    input{
-      width: 100%;
+    input {
+      width: 300px;
       height: 3rem;
       border: 0.5px solid gray;
       border-radius: 0.5rem;
     }
 
-    input :focus{
+    input:focus {
       border: 0.5px solid black;
     }
 
-    .login-btn > button{
+    .login-btn button {
       width: 100%;
       height: 3rem;
       margin-top: 2rem;
@@ -77,12 +76,11 @@
       border-radius: 0.5rem;
     }
 
-
-    .login-btn > button:hover {
+    .login-btn button:hover {
       background-color: #87aed4;
     }
 
-    .main-footer{
+    .main-footer {
       font-size: 13px;
       color: gray;
       margin-top: 2rem;
@@ -90,13 +88,12 @@
       justify-content: center;
     }
 
-    .c1,.c2{
+    .c1, .c2 {
       border-left: 1px solid rgb(102, 102, 102);
       margin: 0 6px;
     }
 
-
-    .quick{
+    .quick {
       width: 100%;
       display: flex;
       font-size: 12px;
@@ -106,53 +103,37 @@
       justify-content: center;
     }
 
-    a{
+    a {
       margin: 0;
       text-decoration: none;
-      color: gray ;
+      color: gray;
     }
-
-    .quick-title{
-      color: rgb(173, 181, 189);
-      font-size: 0.75rem;
-      text-decoration: none;
-      line-height: 1.5;
-      margin: 0 7px;
-    }
-
-    .l1,.l2{
-      content: "";
-      width: 8rem;
-      height: 1px;
-      background-color: rgb(233, 236, 239);
-    }
-
-    .quick-login{
-      text-align: center;
-      height: 2.6rem;
-      line-height: 2.6rem;
-      background-color: #FEE500;
-      font-weight: bold;
-      border-radius:0.5rem;
-      width: auto; /* 100%에서 auto로 변경하여 고정 크기 유지 */
-      min-width: 150px; /* 최소 너비 설정 */
-    }
-
 
     @media screen and (max-width: 768px) {
       .main {
-        width: 100%; /* 화면 크기가 작아지면 100% */
+        width: 100%;
         left: 0;
         transform: none;
       }
 
-      .quick-title{
+      .quick-title {
         color: rgb(173, 181, 189);
         font-size: 0.6rem;
         text-decoration: none;
         line-height: 1.5;
         margin: 0 7px;
       }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      width: 100%;
     }
   </style>
 
@@ -164,6 +145,7 @@
       <div class="main-header">
         <img src="" alt="">
       </div>
+
       <!-- 로그인 시 성공/실패 여부 메세지 출력 -->
       <div th:if="${message}" th:text="${message}"></div>
 
@@ -171,52 +153,32 @@
         <h1>로그인</h1>
         <div class="main-body">
           <div class="email-container">
-            <div class="email">
-              <div class="email-container">
-                <p>이메일</p>
-                <input type="text" name="userEmail" th:value="${userEmail}" required>
-              </div>
-            </div>
+            <p>이메일</p>
+            <input type="email" name="userEmail" th:value="${userEmail}" required>
           </div>
           <div class="password-container">
-            <div class="password">
-              <p>비밀번호</p>
-              <input type="password" name="userPassword" required>
-            </div>
+            <p>비밀번호</p>
+            <input type="password" name="userPassword" required>
           </div>
-          <div class="login-btn-container">
-            <div class="login-btn">
-              <button type="submit">로그인</button>
-            </div>
+          <div class="login-btn">
+            <button type="submit">로그인</button>
+          </div>
+        </div>
+
+        <div class="main-footer">
+          <div class="find-email">
+            <a href="/user/find-email">아이디(이메일) 찾기</a>
+          </div>
+          <div class="c1"></div>
+          <div class="find-password">
+            <a href="/user/find-password">비밀번호 찾기</a>
+          </div>
+          <div class="c2"></div>
+          <div class="find-join">
+            <a href="/user/register">회원가입</a>
           </div>
         </div>
       </form>
-
-      <div class="main-footer">
-        <div class="find-email">
-          <a href="/user/find-email">아이디(이메일) 찾기</a>
-        </div>
-        <div class="c1"></div>
-        <div class="find-password">
-          <a href="/user/find-password">비밀번호 찾기</a>
-        </div>
-        <div class="c2"></div>
-        <div class="find-join">
-          <a href="/user/register">회원가입</a>
-        </div>
-      </div>
-
-      <div class="quick">
-        <div class="l1"></div>
-        <div class="quick-title">간편로그인</div>
-        <div class="l2"></div>
-      </div>
-
-      <div class="icon-container">
-        <div class="quick-login">
-          카카오톡 간편 로그인
-        </div>
-      </div>
     </div>
   </div>
 </div>
