@@ -3,6 +3,8 @@ package Team6.Damoyeo.Post.Controller;
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,10 +24,15 @@ import java.util.List;
 @Controller
 @RequestMapping("/post")
 @RequiredArgsConstructor
+@PropertySource("classpath:config.properties")
 public class PostController {
 
     // 좋아요 버튼 기능
     boolean like = false;
+
+    @Value("${KAKAO_MAP_API_KEY}")
+    private String API_KEY;
+
     private final PostService postService;
     private static final String UPLOAD_DIRECTORY = "C:/uploads/";
 
@@ -63,6 +70,7 @@ public class PostController {
         Post post = this.postService.findById(id);
         postService.updateView(id);
         model.addAttribute("post",post);
+        model.addAttribute("apiKey", API_KEY);
         return "post/detail";
     }
     // 아직 사용자의 id 값 가져오는건 구현 안했음 ㅈㅅ

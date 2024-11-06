@@ -11,7 +11,7 @@
     <div class="content">
         <table>
             <colgroup>
-                <col style="wi  dth:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
+                <col style="width:10%;" /><col style="width:23%;" /><col style="width:10%;" /><col style="width:23%;" />
             </colgroup>
             <tbody>
                 <tr>
@@ -48,6 +48,19 @@
                 </tr>
             </tbody>
         </table>
+        <div id="map" style="width:500px;height:400px;"></div>
+
+        <script>
+            var container = document.getElementById('map'); // 'map' id를 가진 div 요소를 가져옵니다.
+            var options = { // 지도 옵션 설정
+                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도 중심 좌표
+                level: 3 // 지도 확대/축소 레벨
+            };
+
+            // 새로운 kakao 지도 객체 생성 및 'map' div에 렌더링
+            var map = new kakao.maps.Map(container, options); // container는 'map' div, options는 지도 설정
+        </script>
+
         <div class="btn_set">
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
         </div>
