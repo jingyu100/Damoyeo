@@ -85,7 +85,7 @@
 <div class="post-container">
     <div th:each="post, iterStat : ${posts}" class="post">
         <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-            <img th:src="@{/img/test.png}" alt="">
+            <img th:src="@{/img/test1.png}" alt="" style="width: 250px; height: 250px;">
             <div class="post-title" th:text="${post.title}">제목</div>
             <div class="post-content" th:text="${post.content}">내용</div>
             <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
