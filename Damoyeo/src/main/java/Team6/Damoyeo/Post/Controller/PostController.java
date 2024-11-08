@@ -18,6 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -34,7 +37,7 @@ public class PostController {
     private String API_KEY;
 
     private final PostService postService;
-    private static final String UPLOAD_DIRECTORY = "C:/uploads/";
+    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
 
     // 메인 화면
     @GetMapping("/main")
@@ -75,33 +78,37 @@ public class PostController {
     }
     // 아직 사용자의 id 값 가져오는건 구현 안했음 ㅈㅅ
     @PostMapping("/create")
-    public String savePost(@ModelAttribute("post") Post post,@RequestParam("photo") MultipartFile file,
+    public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
                            RedirectAttributes redirectAttributes) {
 
         if (file.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Please select a file to upload.");
-            return "redirect:/";
+            return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
         }
 
         try {
-            // 저장할 파일 경로 설정
-            String filePath = UPLOAD_DIRECTORY + file.getOriginalFilename();
-            File dest = new File(filePath);
+            // static/uploads 디렉토리에 파일 저장
+            String uploadDir = UPLOAD_DIRECTORY;
+            Path path = Paths.get(uploadDir + file.getOriginalFilename());
+            Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
+            file.transferTo(path);
 
-            // 파일 저장
-            file.transferTo(dest);
+            // 저장한 이미지의 URL을 Post 객체에 설정
+            post.setPhotoUrl("/uploads/" + file.getOriginalFilename());
+
+            // 게시물 저장
+            postService.savePost(post);
 
             redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("message", "File upload failed.");
+            return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
         }
-        post.setPhotoUrl(UPLOAD_DIRECTORY + file.getOriginalFilename());
-        postService.savePost(post);
-
 
         return "redirect:/post/main";
     }
+
 
 
 }
