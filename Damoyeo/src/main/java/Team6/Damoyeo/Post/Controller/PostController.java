@@ -58,6 +58,7 @@ public class PostController {
     }
     @GetMapping("/create")
     public String createPost(Model model) {
+        model.addAttribute("apiKey", API_KEY);
         model.addAttribute("post", new Post());
         return "post/create";
     }
@@ -76,7 +77,7 @@ public class PostController {
         model.addAttribute("apiKey", API_KEY);
         return "post/detail";
     }
-    // 아직 사용자의 id 값 가져오는건 구현 안했음 ㅈㅅ
+
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
                            RedirectAttributes redirectAttributes) {
