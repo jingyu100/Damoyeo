@@ -26,7 +26,7 @@ import java.util.List;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 @PropertySource("classpath:config.properties")
-public class PostController {
+public class PostController  {
 
     // 좋아요 버튼 기능
     boolean like = false;
@@ -53,12 +53,10 @@ public class PostController {
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
 
-        for (int i = 0; i <= posts.size(); i++){
-
-        }
 
         return "post/main";
     }
+
     @GetMapping("/create")
     public String createPost(Model model) {
         model.addAttribute("apiKey", API_KEY);
@@ -76,43 +74,42 @@ public class PostController {
     public String detailPost(Model model, @PathVariable("id") Integer id) throws Exception {
         Post post = this.postService.findById(id);
         postService.updateView(id);
-        model.addAttribute("post",post);
+        model.addAttribute("post", post);
         model.addAttribute("apiKey", API_KEY);
         return "post/detail";
     }
 
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes) throws IOException {
 
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "사진 파일을 업로드 해주세요");
-            return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
+            post.setPhotoUrl("nullDefult.png");
+        } else {
+            // catch 문이 필요없어서 주석 처리 실행 대신 메서드에 throws 걸어놓음
+//            try {
+                // static/uploads 디렉토리에 파일 저장
+                String uploadDir = UPLOAD_DIRECTORY;
+                Path path = Paths.get(uploadDir + file.getOriginalFilename());
+                Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
+                file.transferTo(path);
+
+                // 저장한 이미지의 URL을 Post 객체에 설정
+                post.setPhotoUrl(file.getOriginalFilename());
+
+//                // 게시물 저장
+//                postService.savePost(post);
+
+                redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                redirectAttributes.addFlashAttribute("message", "File upload failed.");
+//                return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
+//            }
         }
-
-        try {
-            // static/uploads 디렉토리에 파일 저장
-            String uploadDir = UPLOAD_DIRECTORY;
-            Path path = Paths.get(uploadDir + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
-            file.transferTo(path);
-
-            // 저장한 이미지의 URL을 Post 객체에 설정
-            post.setPhotoUrl(file.getOriginalFilename());
-
-            // 게시물 저장
-            postService.savePost(post);
-
-            redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
-        } catch (IOException e) {
-            e.printStackTrace();
-            redirectAttributes.addFlashAttribute("message", "File upload failed.");
-            return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
-        }
-
+        postService.savePost(post);
         return "redirect:/post/main";
     }
-
 
 
 }

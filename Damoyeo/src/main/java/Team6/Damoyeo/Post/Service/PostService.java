@@ -56,10 +56,8 @@ public class PostService {
         if (imgUrl.isEmpty())
         {
             return "";
-        }else{
-            return imgUrl;
         }
-
+        return imgUrl;
     }
 
 }
