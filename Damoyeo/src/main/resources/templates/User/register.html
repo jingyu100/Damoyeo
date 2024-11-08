@@ -94,7 +94,12 @@
 </head>
 <body>
 
+<div th:if="${errorMessage}" class="alert alert-danger" style="text-align: center; margin-bottom: 20px;">
+    <p th:text="${errorMessage}"></p>
+</div>
+
 <form th:action="@{/user/register}" method="post" th:object="${user}">
+
     <table>
         <tr>
             <td><h2>다모아</h2></td>
@@ -157,7 +162,7 @@
             </td>
         </tr>
 
-        <tr><td><input type="submit" value="회원가입" class="btn" onclick="alert('회원가입이 완료 되었습니다.')"></td></tr>
+        <tr><td><input type="submit" value="회원가입" class="btn" ></td></tr>
     </table>
 </form>
 </body>

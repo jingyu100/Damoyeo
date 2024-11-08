@@ -39,4 +39,11 @@ public class UserService {
 
         return userRepository.save(user);
     }
+    
+    //이메일 중복 체크 메서드
+    public boolean emailCheck(String email) {
+        User user = userRepository.findByEmail(email);
+        return user != null;
+    }
+
 }

@@ -33,7 +33,7 @@ public class User {
     @Column
     private String phone;
 
-    @Column
+    @Column(unique=true)
     private String email;
 
     @Column

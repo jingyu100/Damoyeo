@@ -24,10 +24,15 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user) {
+    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+        // 이메일 중복 체크 에러메세지
+        if (userService.emailCheck(user.getEmail())) {
+            redirectAttributes.addFlashAttribute("errorMessage", "이미 사용 중인 이메일입니다.");
+            return "redirect:/user/register";
+        }
+
         // 기본값 설정
         user.setJoinDate(LocalDateTime.now());
-
         userService.registerUser(user);
         return "redirect:/user/login";
     }
