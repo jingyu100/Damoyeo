@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
 
-    @Query("SELECT p FROM Post p ORDER BY p.postId DESC LIMIT :limit OFFSET :offset")
-    List<Post> findPostsByPage(@Param("offset") int offset, @Param("limit") int limit);
+//    @Query("SELECT p FROM Post p ORDER BY p.postId DESC LIMIT :limit OFFSET :offset")
+//    List<Post> findPostsByPage(@Param("offset") int offset, @Param("limit") int limit);
     
     // 좋아요 기능
 //    boolean exitByPost_Id_like(int postid, int userid);
