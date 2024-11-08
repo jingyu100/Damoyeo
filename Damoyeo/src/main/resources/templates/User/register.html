@@ -7,7 +7,7 @@
         /* 테이블 레이아웃 */
         table {
             width: 100%;
-            max-width: 380px;
+            max-width: 450px;
             margin: 0 auto;
             margin-top: 100px;
             padding: 20px;
@@ -129,8 +129,10 @@
         </tr>
         <tr>
             <td><input id="email" type="email" class="text" th:field="*{email}" placeholder="아이디를 입력해주세요."></td>
+            <td>
+                <button onclick="checkEmail()" style="margin-left: 20px;margin-bottom: 15px;">중복 확인</button>
+            </td>
         </tr>
-        <button onclick="checkEmail()"></button>
 
         <tr>
             <td>비밀번호</td>
