@@ -46,4 +46,8 @@ public class UserService {
         return user != null;
     }
 
+    public boolean isEmailExists(String email) {
+        return userRepository.existsByEmail(email); // 여기서 true/false 반환
+    }
+
 }

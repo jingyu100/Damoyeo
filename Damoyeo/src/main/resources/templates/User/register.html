@@ -91,6 +91,26 @@
             margin-bottom: 15px;
         }
     </style>
+    <script>
+        function checkEmail() {
+            const email = document.getElementById("email").value;
+            if (email) {
+                fetch(`/user/check-email?email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        // JSON 응답 데이터 확인
+                        if (data.exists) {
+                            alert("이미 사용 중인 아이디입니다.");
+                        } else {
+                            alert("사용 가능한 아이디입니다.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            } else {
+                alert("아이디를 입력해주세요.");
+            }
+        }
+    </script>
 </head>
 <body>
 
@@ -104,32 +124,45 @@
         <tr>
             <td><h2>다모아</h2></td>
         </tr>
-        <tr><td>아이디</td></tr>
         <tr>
-            <td><input type="email" class="text" th:field="*{email}" placeholder="이메일을 입력해주세요."></td>
+            <td>아이디</td>
         </tr>
+        <tr>
+            <td><input id="email" type="email" class="text" th:field="*{email}" placeholder="아이디를 입력해주세요."></td>
+        </tr>
+        <button onclick="checkEmail()"></button>
 
-        <tr><td>비밀번호</td></tr>
+        <tr>
+            <td>비밀번호</td>
+        </tr>
         <tr>
             <td><input type="password" class="text" th:field="*{password}" placeholder="영문,숫자,특수문자 포함 8자 이상"></td>
         </tr>
 
-        <tr><td>이름</td></tr>
+        <tr>
+            <td>이름</td>
+        </tr>
         <tr>
             <td><input type="text" class="text" th:field="*{name}"></td>
         </tr>
 
-        <tr><td>전화번호</td></tr>
+        <tr>
+            <td>전화번호</td>
+        </tr>
         <tr>
             <td><input type="tel" class="text" th:field="*{phone}"></td>
         </tr>
 
-        <tr><td>닉네임</td></tr>
+        <tr>
+            <td>닉네임</td>
+        </tr>
         <tr>
             <td><input type="text" class="text" th:field="*{nickname}"></td>
         </tr>
 
-        <tr><td>지역</td></tr>
+        <tr>
+            <td>지역</td>
+        </tr>
         <tr>
             <td>
                 <select class="area" th:field="*{area}">
@@ -154,7 +187,9 @@
             </td>
         </tr>
 
-        <tr><td>성별</td></tr>
+        <tr>
+            <td>성별</td>
+        </tr>
         <tr>
             <td>
                 <input type="radio" name="gender" th:field="*{gender}" value="M"> 남성
@@ -162,7 +197,9 @@
             </td>
         </tr>
 
-        <tr><td><input type="submit" value="회원가입" class="btn" ></td></tr>
+        <tr>
+            <td><input type="submit" value="회원가입" class="btn"></td>
+        </tr>
     </table>
 </form>
 </body>
