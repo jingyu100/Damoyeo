@@ -95,7 +95,7 @@ public class PostController {
             file.transferTo(path);
 
             // 저장한 이미지의 URL을 Post 객체에 설정
-            post.setPhotoUrl("/uploads/" + file.getOriginalFilename());
+            post.setPhotoUrl(file.getOriginalFilename());
 
             // 게시물 저장
             postService.savePost(post);
