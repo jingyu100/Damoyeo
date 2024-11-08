@@ -82,7 +82,7 @@ public class PostController {
                            RedirectAttributes redirectAttributes) {
 
         if (file.isEmpty()) {
-            redirectAttributes.addFlashAttribute("message", "Please select a file to upload.");
+            redirectAttributes.addFlashAttribute("message", "사진 파일을 업로드 해주세요");
             return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
         }
 
@@ -102,7 +102,7 @@ public class PostController {
             redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
         } catch (IOException e) {
             e.printStackTrace();
-            redirectAttributes.addFlashAttribute("message", "사진 파일을 업로드 해주세요");
+            redirectAttributes.addFlashAttribute("message", "File upload failed.");
             return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
         }
 
