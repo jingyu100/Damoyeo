@@ -42,6 +42,7 @@ public class PostController {
     public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
 
         int pageSize = 6;
+
         Page<Post> postPage = postService.findPostsByPage(page, pageSize);
         List<Post> posts = postPage.getContent();
 
@@ -51,6 +52,10 @@ public class PostController {
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
+
+        for (int i = 0; i <= posts.size(); i++){
+
+        }
 
         return "post/main";
     }

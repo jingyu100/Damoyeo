@@ -49,4 +49,17 @@ public class PostService {
     public int updateView(Integer id) {
         return postRepository.updateViews(id);
     }
+
+
+    // 이미지 널 값일때 기본 이미지 사용
+    public String postImgUrl(String imgUrl) {
+        if (imgUrl.isEmpty())
+        {
+            return "";
+        }else{
+            return imgUrl;
+        }
+
+    }
+
 }
