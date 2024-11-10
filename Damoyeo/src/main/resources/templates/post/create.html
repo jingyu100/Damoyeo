@@ -3,38 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <title>새 글 작성</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
-        .form-group {
-            margin-bottom: 15px;
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        label {
+            
+            @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+        
+
+        body {
+             font-family: 'Pretendard-Regular', sans-serif;
+             height: 120vh;
+             display: flex;
+             justify-content:center; 
+             align-items: center; 
+             margin: 0;
+            }
+        
+        form{
+             width: 100%;
+             height: 90%;
+             display: flex;
+             flex-direction: column;
+             align-items: center;
+             border-radius: 0.5rem;
+            }
+        
+        form div{
+            width: 100%;
+            height: 100%;
+              
+        }
+
+       .form-group1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 0.5px solid lightgrey;
+        }
+
+        .form-group1 input{
+            width: 95%;
+            height: 3rem;
+            background-color: #f5f6f8;
+            border: none;  
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 0.5rem;
+            padding-left: 15px;
+            font-family: 'Pretendard-Regular', sans-serif;
+        }
+
+        
+        .form-group1 input::placeholder {
+            font-family: 'Pretendard-Regular', sans-serif; 
+            font-size: 16px;
+            color:lightgray; 
+        }
+
+        
+        .form-group1 input:focus {
+            outline: none;
+            border: 2px solid  #A7C7E7;
+        }
+
+        .form-group2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-bottom: 0.5px solid lightgrey;
+        }
+
+        .form-group2 textarea {
+            width: 100%;
+            height: 300px;
+            font-size: 16px;
+            font-weight: 400;
+            padding-left: 10px;
+            padding-top: 10px;
+            border: none;
+            resize: none;
+            font-family: 'Pretendard-Regular', sans-serif;
+        }
+        
+        .form-group2 textarea:focus {
+            outline: none;
+            border: none;
+        }
+
+        .form-group2 textarea::placeholder {
+            font-family: 'Pretendard-Regular', sans-serif; 
+            font-size: 16px;
+            color:lightgray; 
+        }
+
+        .form-group-container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 300px;
+        }
+
+
+        .form-group-container input{
+            width:90%;
+            height: 40px;
+            border: none;
+            border-bottom: 0.5px solid #A7C7E7;
+            padding-left: 10px;
+            font-family: 'Pretendard-Regular', sans-serif;
+            font-size: 12px;
+            color:lightgray;
+        }
+
+        .form-group-container input[type="datetime-local"]{
+        }
+
+
+        .form-group-container input::placeholder {
+            font-family: 'Pretendard-Regular', sans-serif; 
+            font-size: 12px;
+            color:lightgray;
+        }
+
+        .form-group{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-bottom: 2px solid  #A7C7E7;
+        }
+
+        .form-group-container2 {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 40px;  
+        }
+
+        .file-input-container {
+            width: 100%;
+            height: 50px;
+        }
+
+        .file-input-container :hover{
+            cursor: pointer;
+
+        }
+
+
+        .file-input-container input[type="file"] {
+            display: none;
+        }
+
+        .file-input-container label {
             display: block;
-            margin-bottom: 5px;
+            color: white;
+            width: 100%;
+            height: 100%;
+            background-color: #A7C7E7;
+            border: none;
+            font-size: 15px;
             font-weight: bold;
+            border-radius: 0.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-family: 'Pretendard-Regular', sans-serif; 
         }
+
+        .file-input-container label:hover {
+            background-color: #8FAFD1;  
+        }
+
+
+        .file-input-container label i {
+            font-size: 24px;
+            color: white;
+            margin-right: 10px;
+        }
+
+        
+        
+        button{
+            width: 350px;
+            height: 50px;
+            color: white;
+            background-color: #A7C7E7;
+            font-weight: 800;
+            font-size:1.4rem;
+            font-family:'Pretendard-Regular', sans-serif; 
+            border: none;
+            border-radius: 0.5rem;
+        }
+        
+        button:hover {
+            background-color: #8FAFD1; 
+            cursor: pointer; 
+        }
+
     </style>
 </head>
 <body>
     
 <!--    사진,사용자ID,조회수,상태 미구현-->
-    <h2>새 글 작성</h2>
 
     <div th:if="${message}" th:text="${message}"></div>
 
     <form th:action="@{/post/create}" method="post" th:object="${post}" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">제목:</label>
-            <input type="text" id="title" th:field="*{title}" required/>
+        <div class="form-group1">
+            <input type="text" id="title" placeholder="제목" th:field="*{title}" required/>
         </div>
 
-        <div class="form-group">
-            <label for="content">내용:</label>
-            <textarea id="content" th:field="*{content}" rows="5" required></textarea>
+        <div class="form-group2">
+            <textarea id="content" placeholder="내용을 입력하세요" th:field="*{content}" rows="5" required></textarea>
         </div>
+        
+        
+        <div class="form-group-container">
+              
+            <!--    임시로 텍스트로 받음-->
+            <div class="form-group">
+                <input type="text" id="roadAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required/>
+            </div>
 
-        <div class="form-group">
-            <label for="photoUrl">파일 업로드:</label>
-            <input type="file" name="photo" id="photoUrl" th:src="*{photoUrl}"/>
+            <div class="form-group">
+                <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
+            </div>
+
+            <div class="form-group">
+                <input type="text" id="tag" placeholder="분야를 입력해주세요" th:field="*{tag}" required/>
+            </div>
+
+           
+            <div class="form-group">
+                <input type="number" id="maxParticipants" placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" min="1" required/>
+            </div>
+
+            <div class="form-group">
+                <input type="datetime-local" id="endDate" th:field="*{endDate}" required/>
+            </div>
         </div>
 
         <div class="form-group">
@@ -95,33 +321,13 @@
             }
         </script>
 
-    <!--    임시로 텍스트로 받음-->
-<!--        <div class="form-group">-->
-<!--            <label for="roadAddress">활동 지역:</label>-->
-<!--            <input type="text" id="roadAddress" th:field="*{roadAddress}" required/>-->
-<!--        </div>-->
-
-        <div class="form-group">
-            <label for="detailAddress">상세주소:</label>
-            <input type="text" id="detailAddress" th:field="*{detailAddress}" required/>
-        </div>
-
-        <div class="form-group">
-            <label for="tag">분야:</label>
-            <input type="text" id="tag" th:field="*{tag}" required/>
-        </div>
-
-        <div class="form-group">
-            <label for="endDate">마감 날짜:</label>
-            <input type="datetime-local" id="endDate" th:field="*{endDate}" required/>
-        </div>
-
-        <div class="form-group">
-            <label for="maxParticipants">최대 참가자 수:</label>
-            <input type="number" id="maxParticipants" th:field="*{maxParticipants}" min="1" required/>
-        </div>
-
-        <button type="submit">글 등록</button>
-    </form>
+        <div class="form-group-container2">
+            <div class="file-input-container">   
+                <input type="file" name="photo" id="photoUrl"/>
+                <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
+            </div>
+            <button type="submit">글 등록</button>
+        </div>   
+</form>
 </body>
 </html>
