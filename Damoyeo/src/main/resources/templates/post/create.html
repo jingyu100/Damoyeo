@@ -38,9 +38,7 @@
              display: flex;
              flex-direction: column;
              align-items: center;
-             border: none;
              border-radius: 0.5rem;
-             border: 0.5px solid lightgrey;
             }
         
         form div{
@@ -67,6 +65,14 @@
             padding-left: 15px;
             font-family: 'Pretendard-Regular', sans-serif;
         }
+
+        
+        .form-group1 input::placeholder {
+            font-family: 'Pretendard-Regular', sans-serif; 
+            font-size: 16px;
+            color:lightgray; 
+        }
+
         
         .form-group1 input:focus {
             outline: none;
@@ -94,16 +100,10 @@
         
         .form-group2 textarea:focus {
             outline: none;
-            border: 2px solid  #A7C7E7;
+            border: none;
         }
 
         .form-group2 textarea::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
-            font-size: 16px;
-            color:lightgray; 
-        }
-
-        .form-group1 input::placeholder {
             font-family: 'Pretendard-Regular', sans-serif; 
             font-size: 16px;
             color:lightgray; 
@@ -113,19 +113,64 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            height: 300px;
+        }
+
+
+        .form-group-container input{
+            width:90%;
+            height: 40px;
+            border: none;
+            border-bottom: 0.5px solid #A7C7E7;
+            padding-left: 10px;
+            font-family: 'Pretendard-Regular', sans-serif;
+            font-size: 12px;
+            color:lightgray;
+        }
+
+        .form-group-container input[type="datetime-local"]{
+        }
+
+
+        .form-group-container input::placeholder {
+            font-family: 'Pretendard-Regular', sans-serif; 
+            font-size: 12px;
+            color:lightgray;
+        }
+
+        .form-group{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-bottom: 2px solid  #A7C7E7;
+        }
+
+        .form-group-container2 {
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            gap: 40px;  
         }
 
         .file-input-container {
-            position: relative;
+            width: 100%;
+            height: 50px;
+        }
+
+        .file-input-container :hover{
+            cursor: pointer;
+
         }
 
 
         .file-input-container input[type="file"] {
-            position: absolute;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+            display: none;
         }
 
         .file-input-container label {
@@ -145,79 +190,22 @@
             font-family: 'Pretendard-Regular', sans-serif; 
         }
 
+        .file-input-container label:hover {
+            background-color: #8FAFD1;  
+        }
+
+
         .file-input-container label i {
             font-size: 24px;
             color: white;
             margin-right: 10px;
         }
 
-        .form-group-container input{
-            width: 70%;
-            height: 40px;
-            border: none;
-            background-color:#f5f6f8;
-            border-radius: 0.5rem;
-            padding-left: 10px;
-            font-family: 'Pretendard-Regular', sans-serif;
-        }
-
-        .form-group-container input::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
-            font-size: 12px;
-            color:lightgray; 
-        }
-
-        .form-group{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border: 2px solid  #A7C7E7;
-        }
-
-        label {
-            display: block;
-            font-family: 'Pretendard-Regular', sans-serif; 
-            font-size: 16px; 
-            color: #333; 
-            font-weight: bold;
-        }
-
-        .form-group-container2{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-        }
-
-        .form-group-container2 > input{
-            border: none;
-            width: 20%;
-            height: 40px;
-            padding-left: 10px;
-            background-color: #f5f6f8;
-            border-radius: 0.5rem;
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-weight: normal;
-        }
-
-        .form-group-container2 > input:focus {
-            outline: none;
-            border: 2px solid  #A7C7E7;
-        }
-
-        .form-group-container2 > div{
-            width: 20%;
-            height: 40px;
-        }
-
-
+        
+        
         button{
-            width: 300px;
-            height: 300px;
+            width: 350px;
+            height: 50px;
             color: white;
             background-color: #A7C7E7;
             font-weight: 800;
@@ -226,6 +214,12 @@
             border: none;
             border-radius: 0.5rem;
         }
+        
+        button:hover {
+            background-color: #8FAFD1; 
+            cursor: pointer; 
+        }
+
     </style>
 </head>
 <body>
@@ -260,17 +254,20 @@
             <div class="form-group">
                 <input type="number" id="maxParticipants" placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" min="1" required/>
             </div>
+
+            <div class="form-group">
+                <input type="datetime-local" id="endDate" th:field="*{endDate}" required/>
+            </div>
         </div>
 
+
         <div class="form-group-container2">
-            <input type="datetime-local" id="endDate" placeholder="날짜나 시간을 입력해주세요" th:field="*{endDate}" required/>
-            <div class="file-input-container">
+            <div class="file-input-container">   
                 <input type="file" name="photo" id="photoUrl"/>
                 <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
             </div>
+            <button type="submit">글 등록</button>
         </div>   
-
-        <button type="submit">글 등록</button>
-    </form>
+</form>
 </body>
 </html>
