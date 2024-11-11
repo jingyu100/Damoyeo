@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chat Room</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+</head>
+<body>
+<div id="login-page">
+    <input type="text" id="username" placeholder="Enter your name" />
+    <button onclick="enterChatRoom()">Enter Chat Room</button>
+</div>
+
+<div id="chat-room" style="display:none;">
+    <ul id="messageArea"></ul>
+    <input type="text" id="message" placeholder="Type your message..." />
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script type="text/javascript">
+    var stompClient = null;
+    var username = null;
+
+    function enterChatRoom() {
+        username = document.getElementById("username").value.trim();
+        if (username) {
+            document.getElementById("login-page").style.display = 'none';
+            document.getElementById("chat-room").style.display = 'block';
+            connect();
+        }
+    }
+
+    function connect() {
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            stompClient.subscribe('/topic/public', function (message) {
+                showMessage(JSON.parse(message.body));
+            });
+
+            // 사용자 입장 메시지 전송
+            stompClient.send("/app/chat.addUser", {}, JSON.stringify({
+                sender: username,
+                type: 'JOIN'
+            }));
+        });
+    }
+
+    function sendMessage() {
+        var messageContent = document.getElementById("message").value.trim();
+        if (messageContent && stompClient) {
+            var chatMessage = {
+                sender: username,
+                content: messageContent,
+                type: 'CHAT'
+            };
+            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            document.getElementById("message").value = '';
+        }
+    }
+
+    function showMessage(message) {
+        var messageArea = document.getElementById("messageArea");
+        var messageElement = document.createElement('li');
+
+        // 메시지 타입에 따라 표시할 내용을 달리함
+        if (message.type === 'JOIN') {
+            messageElement.classList.add('event-message');
+            messageElement.innerHTML = message.sender + ' joined!';
+        } else if (message.type === 'LEAVE') {
+            messageElement.classList.add('event-message');
+            messageElement.innerHTML = message.sender + ' left!';
+        } else {
+            messageElement.innerHTML = message.sender + ": " + message.content;
+        }
+        messageArea.appendChild(messageElement);
+    }
+</script>
+</body>
+</html>
