@@ -1,16 +1,259 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>메인 화면</title>
+  <!-- header 부분 시작-->
+  <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    header {
+        width: 100%;
+        background-color: #f5f5f5;
+    }
+
+    .top-nav {
+        display: flex;
+        height: 72.84px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0px 30px 0.87  px 0px;
+        color: #4D5159;
+        font-family: Roboto;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 23.76px;
+        text-decoration: none;
+    }
+
+    .top-nav-box1{
+        display: flex;
+        align-items: center;
+        gap: 50px;
+        margin-left: 25%;
+    }
+
+    .top-nav-box2{
+        display: flex;
+        margin-right:15%;
+        align-items: center;
+
+    }
+
+    .search-container input {
+        width: 288px;
+        padding: 10px 12px 7px 12px;
+        align-items: center;
+        border-radius: 6px;
+        background: #F2F3F6;
+    }
+
+    .login-button {
+        min-height: 40px;
+        margin-left: 10px;
+        padding: 8.69px 17px 10.51px 17px;
+        align-items: center;
+        border-radius: 4px;
+        border: 1px solid var(--color-grey-83, #D1D3D8);
+        background: #FFF;
+        color: #212124;
+        text-align: center;
+        font-family: Roboto;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 20.8px;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+        margin-left: 10%;
+        border-radius: 50%;
+        background-color: #ccc;
+        margin-left: 10px;
+        border: 2px solid #ff6600;
+    }
+
+    .header-banner {
+        background-color: #a5c8e4;
+        padding: 30px 0;
+    }
+
+    .header-banner h1 {
+        margin-left: 25%;
+        letter-spacing: -0.32px;
+        color: #FFF;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 51px;
+    }
+
+    .header-banner p {
+        margin-left: 25%;
+        color: #FFF;
+        font-family: Roboto;
+        font-size: 18px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 23.76px;
+        letter-spacing: -0.18px;
+    }
+
+    .popular-categories {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f9f9f9;
+        padding: 10px 0;
+        font-family: Roboto;
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 24px;
+        letter-spacing: -0.3px;
+    }
+
+    .popular-categories .highlight {
+        font-weight: bold;
+        text-decoration: underline;
+        margin-right: 20px;
+    }
+
+    .popular-categories a {
+        margin: 0 10px;
+        font-size: 14px;
+        color: #333;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-<a href="/user/login">로그인</a>
-<a href="/post/search?tag=">검색</a>
-<a href="/post/main">메인 게시글</a>
-<a href="/chat">채팅하기</a>
-<a href="/calendar/main">캘린더</a>
-<a href="/user/mypage">마이페이지</a>
+<header>
+  <form action="#" method="post">
+    <div class="top-nav">
+      <div class="top-nav-box1">
+        <a href="#" class="top-nav">모임 찾기</a>
+        <a href="#" class="top-nav">채팅하기</a>
+        <a href="#" class="top-nav">캘린더</a>
+      </div>
+      <div class="top-nav-box2">
+        <div class="search-container">
+          <input type="text" name="search" placeholder="모임이나 동네를 검색해보세요..">
+        </div>
+        <a href="/user/login">로그인</a>
+        <div class="profile-icon"></div>
+      </div>
+    </div>
+    <div class="header-banner">
+      <h1>믿을만한</h1>
+      <h1>이웃 모임</h1>
+      <p>동네 주민들과 가깝고 따뜻한 모임을 지금 경험해보세요.</p>
+    </div>
+    <div class="popular-categories">
+      <span class="highlight">인기검색어</span>
+      <a href="#">운동/스포츠</a>
+      <a href="#">음악/악기</a>
+      <a href="#">아웃도어/여행</a>
+      <a href="#">게임/오락</a>
+      <a href="#">요리/제조</a>
+      <a href="#">외국어/언어</a>
+      <a href="#">스포츠 관람</a>
+      <a href="#">인문학/철학</a>
+      <a href="#">자기개발</a>
+      <a href="#">독서</a>
+    </div>
+  </form>
+</header>
+</body>
+<!--header 부분 마지막-->
+
+<!-- Main 부분 시작-->
+
+<!-- Main 부분 끝-->
+
+<!--footer 부분 시작-->
+<style>
+  footer {
+      display: flex;
+      justify-content: center;
+      background-color: #f8f8f8;
+      padding: 20px;
+      font-size: 14px;
+      border-top: 1px solid #eaeaea;
+  }
+
+  .footer-container{
+      width: 50%;
+  }
+
+  .footer-box1{
+      margin-bottom: 30px;
+  }
+
+  .footer-box1 a{
+      text-decoration: none;
+      color: inherit;
+      margin-right: 20px;
+  }
+
+  .footer-box2{
+      margin-bottom: 50px;
+  }
+
+  .footer-box2 a {
+      text-decoration: none;
+      color: inherit;
+      margin-right: 20px;
+  }
+
+  .footer-box3 a {
+      text-decoration: none;
+      color: inherit;
+      white-space: nowrap;
+  }
+
+</style>
+<body>
+<footer>
+  <div class="footer-container">
+    <div class="footer-box1">
+      <p>직업정보제공사업 신고번호 J1200002200016</p>
+      <p>통신판매업 신고번호 2021-서울서초-2875</p>
+      <p>호스팅 사업자: Amazon Web Service(AWS)</p>
+      <p>주소: 서울특별시 구로구 디지털로 300, 10층 (닥터서비스)</p>
+      <p>전화: 1544-9796 | 고객문의: <a href="mailto:cs@daangsservice.com">cs@daangsservice.com</a></p>
+    </div>
+    <div class="footer-box2">
+      <a href="#">제휴 문의</a>
+      <a href="#">광고 문의</a>
+      <a href="#">PR 문의</a>
+      <a href="#">IR 문의</a>
+    </div>
+    <div class="footer-box3">
+      <a href="#">이용약관</a>
+      <a href="#">개인정보처리방침</a>
+      <a href="#">운영정책</a>
+      <a href="#">위치기반서비스 이용약관</a>
+      <a href="#">이용자보호 비전과 계획</a>
+      <a href="#">청소년보호정책</a>
+    </div>
+  </div>
+</footer>
 
 </body>
+<!--footer 부분 마지막-->
 </html>
