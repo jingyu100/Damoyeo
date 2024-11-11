@@ -7,8 +7,12 @@
     </div>
     <div class="top-nav-box2">
         <div class="search-container">
-            <input type="text" name="search" placeholder="모임이나 동네를 검색해보세요..">
+            <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
         </div>
+        <script>
+            var findContent = document.getElementById(search).value();
+        </script>
+        <a th:href="@{|/post/main?content=${findContent}|}">검색하기 </a>
         <a href="/user/login">로그인</a>
         <div class="profile-icon"></div>
     </div>
