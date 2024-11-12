@@ -22,7 +22,7 @@ public class ChatController {
     @GetMapping("chat")
     public String chat(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
                        HttpServletRequest request) {
-        if(userId == null) {
+        if (userId == null) {
             return "redirect:/user/login";
         }
         HttpSession session = request.getSession();
