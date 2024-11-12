@@ -73,8 +73,14 @@ public class PostController  {
     @GetMapping("/detail{id}")
     public String detailPost(Model model, @PathVariable("id") Integer id) throws Exception {
         Post post = this.postService.findById(id);
+        //조회수 업데이트
         postService.updateView(id);
+
+        //현재 게시물의 상세 주소에서 관련된 모임 조회
+        List<Post> nearby = postService.findBydetailAddress(post.getDetailAddress());
+
         model.addAttribute("post", post);
+        model.addAttribute("nearby",nearby);
         model.addAttribute("apiKey", API_KEY);
         return "post/detail";
     }

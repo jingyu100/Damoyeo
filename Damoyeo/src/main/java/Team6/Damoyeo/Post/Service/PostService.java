@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,16 @@ public class PostService {
             return "";
         }
         return imgUrl;
+    }
+
+    // 주변모임 보여주기
+    public List<Post> findBydetailAddress(String keyword) {
+        // 공백으로 나눈 첫 번째 두 단어를 사용해 주소를 찾기
+        String[] locationParts = keyword.split(" ");
+        String locationfix = locationParts[0] + " " + locationParts[1];
+
+
+        return postRepository.findBydetailAddress(locationfix);
     }
 
 }
