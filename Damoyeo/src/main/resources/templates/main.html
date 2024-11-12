@@ -1,115 +1,212 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/navfooter.css"></link>
-  <title>메인 화면</title>
-  <!-- header 부분 시작-->
-  <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/navfooter.css"></link>
+    <title>메인 화면</title>
+    <!-- header 부분 시작-->
+    <style>
+
+        .post-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        .post {
+            width: 30%;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .post-detail {
+            text-decoration: none;
+        }
+
+        .post-title {
+            color: black;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .post-info {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        .post img {
+            width: 100%; /* 너비를 100%로 설정하여 게시물 폭에 맞추기 */
+            height: auto; /* 높이는 자동으로 조정 */
+            border-radius: 5px; /* 모서리를 부드럽게 처리 */
+            margin-bottom: 10px; /* 이미지와 게시물 내용 사이에 여백 추가 */
+        }
+
+        .page-btn {
+            position: fixed;
+            bottom: 20px; /* 화면 하단에서 20px 위 */
+            left: 50%; /* 화면 왼쪽에서 50% */
+            transform: translateX(-50%); /* 가로축을 기준으로 중앙 정렬 */
+            background-color: white; /* 배경색 추가 (선택사항) */
+            padding: 10px; /* 여백 추가 */
+            border-radius: 8px; /* 둥근 모서리 (선택사항) */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 (선택사항) */
+        }
+
+        .page-btn a {
+            margin: 0 10px;
+            font-size: 1.2em;
+            text-decoration: none;
+            color: #333; /* 링크 색상 */
+        }
+
+        .page-btn a:hover {
+            color: #007bff; /* 호버 시 링크 색상 변경 */
+        }
+
+        .page-btn span {
+            margin: 0 10px;
+            font-size: 1.2em;
+            color: #333; /* 페이지 번호 색상 */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
 
-    body {
-        font-family: Arial, sans-serif;
-    }
+        body {
+            font-family: Arial, sans-serif;
+        }
 
-    header {
-        width: 100%;
-        background-color: #f5f5f5;
-    }
+        header {
+            width: 100%;
+            background-color: #f5f5f5;
+        }
 
-    .search-container input {
-        width: 288px;
-        padding: 10px 12px 7px 12px;
-        align-items: center;
-        border-radius: 6px;
-        background: #F2F3F6;
-    }
+        .search-container input {
+            width: 288px;
+            padding: 10px 12px 7px 12px;
+            align-items: center;
+            border-radius: 6px;
+            background: #F2F3F6;
+        }
 
-    .header-banner {
-        background-color: #a5c8e4;
-        padding: 30px 0;
-    }
+        .header-banner {
+            background-color: #a5c8e4;
+            padding: 30px 0;
+        }
 
-    .header-banner h1 {
-        margin-left: 25%;
-        letter-spacing: -0.32px;
-        color: #FFF;
-        font-family: Roboto;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 51px;
-    }
+        .header-banner h1 {
+            margin-left: 25%;
+            letter-spacing: -0.32px;
+            color: #FFF;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 700;
+            line-height: 51px;
+        }
 
-    .header-banner p {
-        margin-left: 25%;
-        color: #FFF;
-        font-family: Roboto;
-        font-size: 18px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 23.76px;
-        letter-spacing: -0.18px;
-    }
+        .header-banner p {
+            margin-left: 25%;
+            color: #FFF;
+            font-family: Roboto;
+            font-size: 18px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 23.76px;
+            letter-spacing: -0.18px;
+        }
 
-    .popular-categories {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #f9f9f9;
-        padding: 10px 0;
-        font-family: Roboto;
-        font-size: 16px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px;
-        letter-spacing: -0.3px;
-    }
+        .popular-categories {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f9f9f9;
+            padding: 10px 0;
+            font-family: Roboto;
+            font-size: 16px;
+            font-style: normal;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: -0.3px;
+        }
 
-    .popular-categories .highlight {
-        font-weight: bold;
-        text-decoration: underline;
-        margin-right: 20px;
-    }
+        .popular-categories .highlight {
+            font-weight: bold;
+            text-decoration: underline;
+            margin-right: 20px;
+        }
 
-    .popular-categories a {
-        margin: 0 10px;
-        font-size: 14px;
-        color: #333;
-        text-decoration: none;
-        cursor: pointer;
-    }
-  </style>
+        .popular-categories a {
+            margin: 0 10px;
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <header>
-  <form action="#" method="post">
-    <div th:replace="~{topnav.html}"></div>
-    <div class="header-banner">
-      <h1>믿을만한</h1>
-      <h1>이웃 모임</h1>
-      <p>동네 주민들과 가깝고 따뜻한 모임을 지금 경험해보세요.</p>
-    </div>
-    <div class="popular-categories">
-      <span class="highlight">인기검색어</span>
-      <a href="#">운동/스포츠</a>
-      <a href="#">음악/악기</a>
-      <a href="#">아웃도어/여행</a>
-      <a href="#">게임/오락</a>
-      <a href="#">요리/제조</a>
-      <a href="#">외국어/언어</a>
-      <a href="#">스포츠 관람</a>
-      <a href="#">인문학/철학</a>
-      <a href="#">자기개발</a>
-      <a href="#">독서</a>
-    </div>
-  </form>
+    <form action="#" method="post">
+        <div th:replace="~{topnav.html}"></div>
+        <div class="header-banner">
+            <h1>믿을만한</h1>
+            <h1>이웃 모임</h1>
+            <p>동네 주민들과 가깝고 따뜻한 모임을 지금 경험해보세요.</p>
+        </div>
+        <div class="popular-categories">
+            <span class="highlight">인기검색어</span>
+            <a href="#">운동/스포츠</a>
+            <a href="#">음악/악기</a>
+            <a href="#">아웃도어/여행</a>
+            <a href="#">게임/오락</a>
+            <a href="#">요리/제조</a>
+            <a href="#">외국어/언어</a>
+            <a href="#">스포츠 관람</a>
+            <a href="#">인문학/철학</a>
+            <a href="#">자기개발</a>
+            <a href="#">독서</a>
+        </div>
+    </form>
 </header>
+
+<div class="post-container">
+    <div th:each="post, iterStat : ${posts}" class="post">
+        <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
+            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+            <div class="post-title" th:text="${post.title}">제목</div>
+            <div class="post-content" th:text="${post.content}">내용</div>
+            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
+            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
+            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
+            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
+            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span
+                    th:text="${post.maxParticipants}">0</span></div>
+            <div class="post-info"><span
+                    th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
+            </div>
+            <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">상태: 모집중</span>
+            </div>
+        </a>
+    </div>
+</div>
 </body>
 <!--header 부분 마지막-->
 
