@@ -104,7 +104,11 @@
         </a>
     </div>
 </div>
-<div><a th:href="@{/post/create}">게시글 작성</a></div>
+<!--로그인했을떄만-->
+<th:block th:if="${userId != null}">
+    <div><a th:href="@{/post/create}">게시글 작성</a></div>
+</th:block>
+
 <div class="page-btn">
     <a th:href="@{/post/main(page=${page - 1})}" th:if="${search == null && page > 0}"> ◀ </a>
     <a th:href="@{/post/main(page=${page - 1}, search=${search})}" th:if="${search != null && page > 0}"> ◀ </a>

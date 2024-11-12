@@ -9,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +26,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
 
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
@@ -29,7 +35,8 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user, RedirectAttributes redirectAttributes) {
+    public String registerUser(@ModelAttribute("user") User user,
+                               RedirectAttributes redirectAttributes) {
         // 이메일 중복 체크 에러메세지
         if (userService.emailCheck(user.getEmail())) {
             redirectAttributes.addFlashAttribute("errorMessage", "이미 사용 중인 이메일입니다.");
@@ -38,6 +45,8 @@ public class UserController {
 
         // 기본값 설정
         user.setJoinDate(LocalDateTime.now());
+        //프로필 디폴트사진
+        user.setPhotoUrl("nullDefult.png");
         userService.registerUser(user);
         return "redirect:/user/login";
     }
@@ -112,14 +121,20 @@ public class UserController {
     // 수정 요청 처리 메서드 추가
     @PostMapping("/editprofile")
     public String updateProfile(@SessionAttribute(name = "userId") Integer userId,
-                                @ModelAttribute("user") User user) {
+                                @RequestParam("photo") MultipartFile file,
+                                @ModelAttribute("user") User user) throws IOException {
         // userId로 기존 사용자 정보 가져오기
         User existingUser = userService.findByUser(userId);
 
-        // 필요한 필드 업데이트 (닉네임, 자기소개 등)
+        String uploadDir = UPLOAD_USER;
+        Path path = Paths.get(uploadDir + file.getOriginalFilename());
+        Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
+        file.transferTo(path);
+
         existingUser.setNickname(user.getNickname());
         existingUser.setComment(user.getComment());
-
+        existingUser.setArea(user.getArea());
+        existingUser.setPhotoUrl(file.getOriginalFilename());
         // 사용자 정보 업데이트
         userService.updateUser(existingUser);
 
