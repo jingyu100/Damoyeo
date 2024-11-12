@@ -2,6 +2,8 @@ package Team6.Damoyeo.User.Controller;
 
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -49,19 +51,22 @@ public class UserController {
     @PostMapping("/login")
     public String loginUser(@RequestParam("userEmail") String userEmail,
                             @RequestParam("userPassword") String userPassword,
-                            RedirectAttributes redirectAttributes) {
+                            RedirectAttributes redirectAttributes,
+                            HttpServletRequest httpServletRequest) {
         try {
             // 디버깅을 위한 로그
             System.out.println("Login attempt - Email: " + userEmail + ", Password: " + userPassword);
+            HttpSession session = httpServletRequest.getSession();
 
             User user = userService.loginUser(userEmail, userPassword);
+            session.setAttribute("userId",user.getUserId());
             System.out.println("Login successful for user: " + user.getEmail());
 
             // 성공 메시지 추가
             redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
             redirectAttributes.addFlashAttribute("nickName", user.getNickname());
 
-            return "redirect:/post/main";
+            return "redirect:/";
         } catch (Exception e) {
 
             // 에러 로그 출력
@@ -79,6 +84,30 @@ public class UserController {
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request) {
+        HttpSession httpSession = request.getSession();
+        httpSession.invalidate();
+        return "redirect:/";
+    }
+
+    //프로필
+    @GetMapping("/profile")
+    public String profile(Model model,@SessionAttribute(name = "userId", required = false)Integer userId) {
+        User user = userService.findByUser(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("userId", userId);
+        return "user/profile";
+    }
+
+    @GetMapping("/editprofile")
+    public String editProfile(Model model,@SessionAttribute(name = "userId", required = false)Integer userId) {
+        User user = userService.findByUser(userId);
+        model.addAttribute("user", user);
+        model.addAttribute("userId", userId);
+        return "user/editprofile";
     }
 
 }

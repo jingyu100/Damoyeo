@@ -25,7 +25,6 @@ public class UserService {
     public User loginUser(String email, String password) {
         // 로그 추가
         System.out.println("Login attempt - Email: " + email);
-
         Optional<User> ou = userRepository.findByEmail(email);
         if (ou.isEmpty()) {
             return null;
@@ -53,6 +52,14 @@ public class UserService {
         }
         User user = ou.get();
         return user != null;
+    }
+
+    public User findByUser(Integer userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (ou.isEmpty()) {
+            return null;
+        }
+        return ou.get();
     }
 
     public boolean isEmailExists(String email) {

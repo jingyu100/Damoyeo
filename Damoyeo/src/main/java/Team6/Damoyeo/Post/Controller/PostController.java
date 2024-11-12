@@ -39,7 +39,8 @@ public class PostController  {
 
     // 메인 화면
     @GetMapping("/main")
-    public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                               @SessionAttribute(name = "userId", required = false)Integer userId,Model model) {
 
         int pageSize = 6;
 
@@ -52,7 +53,7 @@ public class PostController  {
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
-
+        model.addAttribute("userId", userId);
 
         return "post/main";
     }
@@ -71,7 +72,8 @@ public class PostController  {
 
     //상세 페이지
     @GetMapping("/detail{id}")
-    public String detailPost(Model model, @PathVariable("id") Integer id) throws Exception {
+    public String detailPost(Model model, @PathVariable("id") Integer id,
+                             @SessionAttribute(name = "userId", required = false)Integer userId) throws Exception {
         Post post = this.postService.findById(id);
         //조회수 업데이트
         postService.updateView(id);
@@ -80,6 +82,7 @@ public class PostController  {
         List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(),id);
 
         model.addAttribute("post", post);
+        model.addAttribute("userId", userId);
         model.addAttribute("nearby",nearby);
         model.addAttribute("apiKey", API_KEY);
         return "post/detail";
@@ -87,7 +90,8 @@ public class PostController  {
 
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
-                           RedirectAttributes redirectAttributes) throws IOException {
+                           RedirectAttributes redirectAttributes,
+                           @SessionAttribute(name = "userId", required = false)Integer userId) throws IOException {
 
         if (file.isEmpty()) {
             post.setPhotoUrl("nullDefult.png");
@@ -102,7 +106,6 @@ public class PostController  {
 
                 // 저장한 이미지의 URL을 Post 객체에 설정
                 post.setPhotoUrl(file.getOriginalFilename());
-
 //                // 게시물 저장
 //                postService.savePost(post);
 
@@ -113,7 +116,7 @@ public class PostController  {
 //                return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
 //            }
         }
-        postService.savePost(post);
+        postService.savePost(post,userId);
         return "redirect:/post/main";
     }
 

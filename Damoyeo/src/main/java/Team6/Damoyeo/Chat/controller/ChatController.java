@@ -7,12 +7,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 @Controller
 public class ChatController {
 
     @GetMapping("chat")
-    public String chat(Model model) {
+    public String chat(Model model, @SessionAttribute(name = "userId", required = false)Integer userId) {
+        model.addAttribute("userId", userId);
         return "chat/chat";
     }
 

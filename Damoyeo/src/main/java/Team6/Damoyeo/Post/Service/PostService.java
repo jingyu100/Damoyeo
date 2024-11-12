@@ -2,6 +2,7 @@ package Team6.Damoyeo.Post.Service;
 
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Repository.PostRepository;
+import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -28,10 +30,13 @@ public class PostService {
         return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
     }
 
-    public void savePost(Post post) {
+    public void savePost(Post post,@SessionAttribute(name = "userId", required = false)Integer userId) {
         //게시글 생성할때 현재 참가자 1
         post.setNowParticipants(1);
+        Optional<User> byId = userRepository.findById(userId);
+        User user = byId.get();
         post.setCreatedDate(LocalDateTime.now());
+        post.setUser(user);
         postRepository.save(post);
     }
     

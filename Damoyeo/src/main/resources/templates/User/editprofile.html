@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/basic">
+<link rel="stylesheet" href="../css/navfooter.css"></link>
+<head>
+    <meta charset="UTF-8">
+    <title>프로필</title>
+
+</head>
+<body>
+<div th:replace="~{topnav.html}"></div>
+<div class="content">
+    <form th:action="@{/user/edit_profile}" method="post" th:object="${user}">
+        <table>
+            <tr>
+                <td>닉네임</td>
+            </tr>
+            <tr>
+                <td><input type="text" class="text" th:field="*{nickname}" th:text="${user.nickname}" required></td>
+            </tr>
+
+        </table>
+    </form>
+    <a href="/user/editprofile">프로필 수정</a>
+</div>
+<div th:replace="~{footer.html}"></div>
+</body>
+</html>
