@@ -42,7 +42,8 @@ public class PostController {
     // 메인 화면
     @GetMapping("/main")
     public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
-                               @SessionAttribute(name = "userId", required = false)Integer userId,Model model) {
+                               @SessionAttribute(name = "userId", required = false)Integer userId,Model model,
+                               @Nullable @RequestParam(name = "search") String search) {
 
         int pageSize = 6;
         Page<Post> postPage;
