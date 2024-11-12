@@ -66,4 +66,12 @@ public class UserService {
         return userRepository.existsByEmail(email); // 여기서 true/false 반환
     }
 
+    public void updateUser(User user) {
+        Optional<User> byId = userRepository.findById(user.getUserId());
+        if (byId.isEmpty()){
+            return;
+        }
+        User user1 = byId.get();
+        userRepository.save(user1);
+    }
 }

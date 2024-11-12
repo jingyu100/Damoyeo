@@ -10,18 +10,21 @@
 <body>
 <div th:replace="~{topnav.html}"></div>
 <div class="content">
-    <form th:action="@{/user/edit_profile}" method="post" th:object="${user}">
+    <form th:action="@{/user/editprofile}" method="post" th:object="${user}">
         <table>
+            <tbody>
             <tr>
-                <td>닉네임</td>
+                <th scope="row">닉네임</th>
+                <td><input type="text" class="text" th:field="*{nickname}" required></td>
             </tr>
             <tr>
-                <td><input type="text" class="text" th:field="*{nickname}" th:text="${user.nickname}" required></td>
+                <th scope="row">자기소개</th>
+                <td><input type="text" class="text" th:field="*{comment}" required></td>
             </tr>
-
+            </tbody>
         </table>
+        <button type="submit">수정</button>
     </form>
-    <a href="/user/editprofile">프로필 수정</a>
 </div>
 <div th:replace="~{footer.html}"></div>
 </body>

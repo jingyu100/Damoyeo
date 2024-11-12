@@ -109,5 +109,23 @@ public class UserController {
         model.addAttribute("userId", userId);
         return "user/editprofile";
     }
+    // 수정 요청 처리 메서드 추가
+    @PostMapping("/editprofile")
+    public String updateProfile(@SessionAttribute(name = "userId") Integer userId,
+                                @ModelAttribute("user") User user) {
+        // userId로 기존 사용자 정보 가져오기
+        User existingUser = userService.findByUser(userId);
+
+        // 필요한 필드 업데이트 (닉네임, 자기소개 등)
+        existingUser.setNickname(user.getNickname());
+        existingUser.setComment(user.getComment());
+
+        // 사용자 정보 업데이트
+        userService.updateUser(existingUser);
+
+        // 프로필 페이지로 리다이렉트
+        return "redirect:/user/profile";
+    }
+
 
 }
