@@ -1,3 +1,4 @@
+<a href="/">홈으로</a>
 <div class="top-nav">
     <div class="top-nav-box1">
         <a href="/post/main" class="top-nav">모임 찾기</a>
@@ -17,7 +18,7 @@
 <script>
     function searchPost() {
         var searchValue = document.getElementById('search').value;
-        var searchUrl = '/post/main?content=' + encodeURIComponent(searchValue);
+        var searchUrl = '/post/main?search=' + encodeURIComponent(searchValue);
         window.location.href = searchUrl; // 또는 다른 방법으로 처리 가능
     }
 </script>

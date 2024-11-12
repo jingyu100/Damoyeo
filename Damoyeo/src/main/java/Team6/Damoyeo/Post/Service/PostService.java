@@ -6,6 +6,7 @@ import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,17 +35,17 @@ public class PostService {
         post.setCreatedDate(LocalDateTime.now());
         postRepository.save(post);
     }
-    
+
     // 상세 페이지
     public Post findById(Integer id) throws Exception {
         Optional<Post> post = this.postRepository.findById(id);
-        if(post.isPresent()) {
+        if (post.isPresent()) {
             return post.get();
-        }else {
+        } else {
             throw new Exception("post not found");
         }
     }
-    
+
     // 조회 수
     @Transactional
     public int updateView(Integer id) {
@@ -54,21 +55,24 @@ public class PostService {
 
     // 이미지 널 값일때 기본 이미지 사용
     public String postImgUrl(String imgUrl) {
-        if (imgUrl.isEmpty())
-        {
+        if (imgUrl.isEmpty()) {
             return "";
         }
         return imgUrl;
     }
 
     // 주변모임 보여주기
-    public List<Post> findByroadAddress(String keyword,int postId) {
+    public List<Post> findByroadAddress(String keyword, int postId) {
         // 공백으로 나눈 첫 번째 두 단어를 사용해 주소를 찾기
         String[] locationParts = keyword.split(" ");
         String locationfix = locationParts[0] + " " + locationParts[1];
 
 
-        return postRepository.findByroadAddress(locationfix,postId);
+        return postRepository.findByroadAddress(locationfix, postId);
+    }
+
+    public Page<Post> searchPostsByTitle(String title, Pageable pageable) {
+        return postRepository.findByTitleContaining(title, pageable);
     }
 
 }

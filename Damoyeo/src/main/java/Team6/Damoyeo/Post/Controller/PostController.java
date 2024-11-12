@@ -2,10 +2,12 @@ package Team6.Damoyeo.Post.Controller;
 
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,7 @@ import java.util.List;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 @PropertySource("classpath:config.properties")
-public class PostController  {
+public class PostController {
 
     // 좋아요 버튼 기능
     boolean like = false;
@@ -39,20 +41,26 @@ public class PostController  {
 
     // 메인 화면
     @GetMapping("/main")
-    public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
+                               Model model,
+                               @Nullable @RequestParam(name = "search") String search) {
 
         int pageSize = 6;
+        Page<Post> postPage;
 
-        Page<Post> postPage = postService.findPostsByPage(page, pageSize);
+        if (search != null && !search.isEmpty()) {
+            postPage = postService.searchPostsByTitle(search, PageRequest.of(page, pageSize));
+        } else {
+            postPage = postService.findPostsByPage(page, pageSize);
+        }
+
         List<Post> posts = postPage.getContent();
-
-        // 다음 페이지가 있는지 여부를 체크
         boolean hasNextPage = postPage.hasNext();
 
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
-
+        model.addAttribute("search", search); // 검색어를 모델에 추가
 
         return "post/main";
     }
@@ -77,10 +85,10 @@ public class PostController  {
         postService.updateView(id);
 
         //현재 게시물의 상세 주소에서 관련된 모임 조회
-        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(),id);
+        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(), id);
 
         model.addAttribute("post", post);
-        model.addAttribute("nearby",nearby);
+        model.addAttribute("nearby", nearby);
         model.addAttribute("apiKey", API_KEY);
         return "post/detail";
     }
@@ -94,19 +102,19 @@ public class PostController  {
         } else {
             // catch 문이 필요없어서 주석 처리 실행 대신 메서드에 throws 걸어놓음
 //            try {
-                // static/uploads 디렉토리에 파일 저장
-                String uploadDir = UPLOAD_DIRECTORY;
-                Path path = Paths.get(uploadDir + file.getOriginalFilename());
-                Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
-                file.transferTo(path);
+            // static/uploads 디렉토리에 파일 저장
+            String uploadDir = UPLOAD_DIRECTORY;
+            Path path = Paths.get(uploadDir + file.getOriginalFilename());
+            Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
+            file.transferTo(path);
 
-                // 저장한 이미지의 URL을 Post 객체에 설정
-                post.setPhotoUrl(file.getOriginalFilename());
+            // 저장한 이미지의 URL을 Post 객체에 설정
+            post.setPhotoUrl(file.getOriginalFilename());
 
 //                // 게시물 저장
 //                postService.savePost(post);
 
-                redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
+            redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
 //            } catch (IOException e) {
 //                e.printStackTrace();
 //                redirectAttributes.addFlashAttribute("message", "File upload failed.");

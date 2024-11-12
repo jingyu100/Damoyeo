@@ -28,14 +28,14 @@ public class Post {
 
     @Column
     private String content;
-    
+
     //도로명 주소
     @Column
     private String roadAddress;
 
     @Column
     private String detailAddress;
-    
+
     //포스트 분야태그
     @Column
     private String tag;

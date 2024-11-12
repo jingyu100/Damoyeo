@@ -107,9 +107,11 @@
 </div>
 <div><a th:href="@{/post/create}">게시글 작성</a></div>
 <div class="page-btn">
-    <a th:href="@{/post/main(page=${page - 1})}" th:if="${page > 0}"> ◀ </a>
+    <a th:href="@{/post/main(page=${page - 1})}" th:if="${search == null && page > 0}"> ◀ </a>
+    <a th:href="@{/post/main(page=${page - 1}, search=${search})}" th:if="${search != null && page > 0}"> ◀ </a>
     <span th:text="${page + 1}">1</span> <!-- 페이지 번호 표시  -->
-    <a th:href="@{/post/main(page=${page + 1})}" th:if="${hasNextPage}"> ▶ </a>
+    <a th:href="@{/post/main(page=${page + 1})}" th:if="${search == null && hasNextPage}"> ▶ </a>
+    <a th:href="@{/post/main(page=${page + 1}, search=${search})}" th:if="${search != null && hasNextPage}"> ▶ </a>
 </div>
 <div th:replace="~{footer.html}"></div>
 </body>
