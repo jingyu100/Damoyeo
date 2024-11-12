@@ -26,9 +26,11 @@ public class UserService {
         // 로그 추가
         System.out.println("Login attempt - Email: " + email);
 
-        User user = null;
-
-        user = userRepository.findByEmail(email);
+        Optional<User> ou = userRepository.findByEmail(email);
+        if (ou.isEmpty()) {
+            return null;
+        }
+        User user = ou.get();
 
         // 사용자가 없는 경우
         if(user == null) {
@@ -45,7 +47,11 @@ public class UserService {
     
     //이메일 중복 체크 메서드
     public boolean emailCheck(String email) {
-        User user = userRepository.findByEmail(email);
+        Optional<User> ou = userRepository.findByEmail(email);
+        if (ou.isEmpty()) {
+            return false;
+        }
+        User user = ou.get();
         return user != null;
     }
 
