@@ -27,6 +27,11 @@
 
 }
 
+.search > a {
+    text-decoration: none;
+    color: black;
+}
+
 .login-button {
     min-height: 40px;
     margin-left: 10px;

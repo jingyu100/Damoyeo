@@ -7,7 +7,9 @@
         <div class="search-container">
             <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
         </div>
-        <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
+        <div class="search">
+            <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
+        </div>
     </div>
 
     <th:block th:if="${userId == null}">
@@ -17,7 +19,7 @@
         </div>
     </th:block>
 
-    <th:block th:if ="${userId != null}">
+    <th:block th:if="${userId != null}">
         <div class="top-nav-box2">
             <a href="/user/logout">로그아웃</a>
             <div class="profile-icon"></div>
