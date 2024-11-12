@@ -26,9 +26,7 @@ public class UserService {
         // 로그 추가
         System.out.println("Login attempt - Email: " + email);
 
-        User user = null;
-
-        user = userRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email);
 
         // 사용자가 없는 경우
         if(user == null) {
@@ -36,7 +34,7 @@ public class UserService {
         }
 
         // 비밀번호 확인
-        if(passwordEncoder.matches(password, user.getPassword())) {
+        if(!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("비밀번호가 일치하지 않습니다.");
         }
 

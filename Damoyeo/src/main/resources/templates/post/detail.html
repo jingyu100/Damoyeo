@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/basic">
+<link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <title>상세 페이지</title>
@@ -101,6 +102,7 @@
 
 </head>
 <body>
+<div th:replace="~{topnav.html}"></div>
     <div class="page_title">
         <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image" style="max-width: 50%; height: auto;">
     </div>
@@ -245,5 +247,6 @@
         <a th:href="@{/chat}" class="chat_mainpage">참여하기</a>
     </div>
 </div>
+<div th:replace="~{footer.html}"></div>
 </body>
 </html>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <title>메인 화면</title>
@@ -81,6 +82,7 @@
     </style>
 </head>
 <body>
+<div th:replace="~{topnav.html}"></div>
 <div th:if="${nickname}" th:text="@{|닉네임 : ${nickname}|}"></div>
 <div class="post-container">
     <div th:each="post, iterStat : ${posts}" class="post">
@@ -109,5 +111,6 @@
     <span th:text="${page + 1}">1</span> <!-- 페이지 번호 표시  -->
     <a th:href="@{/post/main(page=${page + 1})}" th:if="${hasNextPage}"> ▶ </a>
 </div>
+<div th:replace="~{footer.html}"></div>
 </body>
 </html>

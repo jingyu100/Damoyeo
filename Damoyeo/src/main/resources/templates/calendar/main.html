@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,6 +59,7 @@
     </style>
 </head>
 <body>
+<div th:replace="~{topnav.html}"></div>
 <div class="container calendar mt-5">
     <h2 class="text-center" id="monthYear"></h2>
     <!-- 요일 헤더 -->
@@ -152,5 +154,6 @@
     // 페이지 로드 시 초기 캘린더 렌더링
     document.addEventListener('DOMContentLoaded', renderCalendar);
 </script>
+<div th:replace="~{footer.html}"></div>
 </body>
 </html>
