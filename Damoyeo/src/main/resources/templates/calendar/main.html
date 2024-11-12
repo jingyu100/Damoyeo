@@ -93,7 +93,7 @@
     function renderCalendar() {
         const year = currentDate.getFullYear();  // 현재 년도
         const month = currentDate.getMonth();    // 현재 월
-        monthYearLabel.textContent = `${currentDate.toLocaleString('default', {month: 'long'})} ${year}`; // 월/년 표시
+        monthYearLabel.textContent = `${year} ${currentDate.toLocaleString('default', {month: 'long'})}`; // 월/년 표시
 
         calendarDays.innerHTML = ''; // 이전 달의 날짜를 초기화
         const firstDayOfMonth = new Date(year, month, 1).getDay(); // 월의 첫 번째 날짜 요일
