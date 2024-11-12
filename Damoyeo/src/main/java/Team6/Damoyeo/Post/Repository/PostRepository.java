@@ -22,6 +22,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     int updateViews(@Param("id") int id);
     
     // 주변 모임 기능
-    @Query("SELECT p FROM Post p WHERE p.detailAddress LIKE %:keyword%")
-    List<Post> findBydetailAddress(@Param("keyword") String keyword);
+    @Query("SELECT p FROM Post p WHERE p.roadAddress LIKE %:keyword%")
+    List<Post> findByroadAddress(@Param("keyword") String keyword);
 }
