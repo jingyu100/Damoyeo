@@ -8,23 +8,24 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
-<div id="login-page">
-    <input type="text" id="username" placeholder="Enter your name" />
+
+<!-- 채팅방이 자동으로 로드되므로 로그인 페이지는 필요하지 않음 -->
+<div id="login-page" style="display:none;">
     <button onclick="enterChatRoom()">Enter Chat Room</button>
 </div>
 
+<!-- 채팅방 -->
 <div id="chat-room" style="display:none;">
     <ul id="messageArea"></ul>
-    <input type="text" id="message" placeholder="Type your message..." />
+    <input type="text" id="message" placeholder="Type your message..."/>
     <button onclick="sendMessage()">Send</button>
 </div>
 
-<script type="text/javascript">
+<script type="text/javascript" th:inline="javascript">
     var stompClient = null;
-    var username = null;
+    var username = /*[[${session.userNickName}]]*/ ""; // session의 userId를 사용
 
     function enterChatRoom() {
-        username = document.getElementById("username").value.trim();
         if (username) {
             document.getElementById("login-page").style.display = 'none';
             document.getElementById("chat-room").style.display = 'block';
@@ -77,6 +78,11 @@
         }
         messageArea.appendChild(messageElement);
     }
+
+    // 페이지가 로드될 때 자동으로 채팅방에 입장
+    window.onload = function () {
+        enterChatRoom();
+    };
 </script>
 <div th:replace="~{footer.html}"></div>
 </body>
