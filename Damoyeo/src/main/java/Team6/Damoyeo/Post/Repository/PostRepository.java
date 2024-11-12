@@ -20,5 +20,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Modifying
     @Query("update Post p set p.viewCount = p.viewCount + 1 where p.postId = :id")
     int updateViews(@Param("id") int id);
-
+    
+    // 주변 모임 기능
+    @Query("SELECT p FROM Post p WHERE p.detailAddress LIKE %:keyword%")
+    List<Post> findBydetailAddress(@Param("keyword") String keyword);
 }

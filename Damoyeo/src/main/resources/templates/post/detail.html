@@ -118,16 +118,12 @@
             <td th:text="${post.title}"></td>
         </tr>
         <tr>
-            <th scope="row">내용</th>
-            <td th:text="${post.content}"></td>
-        </tr>
-        <tr>
             <th scope="row">상세주소</th>
             <td th:text="${post.detailAddress}"></td>
         </tr>
         <tr>
-            <th scope="row">분야</th>
-            <td th:text="${post.tag}"></td>
+            <th scope="row">내용</th>
+            <td th:text="${post.content}"></td>
         </tr>
         <tr>
             <th scope="row">참가자 수</th>
@@ -142,10 +138,6 @@
         <tr>
             <th scope="row">좋아요</th>
             <td th:text="${post.likeCount}"></td>
-        </tr>
-        <tr>
-            <th scope="row">상태</th>
-            <td th:text="${post.status}"></td>
         </tr>
         </tbody>
     </table>
@@ -234,8 +226,23 @@
         });
     </script>
 
+
+    <hr>
+    <div class="nearBy-post">
+        <h3>주변 모임</h3>
+        <ul>
+            <li th:each="nearby : ${nearby}">
+                <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}" alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                    <div class="nearby-title" th:text="${nearby.title}">제목</div>
+                    <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span th:text="${nearby.maxParticipants}">0</span></div>
+                    <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
+                </a>
+            </li>
+        </ul>
+    </div>
     <div class="btn_set">
         <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
+        <a th:href="@{/chat}" class="chat_mainpage">참여하기</a>
     </div>
 </div>
 </body>
