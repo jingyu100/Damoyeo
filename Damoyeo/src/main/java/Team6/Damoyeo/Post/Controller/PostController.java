@@ -77,7 +77,7 @@ public class PostController  {
         postService.updateView(id);
 
         //현재 게시물의 상세 주소에서 관련된 모임 조회
-        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress());
+        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(),id);
 
         model.addAttribute("post", post);
         model.addAttribute("nearby",nearby);

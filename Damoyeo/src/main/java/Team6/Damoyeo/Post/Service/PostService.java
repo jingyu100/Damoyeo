@@ -62,13 +62,13 @@ public class PostService {
     }
 
     // 주변모임 보여주기
-    public List<Post> findByroadAddress(String keyword) {
+    public List<Post> findByroadAddress(String keyword,int postId) {
         // 공백으로 나눈 첫 번째 두 단어를 사용해 주소를 찾기
         String[] locationParts = keyword.split(" ");
         String locationfix = locationParts[0] + " " + locationParts[1];
 
 
-        return postRepository.findByroadAddress(locationfix);
+        return postRepository.findByroadAddress(locationfix,postId);
     }
 
 }
