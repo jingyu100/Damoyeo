@@ -31,7 +31,7 @@ public class PostService {
         return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
     }
 
-    public void savePost(Post post,@SessionAttribute(name = "userId", required = false)Integer userId) {
+    public void savePost(Post post, @SessionAttribute(name = "userId", required = false) Integer userId) {
         //게시글 생성할때 현재 참가자 1
         post.setNowParticipants(1);
         Optional<User> byId = userRepository.findById(userId);
@@ -78,6 +78,11 @@ public class PostService {
 
     public Page<Post> searchPostsByTitle(String title, Pageable pageable) {
         return postRepository.findByTitleContaining(title, pageable);
+    }
+
+    public List<Post> findTopPostsByViews(int limit) {
+        Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "viewCount"));
+        return postRepository.findAll(pageable).getContent();
     }
 
 }
