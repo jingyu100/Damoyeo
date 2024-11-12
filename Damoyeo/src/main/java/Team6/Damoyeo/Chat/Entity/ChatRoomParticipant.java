@@ -1,4 +1,4 @@
-package Team6.Damoyeo.Chat.Entity;
+package Team6.Damoyeo.chat.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

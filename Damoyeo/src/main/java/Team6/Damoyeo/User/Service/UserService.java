@@ -62,6 +62,16 @@ public class UserService {
         return ou.get();
     }
 
+    public String findByUserId(Integer userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (ou.isEmpty()) {
+            return null;
+        }
+        User user = ou.get();
+        String nickName = user.getNickname();
+        return nickName;
+    }
+
     public boolean isEmailExists(String email) {
         return userRepository.existsByEmail(email); // 여기서 true/false 반환
     }
