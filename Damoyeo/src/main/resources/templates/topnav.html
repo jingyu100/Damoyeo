@@ -11,14 +11,18 @@
         </div>
         <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
         <a href="/user/login">로그인</a>
-        <div class="profile-icon"></div>
+        <a href="/user/profile">
+            <div class="profile-icon"></div>
+        </a>
     </div>
 </div>
 
 <script>
     function searchPost() {
         var searchValue = document.getElementById('search').value;
-        var searchUrl = '/post/main?search=' + encodeURIComponent(searchValue);
-        window.location.href = searchUrl; // 또는 다른 방법으로 처리 가능
+        if (searchValue) {
+            var searchUrl = '/post/main?search=' + encodeURIComponent(searchValue);
+            window.location.href = searchUrl; // 또는 다른 방법으로 처리 가능
+        }
     }
 </script>
