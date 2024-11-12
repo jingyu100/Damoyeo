@@ -4,17 +4,26 @@
         <a href="/post/main" class="top-nav">모임 찾기</a>
         <a href="/chat" class="top-nav">채팅하기</a>
         <a href="/calendar/main" class="top-nav">캘린더</a>
-    </div>
-    <div class="top-nav-box2">
         <div class="search-container">
             <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
         </div>
         <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
-        <a href="/user/login">로그인</a>
-        <a href="/user/profile">
-            <div class="profile-icon"></div>
-        </a>
     </div>
+
+    <th:block th:if="${userId == null}">
+        <div class="top-nav-box2">
+            <a href="/user/login">로그인</a>
+            <div class="profile-icon"></div>
+        </div>
+    </th:block>
+
+    <th:block th:if ="${userId != null}">
+        <div class="top-nav-box2">
+            <a href="/user/logout">로그아웃</a>
+            <div class="profile-icon"></div>
+            <a href="/user/profile">프로필</a>
+        </div>
+    </th:block>
 </div>
 
 <script>
