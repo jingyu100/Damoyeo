@@ -28,5 +28,10 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     @Query("SELECT p FROM Post p WHERE p.roadAddress LIKE %:keyword% AND p.postId <> :postId")
     List<Post> findByroadAddress(@Param("keyword") String keyword, @Param("postId") int postId);
 
+
+    // 검색 기능
     Page<Post> findByTitleContaining(String title, Pageable pageable);
+
+    //태그 검색 기능
+    Page<Post> findByTagContaining(String tag, Pageable pageable);
 }

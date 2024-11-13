@@ -43,14 +43,17 @@ public class PostController {
     @GetMapping("/main")
     public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
                                @SessionAttribute(name = "userId", required = false) Integer userId, Model model,
-                               @Nullable @RequestParam(name = "search") String search) {
+                               @Nullable @RequestParam(name = "search") String search,
+                               @RequestParam(name = "tag",required = false) String tag) {
 
         int pageSize = 6;
         Page<Post> postPage;
-
         if (search != null && !search.isEmpty()) {
             postPage = postService.searchPostsByTitle(search, PageRequest.of(page, pageSize));
-        } else {
+        } else if (tag != null && !tag.isEmpty()) {
+
+            postPage = postService.searchPostByTag(tag, PageRequest.of(page, pageSize));
+        }else {
             postPage = postService.findPostsByPage(page, pageSize);
         }
 
@@ -62,6 +65,7 @@ public class PostController {
         model.addAttribute("hasNextPage", hasNextPage);
         model.addAttribute("userId", userId);
         model.addAttribute("search", search);
+        model.addAttribute("tag",tag);
 
         return "post/main";
     }

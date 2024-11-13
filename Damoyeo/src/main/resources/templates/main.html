@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -172,16 +172,16 @@
         </div>
         <div class="popular-categories">
             <span class="highlight">인기검색어</span>
-            <a href="#">운동/스포츠</a>
-            <a href="#">음악/악기</a>
-            <a href="#">아웃도어/여행</a>
-            <a href="#">게임/오락</a>
-            <a href="#">요리/제조</a>
-            <a href="#">외국어/언어</a>
-            <a href="#">스포츠 관람</a>
-            <a href="#">인문학/철학</a>
-            <a href="#">자기개발</a>
-            <a href="#">독서</a>
+            <a th:href="@{/post/main?tag=운동/스포츠}">운동/스포츠</a>
+            <a th:href="@{/post/main?tag=음악/악기}">음악/악기</a>
+            <a th:href="@{/post/main?tag=아웃도어/여행}">아웃도어/여행</a>
+            <a th:href="@{/post/main?tag=게임/오락}">게임/오락</a>
+            <a th:href="@{/post/main?tag=요리/제조}">요리/제조</a>
+            <a th:href="@{/post/main?tag=외국어/언어}">외국어/언어</a>
+            <a th:href="@{/post/main?tag=스포츠관람}">스포츠 관람</a>
+            <a th:href="@{/post/main?tag=인문학/철학}">인문학/철학</a>
+            <a th:href="@{/post/main?tag=자기개발}">자기개발</a>
+            <a th:href="@{/post/main?tag=독서}">독서</a>
         </div>
     </form>
 </header>

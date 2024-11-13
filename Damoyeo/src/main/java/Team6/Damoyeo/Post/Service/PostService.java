@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,4 +84,8 @@ public class PostService {
         return postRepository.findAll(pageable).getContent();
     }
 
+
+    public Page<Post> searchPostByTag(String tag, Pageable pageable) {
+        return postRepository.findByTagContaining(tag,pageable);
+    }
 }
