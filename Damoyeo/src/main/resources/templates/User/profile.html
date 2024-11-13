@@ -10,6 +10,10 @@
 <body>
 <div th:replace="~{topnav.html}"></div>
 <div class="content">
+    <p>프로필 사진</p>
+    <div class="page_title">
+        <img th:src="@{|/uploads/${user.photoUrl}|}" alt="Post Image" style="max-width: 50%; height: auto;">
+    </div>
     <table>
 <!--        프로필 이미지 나중에 넣어야함-->
         <tbody>

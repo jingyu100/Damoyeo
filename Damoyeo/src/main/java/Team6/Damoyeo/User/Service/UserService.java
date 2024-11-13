@@ -81,7 +81,7 @@ public class UserService {
         if (byId.isEmpty()){
             return;
         }
-        User user1 = byId.get();
-        userRepository.save(user1);
+        userRepository.save(user);
     }
+
 }
