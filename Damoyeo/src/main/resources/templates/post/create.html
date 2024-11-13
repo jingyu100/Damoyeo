@@ -318,7 +318,7 @@
 
             <!--    임시로 텍스트로 받음-->
             <div class="form-group">
-                <input type="text" id="roaddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required/>
+                <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required/>
             </div>
 
             <div class="form-group">
@@ -382,6 +382,7 @@
                             var addr = data.address; // 최종 주소 변수
 
                             // 주소 정보를 해당 필드에 넣는다.
+                            document.getElementById("readAddress").value= addr;
                             document.getElementById("roadAddress").value = addr;
                             // 주소로 상세 정보를 검색
                             geocoder.addressSearch(data.address, function(results, status) {
