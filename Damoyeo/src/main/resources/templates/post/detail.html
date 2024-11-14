@@ -98,53 +98,111 @@
         .custom_zoomcontrol span:first-child {
             border-bottom: 1px solid #bfbfbf;
         }
+
+
+        @font-face {
+            font-family: 'Pretendard-Regular';
+            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+        }
+
+
+        body{
+            font-family: 'Pretendard-Regular', sans-serif;
+        }
+
+        .section{
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto;
+        }
+        .page_title{
+            display: flex;
+            justify-content: center;
+            width: 700px;
+            height: 500px;
+        }
+
+
+        .page_title > img {
+           border-radius: 8px;
+        }
+
+        table{
+            height: 400px;
+        }
+
+        table tbody td {
+            width: 100%;
+        }
+        
+        h1{
+            margin: 0px;
+        }
+        
+        #title{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+
+        }
+        
+        
+        #participants{
+            font-size: 17px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        #content{
+            font-size: 17px;
+            font-weight: normal;
+            margin-bottom: 20px;
+        }
+
+        #address{
+            font-size: 13px;
+            font-weight: 400;
+            color: black;
+            
+        }
+        
+        #count{
+            font-size: 12px;
+            color: black;
+        }
+
+        
+
     </style>
 
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
+<div class="section">
     <div class="page_title">
-        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image" style="max-width: 50%; height: auto;">
+        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image" style="width: 600px; height: 500px;">
     </div>
 <div class="content">
-    <table>
-        <colgroup>
-            <col style="width:10%;"/>
-            <col style="width:23%;"/>
-            <col style="width:10%;"/>
-            <col style="width:23%;"/>
-        </colgroup>
-        <tbody>
-        <tr>
-            <th scope="row">제목</th>
-            <td th:text="${post.title}"></td>
-        </tr>
-        <tr>
-            <th scope="row">상세주소</th>
-            <td th:text="${post.detailAddress}"></td>
-        </tr>
-        <tr>
-            <th scope="row">내용</th>
-            <td th:text="${post.content}"></td>
-        </tr>
-        <tr>
-            <th scope="row">참가자 수</th>
-            <td th:text="${post.nowParticipants}"></td>
-            /
-            <td th:text="${post.maxParticipants}"></td>
-        </tr>
-        <tr>
-            <th scope="row">조회 수</th>
-            <td th:text="${post.viewCount}"></td>
-        </tr>
-        <tr>
-            <th scope="row">좋아요</th>
-            <td th:text="${post.likeCount}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <div class="map_wrap">
-        <div id="map" style="width:500px;height:400px;position:relative;overflow:hidden;"></div>
+    <div class="content">
+        <div class="row" id="title">
+            <h1 class="value" th:text="${post.title}"></h1>
+            <div class="value" id="participants" th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+        </div>
+        <div class="row" id="content-container">
+            <div class="value" id="content" th:text="${post.content}"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="value" id="address" th:text="${post.detailAddress}"></div>
+    </div>
+    <div class="map_wrap" style="width:500px; height: 200px;">
+        <div id="map" style="width:500px;height:200px;position:relative;overflow:hidden;"></div>
         <!-- 지도타입 컨트롤 div 입니다 -->
         <div class="custom_typecontrol radius_border">
             <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
@@ -200,7 +258,7 @@
         // 주소-좌표 변환 객체를 생성합니다
         var geocoder = new kakao.maps.services.Geocoder();
 
-        var postAddress = [[${post.roadAddress}]];
+        var postAddress = ["[${post.roadAddress}]"];
 
         // 주소로 좌표를 검색합니다
         geocoder.addressSearch(postAddress, function (result, status) {
@@ -230,6 +288,9 @@
 
 
     <hr>
+    <div class="row" id="count">
+        <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 댓글"></div>
+    </div>
     <div class="nearBy-post">
         <h3>주변 모임</h3>
         <ul>
@@ -246,6 +307,7 @@
         <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
         <a th:href="@{/chat}" class="chat_mainpage">참여하기</a>
     </div>
+</div>
 </div>
 <div th:replace="~{footer.html}"></div>
 </body>
