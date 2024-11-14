@@ -24,68 +24,95 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
-
-    // 특정 페이지에 해당하는 게시글 가져오기
+    // 특정 페이지에 해당하는 게시글을 가져오는 메서드
     public Page<Post> findPostsByPage(int page, int pageSize) {
         return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
     }
 
+    // 게시글 저장 메서드 (작성자 정보 포함)
     public void savePost(Post post, @SessionAttribute(name = "userId", required = false) Integer userId) {
-        //게시글 생성할때 현재 참가자 1
+
+        // 새로운 게시글 생성 시 참가자 수를 1로 설정
         post.setNowParticipants(1);
+
+        // 사용자 ID로 작성자 정보 조회
         Optional<User> byId = userRepository.findById(userId);
         User user = byId.get();
+
+        // 작성 시간과 작성자 정보 설정
         post.setCreatedDate(LocalDateTime.now());
         post.setUser(user);
+
+        // 게시글 저장
         postRepository.save(post);
+
     }
 
-    // 상세 페이지
+    // ID로 게시글을 조회하는 메서드 (상세 페이지용)
     public Post findById(Integer id) throws Exception {
+
         Optional<Post> post = this.postRepository.findById(id);
+
+        // 게시글 존재 여부 확인
         if (post.isPresent()) {
             return post.get();
         } else {
             throw new Exception("post not found");
         }
+
     }
 
-    // 조회 수
+    // 조회수를 업데이트하는 메서드 (트랜잭션 적용)
     @Transactional
     public int updateView(Integer id) {
+
         return postRepository.updateViews(id);
+
     }
 
-
-    // 이미지 널 값일때 기본 이미지 사용
+    // 이미지 URL이 널일 경우 기본 이미지를 사용하는 메서드
     public String postImgUrl(String imgUrl) {
+
         if (imgUrl.isEmpty()) {
-            return "";
+            return "";  // 기본 이미지를 설정할 수 있음
         }
+
         return imgUrl;
+
     }
 
-    // 주변모임 보여주기
+    // 주변 모임을 보여주는 메서드 (주소 기준)
     public List<Post> findByroadAddress(String keyword, int postId) {
-        // 공백으로 나눈 첫 번째 두 단어를 사용해 주소를 찾기
+
+        // 키워드에서 첫 두 단어 추출하여 주소 검색에 사용
         String[] locationParts = keyword.split(" ");
         String locationfix = locationParts[0] + " " + locationParts[1];
 
-
+        // 주소를 기준으로 게시물 검색
         return postRepository.findByroadAddress(locationfix, postId);
+
     }
 
+    // 제목을 기준으로 게시글을 검색하는 메서드
     public Page<Post> searchPostsByTitle(String title, Pageable pageable) {
+
         return postRepository.findByTitleContaining(title, pageable);
+
     }
 
+    // 조회수가 높은 상위 게시글 목록을 가져오는 메서드
     public List<Post> findTopPostsByViews(int limit) {
+
         Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "viewCount"));
+
         return postRepository.findAll(pageable).getContent();
+
     }
 
-
+    // 태그를 기준으로 게시글을 검색하는 메서드
     public Page<Post> searchPostByTag(String tag, Pageable pageable) {
-        return postRepository.findByTagContaining(tag,pageable);
+
+        return postRepository.findByTagContaining(tag, pageable);
+
     }
 }

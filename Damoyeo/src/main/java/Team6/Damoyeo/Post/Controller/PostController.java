@@ -30,107 +30,116 @@ import java.util.List;
 @PropertySource("classpath:config.properties")
 public class PostController {
 
-    // 좋아요 버튼 기능
+    // 좋아요 기능의 상태를 저장하는 변수
     boolean like = false;
 
+    // Kakao 지도 API 키를 config.properties 파일에서 가져옴
     @Value("${KAKAO_MAP_API_KEY}")
     private String API_KEY;
 
+    // Post 관련 서비스 클래스
     private final PostService postService;
+
+    // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
 
-    // 메인 화면
+    // 메인 페이지
     @GetMapping("/main")
     public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
                                @SessionAttribute(name = "userId", required = false) Integer userId, Model model,
                                @Nullable @RequestParam(name = "search") String search,
-                               @RequestParam(name = "tag",required = false) String tag) {
+                               @RequestParam(name = "tag", required = false) String tag) {
 
-        int pageSize = 6;
+        int pageSize = 6;  // 페이지당 게시물 수
         Page<Post> postPage;
+
+        // 검색 조건에 따라 페이지 요청
         if (search != null && !search.isEmpty()) {
             postPage = postService.searchPostsByTitle(search, PageRequest.of(page, pageSize));
         } else if (tag != null && !tag.isEmpty()) {
-
             postPage = postService.searchPostByTag(tag, PageRequest.of(page, pageSize));
-        }else {
+        } else {
             postPage = postService.findPostsByPage(page, pageSize);
         }
 
-        List<Post> posts = postPage.getContent();
-        boolean hasNextPage = postPage.hasNext();
+        List<Post> posts = postPage.getContent();  // 현재 페이지의 게시물 목록
+        boolean hasNextPage = postPage.hasNext();  // 다음 페이지 여부
 
+        // 모델에 데이터 추가
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
         model.addAttribute("userId", userId);
         model.addAttribute("search", search);
-        model.addAttribute("tag",tag);
+        model.addAttribute("tag", tag);
 
-        return "post/main";
+        return "post/main";  // 메인 페이지로 이동
+
     }
 
+    // 게시물 작성 페이지
     @GetMapping("/create")
     public String createPost(Model model) {
+
+        // API 키와 새 Post 객체를 모델에 추가
         model.addAttribute("apiKey", API_KEY);
         model.addAttribute("post", new Post());
-        return "post/create";
+
+        return "post/create";  // 게시물 작성 페이지로 이동
+
     }
 
-//    @GetMapping("/detail{id}")
-//    public String detailPost(Model model, @PathVariable int id) {
-//        return "post/detail";
-//    }
-
-    //상세 페이지
-    @GetMapping("/detail{id}")
-    public String detailPost(Model model, @PathVariable("id") Integer id,
-                             @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
-        Post post = this.postService.findById(id);
-        //조회수 업데이트
-        postService.updateView(id);
-
-        //현재 게시물의 상세 주소에서 관련된 모임 조회
-        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(), id);
-
-        model.addAttribute("post", post);
-        model.addAttribute("userId", userId);
-        model.addAttribute("nearby", nearby);
-        model.addAttribute("apiKey", API_KEY);
-        return "post/detail";
-    }
-
+    // 게시물 저장 처리
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
                            RedirectAttributes redirectAttributes,
                            @SessionAttribute(name = "userId", required = false) Integer userId) throws IOException {
 
+        // 파일 업로드 여부 확인
         if (file.isEmpty()) {
-            post.setPhotoUrl("nullDefult.png");
+            post.setPhotoUrl("nullDefult.png");  // 기본 이미지 설정
         } else {
-            // catch 문이 필요없어서 주석 처리 실행 대신 메서드에 throws 걸어놓음
-//            try {
-            // static/uploads 디렉토리에 파일 저장
+
+            // 파일을 저장할 경로 설정
             String uploadDir = UPLOAD_DIRECTORY;
             Path path = Paths.get(uploadDir + file.getOriginalFilename());
             Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
-            file.transferTo(path);
+            file.transferTo(path);  // 파일 저장
 
-            // 저장한 이미지의 URL을 Post 객체에 설정
+            // 저장된 이미지의 URL을 Post 객체에 설정
             post.setPhotoUrl(file.getOriginalFilename());
-//                // 게시물 저장
-//                postService.savePost(post);
-
             redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                redirectAttributes.addFlashAttribute("message", "File upload failed.");
-//                return "redirect:/post/create"; // 업로드 실패 시 리다이렉트 경로 수정
-//            }
+
         }
+
+        // 게시물 저장
         postService.savePost(post, userId);
-        return "redirect:/post/main";
+
+        return "redirect:/post/main";  // 메인 페이지로 리다이렉트
+
     }
 
+    // 게시물 상세 페이지
+    @GetMapping("/detail{id}")
+    public String detailPost(Model model, @PathVariable("id") Integer id,
+                             @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
+
+        Post post = this.postService.findById(id);  // ID로 게시물 찾기
+
+        // 조회수 업데이트
+        postService.updateView(id);
+
+        // 현재 게시물의 주소와 관련된 다른 게시물 조회
+        List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(), id);
+
+        // 모델에 데이터 추가
+        model.addAttribute("post", post);
+        model.addAttribute("userId", userId);
+        model.addAttribute("nearby", nearby);
+        model.addAttribute("apiKey", API_KEY);
+
+        return "post/detail";  // 상세 페이지로 이동
+
+    }
 
 }

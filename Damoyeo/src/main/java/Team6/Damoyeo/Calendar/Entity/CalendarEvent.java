@@ -1,4 +1,4 @@
-package Team6.Damoyeo.Calendar.Entity;
+package Team6.Damoyeo.calendar.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

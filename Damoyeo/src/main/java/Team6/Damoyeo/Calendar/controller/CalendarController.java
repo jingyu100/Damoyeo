@@ -13,8 +13,11 @@ public class CalendarController {
     @GetMapping("main")
     public String main( @SessionAttribute(name = "userId", required = false)Integer userId,
                         Model model) {
+
         model.addAttribute("userId", userId);
+
         return "calendar/main";
+        
     }
 
 }
