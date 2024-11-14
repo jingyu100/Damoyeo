@@ -31,7 +31,7 @@ public class MainController {
 
         model.addAttribute("posts", topPosts);
         model.addAttribute("userId", userId);
-        
+
         return "main";
 
     }

@@ -3,28 +3,32 @@
 <link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <title>Chat Room</title>
+    <!-- SockJS와 STOMP.js 라이브러리 추가 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
 </head>
 <body>
+<!-- 네비게이션 바 포함 -->
 <div th:replace="~{topnav.html}"></div>
 
-<!-- 채팅방이 자동으로 로드되므로 로그인 페이지는 필요하지 않음 -->
+<!-- 로그인 페이지는 채팅방 자동 로드 시 필요하지 않음 -->
 <div id="login-page" style="display:none;">
-    <button onclick="enterChatRoom()">Enter Chat Room</button>
+    <button onclick="enterChatRoom()">채팅방 입장</button>
 </div>
 
 <!-- 채팅방 -->
 <div id="chat-room" style="display:none;">
     <ul id="messageArea"></ul>
-    <input type="text" id="message" placeholder="Type your message..."/>
-    <button onclick="sendMessage()">Send</button>
+    <input type="text" id="message" placeholder="메세지를 입력해주세요"/>
+    <button onclick="sendMessage()"> 전송하기</button>
 </div>
 
 <script type="text/javascript" th:inline="javascript">
     var stompClient = null;
-    var username = /*[[${session.userNickName}]]*/ ""; // session의 userId를 사용
+    // 세션에 저장된 사용자 닉네임 가져오기
+    var username = /*[[${session.userNickName}]]*/ "";
 
+    // 채팅방 입장 함수
     function enterChatRoom() {
         if (username) {
             document.getElementById("login-page").style.display = 'none';
@@ -33,10 +37,12 @@
         }
     }
 
+    // 서버에 연결하고 메시지 수신 구독 설정
     function connect() {
-        var socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
+        var socket = new SockJS('/ws'); // SockJS를 통해 웹소켓 연결 생성
+        stompClient = Stomp.over(socket); // STOMP 클라이언트 생성
         stompClient.connect({}, function (frame) {
+            // 공용 채팅방 토픽 구독
             stompClient.subscribe('/topic/public', function (message) {
                 showMessage(JSON.parse(message.body));
             });
@@ -49,6 +55,7 @@
         });
     }
 
+    // 메시지를 전송하는 함수
     function sendMessage() {
         var messageContent = document.getElementById("message").value.trim();
         if (messageContent && stompClient) {
@@ -58,15 +65,16 @@
                 type: 'CHAT'
             };
             stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
-            document.getElementById("message").value = '';
+            document.getElementById("message").value = ''; // 입력 창 비우기
         }
     }
 
+    // 받은 메시지를 화면에 표시하는 함수
     function showMessage(message) {
+        console.log("Received message type: " + message.type); // 확인용 로그 추가
         var messageArea = document.getElementById("messageArea");
         var messageElement = document.createElement('li');
 
-        // 메시지 타입에 따라 표시할 내용을 달리함
         if (message.type === 'JOIN') {
             messageElement.classList.add('event-message');
             messageElement.innerHTML = message.sender + ' joined!';
@@ -79,11 +87,15 @@
         messageArea.appendChild(messageElement);
     }
 
-    // 페이지가 로드될 때 자동으로 채팅방에 입장
+
+    // 페이지가 로드되면 채팅방에 자동 입장
     window.onload = function () {
         enterChatRoom();
     };
+
 </script>
+
+<!-- 푸터 포함 -->
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>

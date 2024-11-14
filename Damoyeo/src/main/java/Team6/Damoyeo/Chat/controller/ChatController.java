@@ -52,8 +52,10 @@ public class ChatController {
     // 새로운 사용자가 채팅에 참여할 때 호출되는 메서드
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
-    public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor,
-                               @SessionAttribute(name = "userId", required = false) Integer userId) {
+    public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+
+        System.out.println("Sender: " + chatMessage.getSender());
+        System.out.println("Message Type: " + chatMessage.getType());
 
         // 사용자 이름을 세션에 저장
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
