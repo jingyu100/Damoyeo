@@ -24,11 +24,16 @@ public class MainController {
     // 조회수 기준으로 내림차순 정렬해서 6개 노출
     @GetMapping("/")
     public String goMain(@SessionAttribute(name = "userId", required = false) Integer userId, Model model) {
+
         int limit = 6;
+
         List<Post> topPosts = postService.findTopPostsByViews(limit);
+
         model.addAttribute("posts", topPosts);
         model.addAttribute("userId", userId);
+        
         return "main";
+
     }
 
 
