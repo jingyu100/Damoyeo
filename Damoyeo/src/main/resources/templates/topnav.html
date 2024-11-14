@@ -15,14 +15,14 @@
     <th:block th:if="${userId == null}">
         <div class="top-nav-box2">
             <a href="/user/login">로그인</a>
-            <div class="profile-icon"></div>
+<!--            <div class="profile-icon"></div>-->
         </div>
     </th:block>
 
     <th:block th:if="${userId != null}">
         <div class="top-nav-box2">
             <a href="/user/logout">로그아웃</a>
-            <div class="profile-icon"></div>
+            <img th:src="@{|/uploads/${user.photoUrl}|}" style="width: 40px; height: 40px" alt="">
             <a href="/user/profile">프로필</a>
         </div>
     </th:block>

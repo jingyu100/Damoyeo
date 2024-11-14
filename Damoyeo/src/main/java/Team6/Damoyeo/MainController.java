@@ -2,6 +2,8 @@ package Team6.Damoyeo;
 
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
+import Team6.Damoyeo.User.Entity.User;
+import Team6.Damoyeo.User.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.constraints.Max;
@@ -20,6 +22,7 @@ import java.util.List;
 public class MainController {
 
     private final PostService postService;
+    private final UserService userService;
 
     // 조회수 기준으로 내림차순 정렬해서 6개 노출
     @GetMapping("/")
@@ -29,8 +32,15 @@ public class MainController {
 
         List<Post> topPosts = postService.findTopPostsByViews(limit);
 
+        User user = null;
+
+        if (userId != null) {
+            user = userService.findByUser(userId);
+        }
+
         model.addAttribute("posts", topPosts);
         model.addAttribute("userId", userId);
+        model.addAttribute("user", user);
 
         return "main";
 
