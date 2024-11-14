@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ChatMessage {
+
     private String content;
     private String sender;
     private MessageType type;
@@ -16,6 +17,5 @@ public class ChatMessage {
         LEAVE
     }
 
-    // Getter, Setter
 }
 
