@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout/basic">
+    layout:decorate="layout/basic">
 <link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <title>상세 페이지</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         .map_wrap {
             position: relative;
@@ -112,29 +113,38 @@
             font-family: 'Pretendard-Regular', sans-serif;
         }
 
+        .content-section{
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            height: 100%;
+            margin-left: 2rem;
+        }
+
         .section{
-            width: 60%;
+            width: 80%;
+            display: flex;
+            justify-content: center;
+            margin: 0 auto;
+        }
+
+        .page_title{
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            margin: 0 auto;
-        }
-        .page_title{
-            display: flex;
-            justify-content: center;
-            width: 700px;
-            height: 500px;
+            width: 50%;
+            height: 100%;
         }
 
 
         .page_title > img {
-           border-radius: 8px;
+            width: 100%;
+            height: 100%;
         }
 
         table{
             height: 400px;
-        }
+        }   
 
         table tbody td {
             width: 100%;
@@ -148,8 +158,6 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-
-
         }
         
         
@@ -160,9 +168,9 @@
         }
 
         #content{
+            height:400px;
             font-size: 17px;
             font-weight: normal;
-            margin-bottom: 20px;
         }
 
         #address{
@@ -177,6 +185,51 @@
             color: black;
         }
 
+        .profile{
+            display: flex;
+            padding-bottom: 1rem;
+            padding-top: 1rem;
+        
+        }
+
+        .profile-img{
+            width:64px;
+            height:64px;
+        }
+
+        .profile-name, .profile-address{
+            display: flex;
+            width: 100%;
+            height: 50%;
+            align-items: center;
+        }
+
+        .profile-name{
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .profile-address{
+            font-size: 16px;
+            font-weight: 100;
+        }
+
+        .profile-img{
+            font-size: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .nearBy-post > ul{
+            display: flex   ;
+        }
+
+
+        
+
+
+
         
 
     </style>
@@ -186,9 +239,20 @@
 <div th:replace="~{topnav.html}"></div>
 <div class="section">
     <div class="page_title">
-        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image" style="width: 600px; height: 500px;">
+        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image">
+        <div class="profile-container">
+            <div class="profile">
+                <div class="profile-img">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-text">
+                    <div class="profile-name">사용자 이름</div>
+                    <div class="profile-address">사용자 주소</div>
+                </div>
+            </div>
+        </div>
     </div>
-<div class="content">
+<div class="content-section">
     <div class="content">
         <div class="row" id="title">
             <h1 class="value" th:text="${post.title}"></h1>
@@ -211,9 +275,9 @@
         <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
         <div class="custom_zoomcontrol radius_border">
             <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-                                          alt="확대"></span>
+                                        alt="확대"></span>
             <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
-                                           alt="축소"></span>
+                                        alt="축소"></span>
         </div>
     </div>
 
@@ -291,23 +355,24 @@
     <div class="row" id="count">
         <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 조회수"></div>
     </div>
-    <div class="nearBy-post">
-        <h3>주변 모임</h3>
-        <ul>
-            <li th:each="nearby : ${nearby}">
-                <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}" alt="Nearby Post Image" style="width: 250px; height: 250px;">
-                    <div class="nearby-title" th:text="${nearby.title}">제목</div>
-                    <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span th:text="${nearby.maxParticipants}">0</span></div>
-                    <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
-                </a>
-            </li>
-        </ul>
-    </div>
+    
     <div class="btn_set">
-        <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
-        <a th:href="@{/chat}" class="chat_mainpage">참여하기</a>
+        <button th:href="@{/post/main}" class="post_mainpage">메인페이지</button>
+        <button th:href="@{/chat}" class="chat_mainpage">참여하기</button>
     </div>
 </div>
+</div>
+<div class="nearBy-post">
+    <h3>주변 모임</h3>
+    <ul>
+        <li th:each="nearby : ${nearby}">
+            <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}" alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                <div class="nearby-title" th:text="${nearby.title}">제목</div>
+                <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span th:text="${nearby.maxParticipants}">0</span></div>
+                <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
+            </a>
+        </li>
+    </ul>
 </div>
 <div th:replace="~{footer.html}"></div>
 </body>
