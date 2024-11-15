@@ -1,5 +1,6 @@
 package Team6.Damoyeo.chat.controller;
 
+import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import Team6.Damoyeo.chat.dto.ChatMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,7 +30,15 @@ public class ChatController {
         if (userId == null) {
             return "redirect:/user/login";
         }
+        //넣기
+        User user = null;
 
+        if (userId != null) {
+            user = userService.findByUser(userId);
+        }
+        model.addAttribute("user", user);
+        
+        
         // 사용자 닉네임을 가져와 세션과 모델에 설정
         HttpSession session = request.getSession();
         String userNickName = userService.findByUserId(userId);

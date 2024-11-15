@@ -2,6 +2,8 @@ package Team6.Damoyeo.Post.Controller;
 
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
+import Team6.Damoyeo.User.Entity.User;
+import Team6.Damoyeo.User.Service.UserService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,6 +42,9 @@ public class PostController {
     // Post 관련 서비스 클래스
     private final PostService postService;
 
+    // User관련 서비스 클래스
+    private final UserService userService;
+
     // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
 
@@ -65,6 +70,12 @@ public class PostController {
         List<Post> posts = postPage.getContent();  // 현재 페이지의 게시물 목록
         boolean hasNextPage = postPage.hasNext();  // 다음 페이지 여부
 
+        User user = null;
+
+        if (userId != null) {
+            user = userService.findByUser(userId);
+        }
+        model.addAttribute("user", user);
         // 모델에 데이터 추가
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
