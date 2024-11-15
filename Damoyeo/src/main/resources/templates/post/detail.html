@@ -237,8 +237,8 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="profile-text">
-                    <div class="profile-name">사용자 이름</div>
-                    <div class="profile-address">사용자 주소</div>
+                    <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
+<!--                    <div class="profile-address" th:text="${post.detailAddress}">사용자 주소</div>-->
                 </div>
             </div>
         </div>
@@ -255,6 +255,7 @@
             </div>
         </div>
         <div class="row">
+            <div th:text="${post.roadAddress}"></div>
             <div class="value" id="address" th:text="${post.detailAddress}"></div>
         </div>
         <div class="map_wrap" style="width:500px; height: 200px;">
