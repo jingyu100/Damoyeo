@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="layout/basic">
+      layout:decorate="layout/basic">
 <link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
@@ -109,11 +109,11 @@
         }
 
 
-        body{
+        body {
             font-family: 'Pretendard-Regular', sans-serif;
         }
 
-        .content-section{
+        .content-section {
             display: flex;
             flex-direction: column;
             width: 50%;
@@ -121,14 +121,14 @@
             margin-left: 2rem;
         }
 
-        .section{
+        .section {
             width: 80%;
             display: flex;
             justify-content: center;
             margin: 0 auto;
         }
 
-        .page_title{
+        .page_title {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -142,98 +142,89 @@
             height: 100%;
         }
 
-        table{
+        table {
             height: 400px;
-        }   
+        }
 
         table tbody td {
             width: 100%;
         }
-        
-        h1{
+
+        h1 {
             margin: 0px;
         }
-        
-        #title{
+
+        #title {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        
-        
-        #participants{
+
+
+        #participants {
             font-size: 17px;
             font-weight: bold;
             text-align: right;
         }
 
-        #content{
-            height:400px;
+        #content {
+            height: 400px;
             font-size: 17px;
             font-weight: normal;
         }
 
-        #address{
+        #address {
             font-size: 13px;
             font-weight: 400;
             color: black;
-            
+
         }
-        
-        #count{
+
+        #count {
             font-size: 12px;
             color: black;
         }
 
-        .profile{
+        .profile {
             display: flex;
             padding-bottom: 1rem;
             padding-top: 1rem;
-        
+
         }
 
-        .profile-img{
-            width:64px;
-            height:64px;
+        .profile-img {
+            width: 64px;
+            height: 64px;
         }
 
-        .profile-name, .profile-address{
+        .profile-name, .profile-address {
             display: flex;
             width: 100%;
             height: 50%;
             align-items: center;
         }
 
-        .profile-name{
+        .profile-name {
             font-size: 20px;
             font-weight: bold;
         }
 
-        .profile-address{
+        .profile-address {
             font-size: 16px;
             font-weight: 100;
         }
 
-        .profile-img{
+        .profile-img {
             font-size: 40px;
             display: flex;
             justify-content: center;
             align-items: center;
         }
 
-        .nearBy-post > ul{
-            display: flex   ;
+        .nearBy-post > ul {
+            display: flex;
         }
-
-
-        
-
-
-
-        
-
     </style>
-
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
@@ -252,124 +243,132 @@
             </div>
         </div>
     </div>
-<div class="content-section">
-    <div class="content">
-        <div class="row" id="title">
-            <h1 class="value" th:text="${post.title}"></h1>
-            <div class="value" id="participants" th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+    <div class="content-section">
+        <div class="content">
+            <div class="row" id="title">
+                <h1 class="value" th:text="${post.title}"></h1>
+                <div class="value" id="participants"
+                     th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+            </div>
+            <div class="row" id="content-container">
+                <div class="value" id="content" th:text="${post.content}"></div>
+            </div>
         </div>
-        <div class="row" id="content-container">
-            <div class="value" id="content" th:text="${post.content}"></div>
+        <div class="row">
+            <div class="value" id="address" th:text="${post.detailAddress}"></div>
         </div>
-    </div>
-    <div class="row">
-        <div class="value" id="address" th:text="${post.detailAddress}"></div>
-    </div>
-    <div class="map_wrap" style="width:500px; height: 200px;">
-        <div id="map" style="width:500px;height:200px;position:relative;overflow:hidden;"></div>
-        <!-- 지도타입 컨트롤 div 입니다 -->
-        <div class="custom_typecontrol radius_border">
-            <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
-            <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
-        </div>
-        <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
-        <div class="custom_zoomcontrol radius_border">
+        <div class="map_wrap" style="width:500px; height: 200px;">
+            <div id="map" style="width:500px;height:200px;position:relative;overflow:hidden;"></div>
+            <!-- 지도타입 컨트롤 div 입니다 -->
+            <div class="custom_typecontrol radius_border">
+                <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
+                <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+            </div>
+            <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+            <div class="custom_zoomcontrol radius_border">
             <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-                                        alt="확대"></span>
-            <span onclick="zoomOut()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
-                                        alt="축소"></span>
+                                          alt="확대"></span>
+                <span onclick="zoomOut()"><img
+                        src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
+                        alt="축소"></span>
+            </div>
+        </div>
+
+        <!-- Thymeleaf를 통해 Kakao Maps API 키를 script 태그의 src에 직접 바인딩 -->
+        <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
+
+        <script th:inline="javascript">
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                    level: 3 // 지도의 확대 레벨
+                };
+
+            // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            function setMapType(maptype) {
+                var roadmapControl = document.getElementById('btnRoadmap');
+                var skyviewControl = document.getElementById('btnSkyview');
+                if (maptype === 'roadmap') {
+                    map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                    roadmapControl.className = 'selected_btn';
+                    skyviewControl.className = 'btn';
+                } else {
+                    map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                    skyviewControl.className = 'selected_btn';
+                    roadmapControl.className = 'btn';
+                }
+            }
+
+            // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomIn() {
+                map.setLevel(map.getLevel() - 1);
+            }
+
+            // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+            function zoomOut() {
+                map.setLevel(map.getLevel() + 1);
+            }
+
+
+            // 주소-좌표 변환 객체를 생성합니다
+            var geocoder = new kakao.maps.services.Geocoder();
+
+            var postAddress = ["[${post.roadAddress}]"];
+
+            // 주소로 좌표를 검색합니다
+            geocoder.addressSearch(postAddress, function (result, status) {
+
+                // 정상적으로 검색이 완료됐으면
+                if (status === kakao.maps.services.Status.OK) {
+
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                    // 결과값으로 받은 위치를 마커로 표시합니다
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords
+                    });
+
+                    // 인포윈도우로 장소에 대한 설명을 표시합니다
+                    // var infowindow = new kakao.maps.InfoWindow({
+                    //     content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
+                    // });
+                    // infowindow.open(null, marker);
+
+                    // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                    map.setCenter(coords);
+                }
+            });
+        </script>
+
+
+        <hr>
+        <div class="row" id="count">
+            <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 조회수"></div>
+        </div>
+
+        <div class="btn_set">
+            <a th:href="@{/post/main}">
+                <button class="post_mainpage">메인페이지</button>
+            </a>
+            <a th:href="@{/chat}">
+                <button class="chat_mainpage">참여하기</button>
+            </a>
         </div>
     </div>
-
-    <!-- Thymeleaf를 통해 Kakao Maps API 키를 script 태그의 src에 직접 바인딩 -->
-    <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
-
-    <script th:inline="javascript">
-        var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-            mapOption = {
-                center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                level: 3 // 지도의 확대 레벨
-            };
-
-        // 지도를 생성합니다
-        var map = new kakao.maps.Map(mapContainer, mapOption);
-
-        function setMapType(maptype) {
-            var roadmapControl = document.getElementById('btnRoadmap');
-            var skyviewControl = document.getElementById('btnSkyview');
-            if (maptype === 'roadmap') {
-                map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-                roadmapControl.className = 'selected_btn';
-                skyviewControl.className = 'btn';
-            } else {
-                map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-                skyviewControl.className = 'selected_btn';
-                roadmapControl.className = 'btn';
-            }
-        }
-
-        // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomIn() {
-            map.setLevel(map.getLevel() - 1);
-        }
-
-        // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-        function zoomOut() {
-            map.setLevel(map.getLevel() + 1);
-        }
-
-
-        // 주소-좌표 변환 객체를 생성합니다
-        var geocoder = new kakao.maps.services.Geocoder();
-
-        var postAddress = ["[${post.roadAddress}]"];
-
-        // 주소로 좌표를 검색합니다
-        geocoder.addressSearch(postAddress, function (result, status) {
-
-            // 정상적으로 검색이 완료됐으면
-            if (status === kakao.maps.services.Status.OK) {
-
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-                // 결과값으로 받은 위치를 마커로 표시합니다
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
-                });
-
-                // 인포윈도우로 장소에 대한 설명을 표시합니다
-                // var infowindow = new kakao.maps.InfoWindow({
-                //     content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
-                // });
-                // infowindow.open(null, marker);
-
-                // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                map.setCenter(coords);
-            }
-        });
-    </script>
-
-
-    <hr>
-    <div class="row" id="count">
-        <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 조회수"></div>
-    </div>
-    
-    <div class="btn_set">
-        <button th:href="@{/post/main}" class="post_mainpage">메인페이지</button>
-        <button th:href="@{/chat}" class="chat_mainpage">참여하기</button>
-    </div>
-</div>
 </div>
 <div class="nearBy-post">
     <h3>주변 모임</h3>
     <ul>
         <li th:each="nearby : ${nearby}">
-            <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}" alt="Nearby Post Image" style="width: 250px; height: 250px;">
-                <div class="nearby-title" th:text="${nearby.title}">제목</div>
-                <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span th:text="${nearby.maxParticipants}">0</span></div>
-                <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
+            <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
+                 alt="Nearby Post Image" style="width: 250px; height: 250px;">
+            <div class="nearby-title" th:text="${nearby.title}">제목</div>
+            <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
+                    th:text="${nearby.maxParticipants}">0</span></div>
+            <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
             </a>
         </li>
     </ul>
