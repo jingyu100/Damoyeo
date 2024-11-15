@@ -234,11 +234,11 @@
         <div class="profile-container">
             <div class="profile">
                 <div class="profile-img">
-                    <i class="fas fa-user"></i>
+                    <img class="fas fa-user" th:src="@{|/uploads/${post.user.photoUrl}|}" style="width: 70px; height: 70px;" alt="">
                 </div>
                 <div class="profile-text">
                     <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
-<!--                    <div class="profile-address" th:text="${post.detailAddress}">사용자 주소</div>-->
+                    <!--                    <div class="profile-address" th:text="${post.detailAddress}">사용자 주소</div>-->
                 </div>
             </div>
         </div>
