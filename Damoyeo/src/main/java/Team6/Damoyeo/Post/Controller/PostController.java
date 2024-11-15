@@ -69,14 +69,14 @@ public class PostController {
 
         List<Post> posts = postPage.getContent();  // 현재 페이지의 게시물 목록
         boolean hasNextPage = postPage.hasNext();  // 다음 페이지 여부
-
+        // 프로필 사진 넣기를 위한 user생성
         User user = null;
 
         if (userId != null) {
             user = userService.findByUser(userId);
         }
-        model.addAttribute("user", user);
         // 모델에 데이터 추가
+        model.addAttribute("user", user);
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
@@ -142,8 +142,14 @@ public class PostController {
 
         // 현재 게시물의 주소와 관련된 다른 게시물 조회
         List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(), id);
+        // 프로필 사진 넣기를 위한 user생성
+        User user = null;
 
+        if (userId != null) {
+            user = userService.findByUser(userId);
+        }
         // 모델에 데이터 추가
+        model.addAttribute("user", user);
         model.addAttribute("post", post);
         model.addAttribute("userId", userId);
         model.addAttribute("nearby", nearby);

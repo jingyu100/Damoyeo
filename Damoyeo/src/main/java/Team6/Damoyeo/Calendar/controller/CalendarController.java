@@ -20,6 +20,7 @@ public class CalendarController {
     @GetMapping("main")
     public String main(@SessionAttribute(name = "userId", required = false) Integer userId,
                        Model model) {
+        // 프로필 사진 넣기를 위한 user생성
         User user = null;
 
         if (userId != null) {

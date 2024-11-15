@@ -30,19 +30,20 @@ public class ChatController {
         if (userId == null) {
             return "redirect:/user/login";
         }
-        //넣기
+        // 프로필 사진 넣기를 위한 user생성
         User user = null;
 
         if (userId != null) {
             user = userService.findByUser(userId);
         }
-        model.addAttribute("user", user);
+
         
         
         // 사용자 닉네임을 가져와 세션과 모델에 설정
         HttpSession session = request.getSession();
         String userNickName = userService.findByUserId(userId);
         model.addAttribute("userId", userId);
+        model.addAttribute("user", user);
         session.setAttribute("userNickName", userNickName);
 
         return "chat/chat";  // chat 페이지 반환
