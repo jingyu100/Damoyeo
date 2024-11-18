@@ -9,58 +9,123 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
+<br><br>
+<style>
+    .profile-modify {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .details {
+        margin-top: 10px;
+        font-size: 1.5em;
+        width: 50%; /* 테이블 너비 조정 */
+        border-spacing: 0px 10px; /* 항목 간 간격 조정 */
+    }
+    .details th {
+        text-align: left;
+        color: #555;
+        width: 40%; /* 텍스트 칸을 좁게 조정 */
+        padding-right: 5px; /* 텍스트와 입력 필드 간격 조정 */
+    }
+    .details td {
+        text-align: left;
+        width: 60%; /* 입력 필드 칸을 넓게 조정 */
+    }
+    .details input {
+        width: 50%; /* 입력 필드와 텍스트 영역 너비를 줄여서 중앙으로 밀착 */
+        padding: 10px;
+        margin: 0 auto;
+    }
+    .details textarea {
+        width: 50%;
+        padding: 10px;
+        margin: 0 auto;
+}
+    .details select {
+        width: 30%;
+        padding: 5px;
+        margin: 0 auto;
+}
+    #photoUrl + label {
+        display: inline-block;
+        margin-top: 5px;
+        cursor: pointer;
+        font-size: 0.9em;
+        text-align: center;
+    }
+    button {
+        margin-top: 20px;
+        padding: 15px 25px; /* 버튼 크기 조정 */
+        font-size: 1em;
+        border: none;
+        background-color: #007BFF;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
 <div class="content">
     <form th:action="@{/user/editprofile}" method="post" th:object="${user}" enctype="multipart/form-data">
-        <table>
-            <tbody>
-            <tr>
-                <th scope="row">닉네임</th>
-                <td>
-                    <input type="text" class="text" th:field="*{nickname}" required>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">자기소개</th>
-                <td>
-                    <textarea id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="5" required></textarea>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">지역</th>
-                <td>
-                    <select class="area" th:field="*{area}">
-                        <option value="서울">서울</option>
-                        <option value="인천">인천</option>
-                        <option value="경기">경기</option>
-                        <option value="강원">강원</option>
-                        <option value="충남">충남</option>
-                        <option value="세종">세종</option>
-                        <option value="대전">대전</option>
-                        <option value="충북">충북</option>
-                        <option value="경북">경북</option>
-                        <option value="대구">대구</option>
-                        <option value="울산">울산</option>
-                        <option value="경남">경남</option>
-                        <option value="부산">부산</option>
-                        <option value="전북">전북</option>
-                        <option value="광주">광주</option>
-                        <option value="전남">전남</option>
-                        <option value="제주">제주</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <th scope="row">프로필 사진</th>
-                <td>
-                    <input type="file" name="photo" id="photoUrl"/>
-                    <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <button type="submit">수정</button>
+        <div class="profile-modify">
+            <table class="details">
+                <tbody>
+                <tr>
+                    <th scope="row">닉네임</th>
+                    <td>
+                        <input type="text" class="text" th:field="*{nickname}" required>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">자기소개</th>
+                    <td>
+                        <textarea id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required></textarea>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">지역</th>
+                    <td>
+                        <select class="area" th:field="*{area}">
+                            <option value="서울">서울</option>
+                            <option value="인천">인천</option>
+                            <option value="경기">경기</option>
+                            <option value="강원">강원</option>
+                            <option value="충남">충남</option>
+                            <option value="세종">세종</option>
+                            <option value="대전">대전</option>
+                            <option value="충북">충북</option>
+                            <option value="경북">경북</option>
+                            <option value="대구">대구</option>
+                            <option value="울산">울산</option>
+                            <option value="경남">경남</option>
+                            <option value="부산">부산</option>
+                            <option value="전북">전북</option>
+                            <option value="광주">광주</option>
+                            <option value="전남">전남</option>
+                            <option value="제주">제주</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">프로필 사진</th>
+                    <td>
+                        <input type="file" name="photo" id="photoUrl"/>
+                        <label for="photoUrl"><i class="fas fa-upload"></i> 파일 업로드</label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit">수정</button>
+        </div>
     </form>
 </div>
+
+<br><br>
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>

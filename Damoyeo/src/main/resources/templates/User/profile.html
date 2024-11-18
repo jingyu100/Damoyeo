@@ -9,7 +9,8 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
-<!--메인 부분-->
+<br><br>
+<!--메인 시작부분 -->
 <style>
     .content {
         font-family: Arial, sans-serif;
@@ -25,8 +26,8 @@
     }
 
     .profile-photo img {
-        width: 240px;
-        height: 240px;
+        width: 250px;
+        height: 250px;
         border-radius: 50%;
     }
 
@@ -39,17 +40,14 @@
 
     .profile-info h2 {
         margin: 0;
-        font-size: 1.8em;
+        font-size: 2.0em;
         display: flex;
         align-items: center;
-        justify-content: flex-start; /* 닉네임과 버튼 정렬 */
-        gap: 40px; /* 닉네임과 버튼 사이 간격 추가 */
-    }
-
-    .profile-info p {
-        margin: 10px 0;
-        color: black;
-        font-size: 1.2em;
+        justify-content: space-between; /* 닉네임과 버튼 사이 정렬 */
+        gap: 10px; /* 최소 간격 설정 */
+        flex-wrap: nowrap; /* 항목이 줄바꿈되지 않도록 설정 */
+        overflow: hidden; /* 넘치는 내용 숨김 */
+        white-space: nowrap; /* 한 줄로 고정 */
     }
 
     .profilemodify a {
@@ -61,6 +59,7 @@
         border-radius: 5px;
         font-size: 0.8em;
         transition: background-color 0.3s;
+        flex-shrink: 0; /* 버튼이 크기 변화에 영향을 받지 않도록 설정 */
     }
 
     .profilemodify a:hover {
@@ -69,13 +68,14 @@
 
     .details {
         margin-top: 10px;
-        font-size: 1.2em;
+        font-size: 1.3em;
     }
 
     .details th {
         text-align: left;
         color: #555;
         width: 20%;
+        white-space: nowrap; /* 줄바꿈 방지 */
     }
 
     .details td {
@@ -86,38 +86,26 @@
 <div class="content">
     <div class="profile-header">
         <div class="profile-photo">
-            <img th:src="@{|/uploads/${user.photoUrl}|}" alt="Post Image" style="max-width: 50%; height: auto;">
+            <img th:src="@{|/uploads/${user.photoUrl}|}" alt="Post Image">
         </div>
         <div class="profile-info">
             <h2>
-                <td th:text="${user.nickname}"></td>
+                <td th:text="${#strings.abbreviate(user.nickname, 10)}"></td> <!--#닉네임을 최대 10자로 제한-->
                 <div class="profilemodify">
                     <a href="/user/editprofile">프로필 수정</a>
                 </div>
+                <img th:src="@{/uploads/cogwheel.png}" alt="Settings Icon" style="width: 50px; height: 50px;">
             </h2>
             <br>
-            <p>게시물: 0</p>
             <table class="details">
                 <tbody>
-                <tr>
-                    <th scope="row">성별:</th>
-                    <td th:text="${user.gender}"></td>
-                </tr>
-                <tr>
-                    <th scope="row">자기소개:</th>
-                    <td th:text="${user.comment}"></td>
-                </tr>
                 <tr>
                     <th scope="row">지역:</th>
                     <td th:text="${user.area}"></td>
                 </tr>
                 <tr>
-                    <th scope="row">추가1 :</th>
-                    <td>추가</td>
-                </tr>
-                <tr>
-                    <th scope="row">추가2 :</th>
-                    <td>추가</td>
+                    <th scope="row">자기소개:</th>
+                    <td th:text="${user.comment}"></td>
                 </tr>
                 </tbody>
             </table>
@@ -125,14 +113,14 @@
     </div>
 </div>
 <br><br>
-<!-- 메인 끝 부분-->
+<!--메인 끝 부분-->
 
 <!-- 메인 게시물 시작 부분-->
 <style>
     .divider {
-        width: 50%;
-        border-top: 1px solid #ddd;
-        margin: 20px auto;
+        width: 80%;
+        border-top: 3px solid #ddd;
+        margin: 30px auto;
         position: relative;
         text-align: center;
     }
@@ -153,7 +141,6 @@
 </div>
 <br><br><br><br><br>
 <!--메인 게시물 끝 부분-->
-
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>
