@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout/basic">
+    layout:decorate="layout/basic">
 <link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
@@ -109,23 +109,26 @@
         }
 
 
-        body {
+        html, body {
             font-family: 'Pretendard-Regular', sans-serif;
+            height: 100%;
         }
 
         .content-section {
             display: flex;
             flex-direction: column;
             width: 50%;
-            height: 100%;
+            height: 100%;   
             margin-left: 2rem;
         }
 
         .section {
-            width: 80%;
+            width: 70%;
+            height: 70%;
             display: flex;
-            justify-content: center;
             margin: 0 auto;
+            margin-top: 50px;
+            margin-bottom: 50px;
         }
 
         .page_title {
@@ -134,20 +137,14 @@
             justify-content: center;
             width: 50%;
             height: 100%;
+            gap: 65px;
         }
 
 
         .page_title > img {
             width: 100%;
-            height: 100%;
-        }
-
-        table {
-            height: 400px;
-        }
-
-        table tbody td {
-            width: 100%;
+            height: 80%;
+            
         }
 
         h1 {
@@ -168,7 +165,7 @@
         }
 
         #content {
-            height: 400px;
+            height: 300px;
             font-size: 17px;
             font-weight: normal;
         }
@@ -189,16 +186,20 @@
 
         .profile {
             display: flex;
-            padding-bottom: 1rem;
-            padding-top: 1rem;
-
         }
 
         .profile-img {
-            width: 64px;
-            height: 64px;
+            width: 70px;
+            height: 70px;
             margin-right: 20px;
         }
+
+        .profile-img > img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+
 
         .profile-name, .profile-address {
             display: flex;
@@ -317,6 +318,16 @@
             text-align: center;
             margin-right: 5px;
         }
+
+        .date-container{
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        
+
+        
+
     </style>
 </head>
 <body>
@@ -328,8 +339,7 @@
         <div class="profile-container">
             <div class="profile">
                 <div class="profile-img">
-                    <img class="" th:src="@{|/uploads/${post.user.photoUrl}|}" style="width: 70px; height: 70px;"
-                         alt="">
+                    <img class="" th:src="@{|/uploads/${post.user.photoUrl}|}" alt="">
                 </div>
                 <div class="profile-text">
                     <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
@@ -343,7 +353,11 @@
             <div class="row" id="title">
                 <h1 class="value" th:text="${post.title}"></h1>
                 <div class="value" id="participants"
-                     th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+                    th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+            </div>
+            <div class="date-container">
+<!--                날짜 포멧팅-->
+                <div class="date" th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
             </div>
             <div class="row" id="content-container">
                 <div class="value" id="content" th:text="${post.content}"></div>
@@ -353,8 +367,8 @@
             <div th:text="${post.roadAddress}"></div>
             <div class="value" id="address" th:text="${post.detailAddress}"></div>
         </div>
-        <div class="map_wrap" style="width:500px; height: 200px;">
-            <div id="map" style="width:500px;height:200px;position:relative;overflow:hidden;"></div>
+        <div class="map_wrap" style="width:100%; height: 200px;">
+            <div id="map" style="width:100%;height:200px;position:relative;overflow:hidden;"></div>
             <!-- 지도타입 컨트롤 div 입니다 -->
             <div class="custom_typecontrol radius_border">
                 <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
@@ -363,7 +377,7 @@
             <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
             <div class="custom_zoomcontrol radius_border">
             <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-                                          alt="확대"></span>
+                                        alt="확대"></span>
                 <span onclick="zoomOut()"><img
                         src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
                         alt="축소"></span>
@@ -459,7 +473,7 @@
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
                 <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
-                     alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                    alt="Nearby Post Image" style="width: 250px; height: 250px;">
                 <div class="nearby-title" th:text="${nearby.title}">제목</div>
                 <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
                         th:text="${nearby.maxParticipants}">0</span></div>
