@@ -356,7 +356,8 @@
                     th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
             </div>
             <div class="date-container">
-                <div class="date">2024.01.10 ~ 2024.02.10</div>
+<!--                날짜 포멧팅-->
+                <div class="date" th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
             </div>
             <div class="row" id="content-container">
                 <div class="value" id="content" th:text="${post.content}"></div>
