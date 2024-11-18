@@ -234,60 +234,59 @@
             border: none;
             cursor: pointer;
             font-size: 25px;
-            color:white; 
-            margin-left: 10px; 
+            color: white;
+            margin-left: 10px;
             border-radius: 5px;
         }
 
         .btn_set {
-            display: flex; 
+            display: flex;
             align-items: center;
-            gap: 10px; 
+            gap: 10px;
         }
 
         .chat_mainpage {
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 500px; 
-            height: 50px; 
+            width: 500px;
+            height: 50px;
             font-weight: bold;
-            text-decoration: none; 
-            background-color: #A7C7E7; 
-            color: white; 
-            border-radius: 5px; 
-            font-size: 16px; 
-            border: none; 
-            cursor: pointer; 
+            text-decoration: none;
+            background-color: #A7C7E7;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
         }
 
 
-        
         .post_mainpage {
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 200px; 
-            height: 50px; 
+            width: 200px;
+            height: 50px;
             font-weight: bold;
-            text-decoration: none; 
-            background-color: #A7C7E7; 
-            color: white; 
-            border-radius: 5px; 
-            font-size: 16px; 
-            border: none; 
-            cursor: pointer; 
+            text-decoration: none;
+            background-color: #A7C7E7;
+            color: white;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
         }
 
         .chat_mainpage:hover {
-            background-color: #91B9D6; 
+            background-color: #91B9D6;
         }
 
         button.like-button {
-            display: inline-flex; 
+            display: inline-flex;
             justify-content: center;
             align-items: center;
-            width: 70px; 
+            width: 70px;
             height: 50px;
             background: #A7C7E7;
             border: none;
@@ -298,9 +297,26 @@
         }
 
         button.like-button:hover {
-            background-color: #91B9D6; 
+            background-color: #91B9D6;
         }
 
+        a {
+            text-decoration: none;
+            color: black;
+        }
+
+        .nearBy-post > ul {
+            list-style: none;
+
+        }
+
+        .nearBy-post > ul > li {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            margin-right: 5px;
+        }
     </style>
 </head>
 <body>
@@ -312,11 +328,12 @@
         <div class="profile-container">
             <div class="profile">
                 <div class="profile-img">
-                    <img class="" th:src="@{|/uploads/${post.user.photoUrl}|}" style="width: 70px; height: 70px;" alt="">
+                    <img class="" th:src="@{|/uploads/${post.user.photoUrl}|}" style="width: 70px; height: 70px;"
+                         alt="">
                 </div>
                 <div class="profile-text">
                     <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
-                                       <div class="profile-address" th:text="${post.detailAddress}">사용자 주소</div>
+                    <div class="profile-address" th:text="${post.detailAddress}">사용자 주소</div>
                 </div>
             </div>
         </div>
@@ -431,7 +448,7 @@
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
             <a href="/#" class="chat_mainpage">모임 참여하기</a>
             <button class="like-button" onclick="toggleLike()">
-                <i id="like-icon" class="far fa-heart"></i> 
+                <i id="like-icon" class="far fa-heart"></i>
             </button>
         </div>
     </div>
@@ -440,12 +457,13 @@
     <h3>주변 모임</h3>
     <ul>
         <li th:each="nearby : ${nearby}">
-            <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
-                 alt="Nearby Post Image" style="width: 250px; height: 250px;">
-            <div class="nearby-title" th:text="${nearby.title}">제목</div>
-            <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
-                    th:text="${nearby.maxParticipants}">0</span></div>
-            <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
+            <a th:href="@{|/post/detail${nearby.postId}|}">
+                <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
+                     alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                <div class="nearby-title" th:text="${nearby.title}">제목</div>
+                <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
+                        th:text="${nearby.maxParticipants}">0</span></div>
+                <div class="nearby-info">상세주소: <span th:text="${nearby.detailAddress}">상세주소</span></div>
             </a>
         </li>
     </ul>
@@ -454,15 +472,15 @@
 
 <script>
     function toggleLike() {
-    const likeIcon = document.getElementById("like-icon");
-    if (likeIcon.classList.contains("far")) { 
-        likeIcon.classList.remove("far"); 
-        likeIcon.classList.add("fas");   
-    } else { 
-        likeIcon.classList.remove("fas"); 
-        likeIcon.classList.add("far");   
+        const likeIcon = document.getElementById("like-icon");
+        if (likeIcon.classList.contains("far")) {
+            likeIcon.classList.remove("far");
+            likeIcon.classList.add("fas");
+        } else {
+            likeIcon.classList.remove("fas");
+            likeIcon.classList.add("far");
+        }
     }
-}
 </script>
 </body>
 </html>
