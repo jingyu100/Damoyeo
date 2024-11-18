@@ -9,34 +9,139 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
+<!--메인 부분-->
+<style>
+    .content {
+        font-family: Arial, sans-serif;
+        width: 700px;
+        margin: 0 auto;
+    }
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 10px;
+    }
+    .profile-photo img {
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+    }
+    .profile-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        width: 100%;
+    }
+    .profile-info h2 {
+        margin: 0;
+        font-size: 1.8em;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; /* 닉네임과 버튼 정렬 */
+        gap: 40px; /* 닉네임과 버튼 사이 간격 추가 */
+    }
+    .profile-info p {
+        margin: 10px 0;
+        color: black;
+        font-size: 1.2em;
+    }
+    .profilemodify a {
+        text-decoration: none;
+        color: black;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8em;
+        transition: background-color 0.3s;
+    }
+    .profilemodify a:hover {
+        background-color: #e0e0e0;
+    }
+    .details {
+        margin-top: 10px;
+        font-size: 1.2em;
+    }
+    .details th {
+        text-align: left;
+        color: #555;
+        width: 20%;
+    }
+    .details td {
+        text-align: left;
+    }
+</style>
+
 <div class="content">
-    <p>프로필 사진</p>
-    <div class="page_title">
-        <img th:src="@{|/uploads/${user.photoUrl}|}" alt="Post Image" style="max-width: 50%; height: auto;">
+    <div class="profile-header">
+        <div class="profile-photo">
+            <img src="/images/nullDefult.png" alt="프로필 사진">
+        </div>
+        <div class="profile-info">
+            <h2>닉네임
+                <div class="profilemodify">
+                    <a href="">프로필 수정</a>
+                </div>
+            </h2><br>
+            <p>게시물: 0</p>
+            <table class="details">
+                <tbody>
+                <tr>
+                    <th scope="row">성별:</th>
+                    <td>남</td>
+                </tr>
+                <tr>
+                    <th scope="row">한줄소개:</th>
+                    <td>저는 19살 대구살고 야구 좋아합니다.</td>
+                </tr>
+                <tr>
+                    <th scope="row">지역:</th>
+                    <td>대구</td>
+                </tr>
+                <tr>
+                    <th scope="row">추가1 :</th>
+                    <td>추가</td>
+                </tr>
+                <tr>
+                    <th scope="row">추가2 :</th>
+                    <td>추가</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <table>
-<!--        프로필 이미지 나중에 넣어야함-->
-        <tbody>
-        <tr>
-            <th scope="row">닉네임</th>
-            <td th:text="${user.nickname}"></td>
-        </tr>
-        <tr>
-            <th scope="row">성별</th>
-            <td th:text="${user.gender}"></td>
-        </tr>
-        <tr>
-            <th scope="row">자기 소개</th>
-            <td th:text="${user.comment}"></td>
-        </tr>
-        <tr>
-            <th scope="row">지역</th>
-            <td th:text="${user.area}"></td>
-        </tr>
-        </tbody>
-    </table>
-    <a href="/user/editprofile">프로필 수정</a>
 </div>
+<br><br>
+<!-- 메인 끝 부분-->
+
+<!-- 메인 게시물 시작 부분-->
+<style>
+    .divider {
+        width: 50%;
+        border-top: 1px solid #ddd;
+        margin: 20px auto;
+        position: relative;
+        text-align: center;
+    }
+
+    .divider span {
+        background-color: #fff;
+        padding: 0 10px;
+        font-weight: bold;
+        font-size: 1.2em;
+        display: inline-block;
+        position: relative;
+        top: -10px;
+    }
+</style>
+
+<div class="divider">
+    <span>게시물</span>
+</div>
+<br><br><br><br><br>
+<!--메인 게시물 끝 부분-->
+
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>
