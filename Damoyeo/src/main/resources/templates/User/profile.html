@@ -18,11 +18,11 @@
         margin: 0 auto;
     }
 
-    .profile-header {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        margin-bottom: 10px;
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 10px;
     }
 
     .profile-photo img {
@@ -36,6 +36,7 @@
         flex-direction: column;
         justify-content: center;
         width: 100%;
+
     }
 
     .profile-info h2 {
@@ -100,11 +101,11 @@
             <table class="details">
                 <tbody>
                 <tr>
-                    <th scope="row">지역:</th>
+                    <th scope="row">지역</th>
                     <td th:text="${user.area}"></td>
                 </tr>
                 <tr>
-                    <th scope="row">자기소개:</th>
+                    <th scope="row">자기소개</th>
                     <td th:text="${user.comment}"></td>
                 </tr>
                 </tbody>
