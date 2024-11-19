@@ -104,4 +104,8 @@ public class UserService {
         byId.ifPresent(existingUser -> userRepository.save(user));
 
     }
+
+    public void deleteUser(Integer userId) {
+        userRepository.deleteById(userId);
+    }
 }

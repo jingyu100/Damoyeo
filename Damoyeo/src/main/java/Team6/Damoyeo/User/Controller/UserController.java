@@ -5,6 +5,7 @@ import Team6.Damoyeo.User.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,10 +24,12 @@ import java.util.Map;
 @Controller
 @RequestMapping("/user")
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
 
     private final UserService userService;
     private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
+    private final HttpSession httpSession;
 
     // 회원가입 폼 페이지로 이동
     @GetMapping("/register")
@@ -173,7 +176,7 @@ public class UserController {
         User existingUser = userService.findByUser(userId);
 
         // 파일 업로드 여부 확인 파일이 존재하면
-        if (!file.isEmpty()){
+        if (!file.isEmpty()) {
             // 파일 업로드 경로 설정
             String uploadDir = UPLOAD_USER;
             Path path = Paths.get(uploadDir + file.getOriginalFilename());
@@ -198,4 +201,13 @@ public class UserController {
         return "redirect:/user/profile";
 
     }
+
+    @PostMapping("/delete")
+    public String deleteUser(HttpServletRequest request, @SessionAttribute(name = "userId") Integer userId) {
+        HttpSession session = request.getSession();
+        session.invalidate();
+        userService.deleteUser(userId);
+        return "redirect:/";
+    }
+
 }
