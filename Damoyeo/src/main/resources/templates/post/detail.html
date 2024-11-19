@@ -332,6 +332,18 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
+<!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 삭제 보이게-->
+<th:block th:if="${userId == post.user.getUserId()}">
+    <div>
+        <form th:action="@{'/post/delete/' + ${post.postId}}" method="post" >
+            <button type="submit">삭제</button>
+        </form>
+    </div>
+</th:block>
+<!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 수정 보이게-->
+<th:block th:if="${userId == post.user.getUserId()}">
+    <p>수정</p>
+</th:block>
 
 <div class="section">
     <div class="page_title">

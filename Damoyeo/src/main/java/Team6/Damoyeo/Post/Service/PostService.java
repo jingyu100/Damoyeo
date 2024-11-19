@@ -115,4 +115,9 @@ public class PostService {
         return postRepository.findByTagContaining(tag, pageable);
 
     }
+
+    //포스트 삭제하는 메서드
+    public void deletePost(Post post) {
+        postRepository.delete(post);
+    }
 }

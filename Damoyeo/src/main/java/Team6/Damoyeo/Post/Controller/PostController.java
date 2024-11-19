@@ -159,4 +159,23 @@ public class PostController {
 
     }
 
+    //게시물 삭제
+    @PostMapping("/delete/{id}")
+    public String deletePost(@PathVariable("id") Integer id,
+                             @SessionAttribute(name = "userId", required = false) Integer userId){
+        try {
+            Post post = postService.findById(id);
+
+            if (post.getUser().getUserId().equals(userId)) {
+                postService.deletePost(post);
+                return "redirect:/post/main";
+            } else {
+                return "redirect:/post/main";
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
 }
