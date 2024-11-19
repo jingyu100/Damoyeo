@@ -172,19 +172,26 @@ public class UserController {
         // userId로 기존 사용자 정보 가져오기
         User existingUser = userService.findByUser(userId);
 
-        // 파일 업로드 경로 설정
-        String uploadDir = UPLOAD_USER;
-        Path path = Paths.get(uploadDir + file.getOriginalFilename());
+        // 파일 업로드 여부 확인 파일이 존재하면
+        if (!file.isEmpty()){
+            // 파일 업로드 경로 설정
+            String uploadDir = UPLOAD_USER;
+            Path path = Paths.get(uploadDir + file.getOriginalFilename());
 
-        // 폴더 생성
-        Files.createDirectories(path.getParent());
-        file.transferTo(path);
+            // 폴더 생성
+            Files.createDirectories(path.getParent());
+            file.transferTo(path);
+            existingUser.setPhotoUrl(file.getOriginalFilename());
+        } else {
+            //파일이 존재 하지않다면 기존 파일 유지
+            user.setPhotoUrl(existingUser.getPhotoUrl());
+        }
 
         // 사용자 정보 업데이트
         existingUser.setNickname(user.getNickname());
         existingUser.setComment(user.getComment());
         existingUser.setArea(user.getArea());
-        existingUser.setPhotoUrl(file.getOriginalFilename());
+
         userService.updateUser(existingUser);
 
         // 프로필 페이지로 리다이렉트
