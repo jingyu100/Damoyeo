@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +29,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/post")
@@ -184,24 +187,20 @@ public class PostController {
         }
 
     }
-
-    @GetMapping("/join/{id}")
-    public String joinPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
-                           @PathVariable(name = "id", required = false) Integer postId) {
-        model.addAttribute("postId", postId);
-        model.addAttribute("userId", userId);
-        log.info(userId.toString() + "  12 1 2 " + postId.toString());
-        return "post/join";
-    }
-
+    
+    //참가 신청
     @PostMapping("/join/{id}")
-    public String joinPost(@SessionAttribute(name = "userId", required = false) Integer userId,
-                           @PathVariable(name = "id", required = false) Integer postId,
-                           @RequestParam("text") String text) {
-
-        postRequestService.saveRequest(userId, postId, text);
-
-        return "redirect:/post/main";
+    @ResponseBody
+    public ResponseEntity<String> joinPost( @PathVariable("id") Integer postId,
+                                            @RequestParam("message") String message,
+                                            @RequestParam("user_id") Integer userId) {
+        try {
+            postRequestService.saveRequest(userId, postId, message);
+            return ResponseEntity.ok("성공적으로 신청되었습니다.");
+        } catch (Exception e) {
+            log.error("Error in joinPost: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("오류가 발생했습니다: " + e.getMessage());
+        }
     }
-
 }
