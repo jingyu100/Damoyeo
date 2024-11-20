@@ -1,19 +1,25 @@
 package Team6.Damoyeo.calendar.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "calendar_events")
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CalendarEvent {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
@@ -36,6 +42,6 @@ public class CalendarEvent {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonBackReference // 순환 참조 방지
     private User user;
-
 }

@@ -1,6 +1,7 @@
 package Team6.Damoyeo.Post.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
@@ -66,6 +67,7 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
+    @JsonIgnore // Post -> User의 직렬화를 막음
     private User user;
 
     @OneToMany(mappedBy = "post")

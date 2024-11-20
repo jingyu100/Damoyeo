@@ -85,41 +85,99 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 
 <script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        await renderCalendar();
+        await loadEvents(); // 페이지 로드 시 이벤트 로드
+    });
+
+    async function loadEvents() {
+        try {
+            const response = await fetch('/calendar/events');
+            const events = await response.json();
+
+            if (!Array.isArray(events)) {
+                console.error('Failed to load events:', events);
+                return;
+            }
+
+            // 모든 이벤트 텍스트 초기화
+            const existingEventTexts = document.querySelectorAll('.event-text');
+            existingEventTexts.forEach(text => text.remove());
+
+            events.forEach(event => {
+                // ISO 날짜 문자열을 Date 객체로 변환 후 로컬 시간으로 변환
+                const eventDate = new Date(event.start_time);
+
+                // 로컬 시간대로 날짜를 변환
+                const localEventDate = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
+                localEventDate.setHours(0, 0, 0, 0);  // 시간은 00:00:00으로 설정
+
+                // 날짜 컴포넌트 추출
+                const day = localEventDate.getDate();
+                const month = localEventDate.getMonth();
+                const year = localEventDate.getFullYear();
+
+                // 현재 표시된 캘린더의 년월과 일치하는지 확인
+                if (year === currentDate.getFullYear() && month === currentDate.getMonth()) {
+                    const dayDivs = document.querySelectorAll('.day:not(.empty)');
+                    dayDivs.forEach(div => {
+                        const divDay = parseInt(div.childNodes[0].textContent, 10); // 날짜 숫자로 변환해서 비교
+
+                        if (divDay === day) {
+                            const eventSpan = document.createElement('span');
+                            eventSpan.classList.add('event-text');
+                            eventSpan.textContent = event.title; // 이벤트 제목 표시
+                            div.appendChild(eventSpan);
+                        }
+                    });
+                }
+            });
+        } catch (error) {
+            console.error('Error loading events:', error);
+        }
+    }
+
+
+
+
+
+
     const monthYearLabel = document.getElementById('monthYear');
     const calendarDays = document.getElementById('calendarDays');
     let currentDate = new Date();  // 현재 날짜를 기준으로 초기 설정
 
     // 캘린더를 렌더링하는 함수
     function renderCalendar() {
-        const year = currentDate.getFullYear();  // 현재 년도
-        const month = currentDate.getMonth();    // 현재 월
-        monthYearLabel.textContent = `${year} ${currentDate.toLocaleString('default', {month: 'long'})}`; // 월/년 표시
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        monthYearLabel.textContent = `${year} ${currentDate.toLocaleString('default', {month: 'long'})}`;
 
-        calendarDays.innerHTML = ''; // 이전 달의 날짜를 초기화
-        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 월의 첫 번째 날짜 요일
-        const daysInMonth = new Date(year, month + 1, 0).getDate(); // 월의 총 일수
+        calendarDays.innerHTML = '';
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
 
         let dayRow = document.createElement('div');
         dayRow.classList.add('calendar-row');
 
-        // 빈 날짜 칸 추가 (월의 시작 요일에 맞추기 위해)
         for (let i = 0; i < firstDayOfMonth; i++) {
             const emptyDay = document.createElement('div');
             emptyDay.classList.add('day', 'empty');
             dayRow.appendChild(emptyDay);
         }
 
-        // 실제 날짜 칸 추가
         for (let day = 1; day <= daysInMonth; day++) {
             const dayDiv = document.createElement('div');
             dayDiv.classList.add('day');
-            dayDiv.textContent = day; // 날짜 번호 표시
-            dayDiv.addEventListener('click', function () {  // 날짜 클릭 이벤트 추가
-                addEvent(dayDiv);  // 클릭 시 이벤트 추가 함수 호출
+            // 날짜를 span으로 감싸서 추가
+            const dateSpan = document.createElement('span');
+            dateSpan.textContent = day;
+            dayDiv.appendChild(dateSpan);
+
+            dayDiv.addEventListener('click', function() {
+                addEvent(dayDiv);
             });
             dayRow.appendChild(dayDiv);
 
-            // 한 주가 끝나면 새로운 줄을 추가
             if ((day + firstDayOfMonth) % 7 === 0 || day === daysInMonth) {
                 calendarDays.appendChild(dayRow);
                 dayRow = document.createElement('div');
@@ -128,27 +186,92 @@
         }
     }
 
-    // 날짜 클릭 시 이벤트를 추가하는 함수
-    function addEvent(dayDiv) {
-        const eventText = prompt("Enter your event:"); // 이벤트 내용 입력받기
-        if (eventText) {  // 입력값이 있는 경우에만 추가
-            const eventSpan = document.createElement('span');
-            eventSpan.classList.add('event-text');
-            eventSpan.textContent = eventText;
-            dayDiv.appendChild(eventSpan); // 날짜 박스에 이벤트 텍스트 추가
+    // // 날짜 클릭 시 이벤트를 추가하는 함수
+    // function addEvent(dayDiv) {
+    //     const eventText = prompt("Enter your event:"); // 이벤트 내용 입력받기
+    //     if (eventText) {  // 입력값이 있는 경우에만 추가
+    //         const eventSpan = document.createElement('span');
+    //         eventSpan.classList.add('event-text');
+    //         eventSpan.textContent = eventText;
+    //         dayDiv.appendChild(eventSpan); // 날짜 박스에 이벤트 텍스트 추가
+    //     }
+    // }
+
+    // 이벤트 추가 함수 수정
+    async function addEvent(dayDiv) {
+        const eventText = prompt("Enter your event:");
+        if (eventText) {
+            const day = parseInt(dayDiv.textContent);
+            const startTime = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                day,
+                0, 0, 0
+            );
+
+            const endTime = new Date(
+                currentDate.getFullYear(),
+                currentDate.getMonth(),
+                day,
+                23, 59, 59
+            );
+
+            const eventData = {
+                title: eventText,
+                description: eventText,
+                startTime: startTime.toISOString(),
+                endTime: endTime.toISOString()
+            };
+
+            try {
+                const response = await fetch('/calendar/events', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(eventData)
+                });
+
+                if (response.ok) {
+                    const eventSpan = document.createElement('span');
+                    eventSpan.classList.add('event-text');
+                    eventSpan.textContent = eventText;
+                    dayDiv.appendChild(eventSpan);
+                } else {
+                    const errorData = await response.text();
+                    console.error('Failed to save event:', errorData);
+                    alert('Failed to save event: ' + errorData);
+                }
+            } catch (error) {
+                console.error('Error saving event:', error);
+                alert('Error saving event');
+            }
         }
     }
 
-    // 이전 달로 이동
-    function prevMonth() {
-        currentDate.setMonth(currentDate.getMonth() - 1); // 현재 월에서 -1
-        renderCalendar();
+    // // 이전 달로 이동
+    // function prevMonth() {
+    //     currentDate.setMonth(currentDate.getMonth() - 1); // 현재 월에서 -1
+    //     renderCalendar();
+    // }
+    //
+    // // 다음 달로 이동
+    // function nextMonth() {
+    //     currentDate.setMonth(currentDate.getMonth() + 1); // 현재 월에서 +1
+    //     renderCalendar();
+    // }
+
+    // prevMonth와 nextMonth 함수 수정
+    async function prevMonth() {
+        currentDate.setMonth(currentDate.getMonth() - 1);
+        await renderCalendar();
+        await loadEvents(); // 월 변경 시 이벤트 다시 로드
     }
 
-    // 다음 달로 이동
-    function nextMonth() {
-        currentDate.setMonth(currentDate.getMonth() + 1); // 현재 월에서 +1
-        renderCalendar();
+    async function nextMonth() {
+        currentDate.setMonth(currentDate.getMonth() + 1);
+        await renderCalendar();
+        await loadEvents(); // 월 변경 시 이벤트 다시 로드
     }
 
     // 페이지 로드 시 초기 캘린더 렌더링
