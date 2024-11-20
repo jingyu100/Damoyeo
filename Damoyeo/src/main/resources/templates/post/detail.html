@@ -477,6 +477,8 @@
         <div class="btn_set">
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
             <a class="chat_mainpage" id="promptButton">모임 참여하기</a>
+<!--            <a href="/#" class="chat_mainpage">모임 참여하기</a>-->
+            <a th:href="@{|/post/join/${post.postId}|}" class="chat_mainpage">모임 참여하기</a>
             <button class="like-button" onclick="toggleLike()">
                 <i id="like-icon" class="far fa-heart"></i>
             </button>
