@@ -21,7 +21,10 @@ public class SecurityConfig {
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"))
-                        .ignoringRequestMatchers("/calendar/events/**"))  // calendar 엔드포인트에 대한 CSRF 비활성화 추가
+                        .ignoringRequestMatchers("/calendar/events/**"),
+                        , new AntPathRequestMatcher("/post/join/**")
+                        )  // calendar 엔드포인트에 대한 CSRF 비활성화 추가
+                        
                 .headers((headers) -> headers
                         .addHeaderWriter(new XFrameOptionsHeaderWriter(
                                 XFrameOptionsHeaderWriter.XFrameOptionsMode.SAMEORIGIN)));
