@@ -5,7 +5,10 @@
 <head>
     <meta charset="UTF-8">
     <title>상세 페이지</title>
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+
     <style>
         .map_wrap {
             position: relative;
@@ -331,6 +334,7 @@
     </style>
 </head>
 <body>
+<script src="/js/sweetalert2.min.js"></script>
 <div th:replace="~{topnav.html}"></div>
 <!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 삭제 보이게-->
 <th:block th:if="${userId == post.user.getUserId()}">
@@ -472,7 +476,7 @@
 
         <div class="btn_set">
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
-            <a href="/#" class="chat_mainpage">모임 참여하기</a>
+            <a class="chat_mainpage" id="promptButton">모임 참여하기</a>
             <button class="like-button" onclick="toggleLike()">
                 <i id="like-icon" class="far fa-heart"></i>
             </button>
@@ -507,6 +511,21 @@
             likeIcon.classList.add("far");
         }
     }
+
+    // 버튼 클릭 이벤트 핸들러
+    document.getElementById('promptButton').addEventListener('click', () => {
+        Swal.fire({
+            title: '참가 사유를 적어주세요',
+            input: 'text',
+            inputPlaceholder: '사유를 적어주세요',
+            showCancelButton: true,
+            confirmButtonText: 'Submit'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(`${result.value}!`);
+            }
+        });
+    });
 </script>
 </body>
 </html>
