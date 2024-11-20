@@ -1,11 +1,13 @@
 package Team6.Damoyeo.Post.Controller;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Service.PostRequestService;
 import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.domain.Page;
@@ -30,6 +32,7 @@ import java.util.List;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 @PropertySource("classpath:config.properties")
+@Slf4j
 public class PostController {
 
     // 좋아요 기능의 상태를 저장하는 변수
@@ -41,6 +44,9 @@ public class PostController {
 
     // Post 관련 서비스 클래스
     private final PostService postService;
+
+    // Post 가입 신청 관련 서비스 클래스
+    private final PostRequestService postRequestService;
 
     // User관련 서비스 클래스
     private final UserService userService;
@@ -162,7 +168,7 @@ public class PostController {
     //게시물 삭제
     @PostMapping("/delete/{id}")
     public String deletePost(@PathVariable("id") Integer id,
-                             @SessionAttribute(name = "userId", required = false) Integer userId){
+                             @SessionAttribute(name = "userId", required = false) Integer userId) {
         try {
             Post post = postService.findById(id);
 
@@ -178,4 +184,24 @@ public class PostController {
         }
 
     }
+
+    @GetMapping("/join/{id}")
+    public String joinPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
+                           @PathVariable(name = "id", required = false) Integer postId) {
+        model.addAttribute("postId", postId);
+        model.addAttribute("userId", userId);
+        log.info(userId.toString() + "  12 1 2 " + postId.toString());
+        return "post/join";
+    }
+
+    @PostMapping("/join/{id}")
+    public String joinPost(@SessionAttribute(name = "userId", required = false) Integer userId,
+                           @PathVariable(name = "id", required = false) Integer postId,
+                           @RequestParam("text") String text) {
+
+        postRequestService.saveRequest(userId, postId, text);
+
+        return "redirect:/post/main";
+    }
+
 }
