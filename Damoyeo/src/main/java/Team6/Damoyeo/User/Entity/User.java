@@ -1,5 +1,6 @@
 package Team6.Damoyeo.User.Entity;
 
+import Team6.Damoyeo.Post.Entity.Post;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
@@ -56,5 +57,8 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<UserInterest> interests = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Post> posts = new ArrayList<>();
 
 }
