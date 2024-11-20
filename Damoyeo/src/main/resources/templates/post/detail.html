@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="layout/basic">
+      layout:decorate="layout/basic">
 <link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <title>상세 페이지</title>
     <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
         .map_wrap {
@@ -121,7 +121,7 @@
             display: flex;
             flex-direction: column;
             width: 50%;
-            height: 100%;   
+            height: 100%;
             margin-left: 2rem;
         }
 
@@ -147,7 +147,7 @@
         .page_title > img {
             width: 100%;
             height: 80%;
-            
+
         }
 
         h1 {
@@ -322,24 +322,22 @@
             margin-right: 5px;
         }
 
-        .date-container{
+        .date-container {
             text-align: right;
             margin-bottom: 20px;
         }
 
-        
-
-        
 
     </style>
 </head>
 <body>
 <script src="/js/sweetalert2.min.js"></script>
+
 <div th:replace="~{topnav.html}"></div>
 <!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 삭제 보이게-->
 <th:block th:if="${userId == post.user.getUserId()}">
     <div>
-        <form th:action="@{'/post/delete/' + ${post.postId}}" method="post" >
+        <form th:action="@{'/post/delete/' + ${post.postId}}" method="post">
             <button type="submit">삭제</button>
         </form>
     </div>
@@ -348,6 +346,10 @@
 <th:block th:if="${userId == post.user.getUserId()}">
     <p>수정</p>
 </th:block>
+<!--참가신청 userId 확인을 위한 코드-->
+<input type="hidden" id="userId" th:value="${userId}">
+<!--포스트보낼때 사용 지우지 마세요-->
+<input type="hidden" id="joinUrl" th:value="@{|/post/join/${post.postId}|}">
 
 <div class="section">
     <div class="page_title">
@@ -369,11 +371,12 @@
             <div class="row" id="title">
                 <h1 class="value" th:text="${post.title}"></h1>
                 <div class="value" id="participants"
-                    th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+                     th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
             </div>
             <div class="date-container">
-<!--                날짜 포멧팅-->
-                <div class="date" th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
+                <!--                날짜 포멧팅-->
+                <div class="date"
+                     th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
             </div>
             <div class="row" id="content-container">
                 <div class="value" id="content" th:text="${post.content}"></div>
@@ -393,7 +396,7 @@
             <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
             <div class="custom_zoomcontrol radius_border">
             <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-                                        alt="확대"></span>
+                                          alt="확대"></span>
                 <span onclick="zoomOut()"><img
                         src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
                         alt="축소"></span>
@@ -477,8 +480,6 @@
         <div class="btn_set">
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
             <a class="chat_mainpage" id="promptButton">모임 참여하기</a>
-<!--            <a href="/#" class="chat_mainpage">모임 참여하기</a>-->
-            <a th:href="@{|/post/join/${post.postId}|}" class="chat_mainpage">모임 참여하기</a>
             <button class="like-button" onclick="toggleLike()">
                 <i id="like-icon" class="far fa-heart"></i>
             </button>
@@ -491,7 +492,7 @@
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
                 <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
-                    alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                     alt="Nearby Post Image" style="width: 250px; height: 250px;">
                 <div class="nearby-title" th:text="${nearby.title}">제목</div>
                 <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
                         th:text="${nearby.maxParticipants}">0</span></div>
@@ -500,9 +501,11 @@
         </li>
     </ul>
 </div>
+
 <div th:replace="~{footer.html}"></div>
 
 <script>
+
     function toggleLike() {
         const likeIcon = document.getElementById("like-icon");
         if (likeIcon.classList.contains("far")) {
@@ -516,6 +519,8 @@
 
     // 버튼 클릭 이벤트 핸들러
     document.getElementById('promptButton').addEventListener('click', () => {
+        const joinUrl = document.getElementById('joinUrl').value;
+
         Swal.fire({
             title: '참가 사유를 적어주세요',
             input: 'text',
@@ -524,7 +529,31 @@
             confirmButtonText: 'Submit'
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(`${result.value}!`);
+                const text = result.value;
+                const userId = document.getElementById('userId').value;
+
+                // FormData 사용
+                const formData = new FormData();
+                formData.append('message', text);
+                formData.append('user_id', userId);
+
+                $.ajax({
+                    url: joinUrl,
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        console.log("Success:", response);
+                        Swal.fire('신청 완료!', '모임 신청이 완료되었습니다.', 'success');
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("Status:", status);
+                        console.log("Error:", error);
+                        console.log("Response:", xhr.responseText);
+                        Swal.fire('오류 발생', '모임 신청에 실패했습니다.', 'error');
+                    }
+                });
             }
         });
     });
