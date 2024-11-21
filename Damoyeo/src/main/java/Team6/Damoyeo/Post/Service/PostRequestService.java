@@ -43,4 +43,18 @@ public class PostRequestService {
         postRequestRepository.save(postRequest);
     }
 
+    public PostRequest findClick(Post post, User user)  {
+
+        Optional<PostRequest> pru = postRequestRepository.findByPostAndUser(post, user);
+        if (pru.isEmpty()) {
+            return null;
+        }
+        return pru.get();
+    }
+
+    public void delete(PostRequest postRequest) {
+        postRequestRepository.delete(postRequest);
+    }
+
+
 }
