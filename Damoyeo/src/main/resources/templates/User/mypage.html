@@ -75,25 +75,27 @@
   .main-banner {
     display: flex;
     flex-direction: column; /* 세로로 나열 */
-    gap: 50px;
+    gap: 50px; /* 메뉴 항목 간 간격 */
   }
 
   .menu-item {
     display: flex;
-    align-items: center;
+    align-items: center; /* 이미지와 텍스트 수직 정렬 */
     gap: 10px; /* 이미지와 텍스트 간격 */
-    margin-left: 0;
+    margin-left: 0; /* 왼쪽 여백 제거 */
     transition: opacity 0.3s; /* 부드러운 흐림 효과 */
   }
 
   .menu-item img {
     width: 70px;
     height: 70px;
+    cursor: pointer; /* 클릭 가능한 상태로 설정 */
   }
 
   .custom-heading {
     font-size: 1.2em;
     font-weight: bold;
+    cursor: pointer; /* 텍스트도 클릭 가능하게 설정 */
   }
 
   .big-box {
@@ -113,39 +115,39 @@
 <div class="main-layout">
   <!-- 왼쪽 메뉴 -->
   <div class="main-banner">
-    <div class="menu-item" onclick="handleClick(this)">
-      <a href="">
-        <img src="/uploads/찜한 게시물.png" alt="찜한 게시물">
+    <div class="menu-item">
+      <a href="#">
+        <img src="/uploads/찜한 게시물.png" alt="찜한 게시물" onclick="handleClick(this)">
       </a>
-      <div class="custom-heading">찜한 게시물</div>
+      <div class="custom-heading" onclick="handleClick(this)">찜한 게시물</div>
     </div>
 
-    <div class="menu-item" onclick="handleClick(this)">
-      <a href="">
-        <img src="/uploads/알림.png" alt="알림">
+    <div class="menu-item">
+      <a href="#">
+        <img src="/uploads/알림.png" alt="알림" onclick="handleClick(this)">
       </a>
-      <div class="custom-heading">알림</div>
+      <div class="custom-heading" onclick="handleClick(this)">알림</div>
     </div>
 
-    <div class="menu-item" onclick="handleClick(this)">
-      <a href="">
-        <img src="/uploads/공지사항.png" alt="공지사항">
+    <div class="menu-item">
+      <a href="#">
+        <img src="/uploads/공지사항.png" alt="공지사항" onclick="handleClick(this)">
       </a>
-      <div class="custom-heading">공지사항</div>
+      <div class="custom-heading" onclick="handleClick(this)">공지사항</div>
     </div>
 
-    <div class="menu-item" onclick="handleClick(this)">
-      <a href="">
-        <img src="/uploads/고객센터.png" alt="고객센터">
+    <div class="menu-item">
+      <a href="#">
+        <img src="/uploads/고객센터.png" alt="고객센터" onclick="handleClick(this)">
       </a>
-      <div class="custom-heading">고객센터</div>
+      <div class="custom-heading" onclick="handleClick(this)">고객센터</div>
     </div>
 
-    <div class="menu-item" onclick="handleClick(this)">
-      <a href="">
-        <img src="/uploads/설정.png" alt="설정">
+    <div class="menu-item">
+      <a href="#">
+        <img src="/uploads/설정.png" alt="설정" onclick="handleClick(this)">
       </a>
-      <div class="custom-heading">설정</div>
+      <div class="custom-heading" onclick="handleClick(this)">설정</div>
     </div>
   </div>
   <!-- 오른쪽 큰 박스 -->
@@ -159,7 +161,7 @@
 
     // 모든 항목을 흐리게 설정
     items.forEach(item => {
-      if (item !== clickedItem) {
+      if (!item.contains(clickedItem)) {
         item.classList.add('dimmed'); // 흐림 효과 추가
       } else {
         item.classList.remove('dimmed'); // 클릭된 항목은 흐리지 않음
@@ -167,7 +169,7 @@
     });
 
     // 클릭된 항목을 다시 클릭하면 기본 상태로 되돌림
-    if (clickedItem.classList.contains('dimmed')) {
+    if (clickedItem.parentElement.parentElement.classList.contains('dimmed')) {
       items.forEach(item => item.classList.remove('dimmed'));
     }
   }
