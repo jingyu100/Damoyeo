@@ -7,46 +7,49 @@ import Team6.Damoyeo.Post.Repository.PostRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class LikeService {
 
-    @Autowired
     private final LikeRepository likeRepository;
 
-    @Autowired
     private final PostRepository postRepository;
 
-    @Autowired
     private final UserRepository userRepository;
 
 
-    public LikeService(LikeRepository likeRepository, PostRepository postRepository, UserRepository userRepository) {
-        this.likeRepository = likeRepository;
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-    }
-
-    public boolean toggleLike(int postId, int userId) {
+    public String toggleLike(int postId, int userId) {
         User user = userRepository.findById(userId).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
 
         Optional<Like> existingLike = likeRepository.findByUserAndPost(user,post);
+        String result;
+
+        log.info(existingLike.toString());
 
         if(existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
-            return false;
+            post.setLikeCount(post.getLikeCount() -1);
+            result = "0";
         }else {
             Like like = new Like();
             like.setUser(user);
             like.setPost(post);
+            like.setIsLiked("1");
             likeRepository.save(like);
-            return true;
+            post.setLikeCount(post.getLikeCount() + 1);
+            result = "1";
         }
+
+        postRepository.save(post);
+        return result;
     }
 
     public int getLikeCount(int postId) {

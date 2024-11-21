@@ -26,4 +26,9 @@ public class Like {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "is_liked",nullable = false)
+    private String isLiked;
+
+
 }

@@ -325,9 +325,9 @@
             margin-bottom: 20px;
         }
 
-        
 
-        
+
+
 
     </style>
 </head>
@@ -468,7 +468,8 @@
         </script>
 
         <div class="row" id="count">
-            <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 조회수"></div>
+            <div class="value" id="like-count" th:text="${post.likeCount}">좋아요</div>
+            <div class="value" id="view-count" th:text="${post.viewCount}">조회수</div>
         </div>
 
         <div class="btn_set">
@@ -498,41 +499,41 @@
 <div th:replace="~{footer.html}"></div>
 
 <script>
-    let isLiked = false;
-
+     let isLiked = false;
 
     function toggleLike(postId, userId) {
-
+        // 현재 상태 변경
         isLiked = !isLiked;
 
+        // 좋아요 아이콘과 카운트 요소 가져오기
         const likeIcon = document.getElementById('like-icon');
-        if (isLiked) {
-            $.ajax({
-                url : '/likes/' + postId,
-                method : 'POST',
-                contentType : 'application/json',
-                data : JSON.stringify({ postId: postId, userId: userId , isLiked : isLiked}),
-                success : function (data) {
-                    if(data.success) {
-                        if(isLiked) {
-                            likeIcon.classList.remove('far');
-                            likeIcon.classList.add('fas');
-                        } else {
-                            likeIcon.classList.remove('fas');
-                            likeIcon.classList.add('far');
-                        }
+        const likeCountElement = document.getElementById('like-count');
 
-                        const countElement = document.getElementById('like-count');
-                        countElement.textContent = `${data.likeCount} 좋아요 ∙ ${data.viewCount} 조회수`;
-                    }
-                },
-                error : function(error) {
-                    console.error("Error ",error);
+        // AJAX 요청 실행
+        $.ajax({
+        url: '/likes/' + postId,
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({ userId: userId }),
+        success: function (response) {
+            if (response.success) {
+                // 좋아요 수와 상태 업데이트
+                document.getElementById('like-count').textContent = response.likeCount + " 좋아요";
+                const likeIcon = document.getElementById('like-icon');
+                if (response.liked === "1") {
+                    likeIcon.classList.remove('far');
+                    likeIcon.classList.add('fas');
+                } else {
+                    likeIcon.classList.remove('fas');
+                    likeIcon.classList.add('far');
                 }
-            });
+            }
+        },
+        error: function (error) {
+            console.error("Error:", error);
         }
-    }
-
+    });
+}
 </script>
 </body>
 </html>

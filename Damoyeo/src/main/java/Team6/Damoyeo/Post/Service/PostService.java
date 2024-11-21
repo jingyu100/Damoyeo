@@ -23,7 +23,6 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
-
     // 특정 페이지에 해당하는 게시글을 가져오는 메서드
     public Page<Post> findPostsByPage(int page, int pageSize) {
         return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
@@ -47,6 +46,13 @@ public class PostService {
         postRepository.save(post);
 
     }
+
+
+    //좋아요 메서드
+    public void saveLike(Post post) {
+        postRepository.save(post);
+    }
+
 
     // ID로 게시글을 조회하는 메서드 (상세 페이지용)
     public Post findById(Integer id) throws Exception {
