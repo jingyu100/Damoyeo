@@ -73,40 +73,48 @@
             const email = document.getElementById("email").value;
             const emailNotice = document.getElementById("emailNotice");
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (regex.test(email)) {
-                if (email) {
-                    fetch(`/user/check-email?email=${email}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.exists) {
-                                emailNotice.innerHTML = "이미 사용 중인 아이디입니다";
-                                emailNotice.style.color = "red";
-                                emailUnique = false;
-                            } else {
-                                emailNotice.innerHTML = "사용 가능한 아이디입니다";
-                                emailNotice.style.color = "green";
-                                emailUnique = true;
-                            }
-                            updateSubmitButton();
-                        })
-                        .catch(error => {
-                            console.error("Error:", error);
-                            emailUnique = false;
-                            updateSubmitButton();
-                        });
-                } else {
-                    // alert("닉네임를 입력해주세요.");
-                    // emailNotice.innerHTML = "아이디를 입력해주세요.";
-                    // emailNotice.style.color = "red";
-                    emailUnique = false;
-                    updateSubmitButton();
-                }
-            } else {
+
+
+            // 이메일 비어있는지 확인
+            if (!email) {
+                emailNotice.innerHTML = "이메일을 입력해주세요.";
+                emailNotice.style.color = "red";
+                emailUnique = false;
+                updateSubmitButton();
+                return;
+            }
+
+            // 정규식 확인
+            if (!regex.test(email)) {
                 emailNotice.innerHTML = "올바른 이메일 형식을 입력해 주세요.";
                 emailNotice.style.color = "red";
                 emailUnique = false;
                 updateSubmitButton();
+                return;
             }
+
+            // 이메일 중복 체크
+            fetch(`/user/check-email?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        emailNotice.innerHTML = "이미 사용 중인 아이디입니다";
+                        emailNotice.style.color = "red";
+                        emailUnique = false;
+                    } else {
+                        emailNotice.innerHTML = "사용 가능한 아이디입니다";
+                        emailNotice.style.color = "green";
+                        emailUnique = true;
+                    }
+                    updateSubmitButton();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    emailNotice.innerHTML = "이메일 확인 중 오류가 발생했습니다";
+                    emailNotice.style.color = "red";
+                    emailUnique = false;
+                    updateSubmitButton();
+                });
         }
 
         function checkNickname() {
