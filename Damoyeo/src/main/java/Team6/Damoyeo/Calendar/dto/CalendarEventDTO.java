@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CalendarEventDto {
+public class CalendarEventDTO {
 
     @NotBlank(message = "Title is required")
     private String title;

@@ -2,7 +2,6 @@ package Team6.Damoyeo.calendar.service;
 
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
-import Team6.Damoyeo.calendar.dto.CalendarEventDto;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +24,7 @@ public class CalendarService {
         return eventRepository.findByUser(user);
     }
 
-    public CalendarEvent createEvent(CalendarEventDto eventDto, User user) {
+    public CalendarEvent createEvent(Team6.Damoyeo.calendar.dto.CalendarEventDTO eventDto, User user) {
         try {
             if (user == null) {
                 throw new IllegalArgumentException("User cannot be null");

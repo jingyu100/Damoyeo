@@ -3,16 +3,12 @@ package Team6.Damoyeo.calendar.controller;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
-import Team6.Damoyeo.calendar.dto.CalendarEventDto;
 import Team6.Damoyeo.calendar.service.CalendarService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/calendar")
@@ -51,7 +47,7 @@ public class CalendarController {
 
     @PostMapping("/events")
     public ResponseEntity<?> createEvent(
-            @RequestBody CalendarEventDto eventDto,
+            @RequestBody Team6.Damoyeo.calendar.dto.CalendarEventDTO eventDto,
             @SessionAttribute(name = "userId", required = false) Integer userId) {
         if (userId == null) {
             return ResponseEntity.badRequest().body("User not logged in");
