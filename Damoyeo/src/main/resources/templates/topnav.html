@@ -1,32 +1,41 @@
-<div class="top-nav">
-    <div class="top-nav-box1">
-        <a href="/"><img th:src="@{/uploads/logo.png}" style="width: 130px; height: 130px" alt=""></a>
-        <a href="/post/main" class="top-nav">모임 찾기</a>
-        <a href="/chat" class="top-nav">채팅하기</a>
-        <a href="/calendar/main" class="top-nav">캘린더</a>
-        <div class="search-container">
-            <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
+<div class="null"></div>
+<div class="top-nav-wrap">
+    <div class="top-nav-bar">
+        <div class="top-nav-box1">
+            <a href="/"><img th:src="@{/uploads/logo2.png}" style="width: 150px; height: 40px;"  alt=""></a>
+            <div class="top-nav-content">
+                <a href="/post/main" class="top-nav">모임 찾기</a>
+                <a href="/chat" class="top-nav">채팅하기</a>
+                <a href="/calendar/main" class="top-nav">캘린더</a>
+                <a href="/">마이페이지</a>
+            </div>
+
+            <th:block th:if="${userId == null}">
+                <a href="/user/login" class="login-btn">로그인</a>
+                <!--            <div class="profile-icon"></div>-->
+            </th:block>
+            <th:block th:if="${userId != null}">
+                <a href="/user/profile" class="top-nav-profile">
+                    <img th:src="@{|/uploads/${user.photoUrl}|}" style="width: 40px; height: 40px" alt="">
+                    어 그래 형이야
+                </a>
+                <a href="/user/logout" class="login-btn">로그아웃</a>
+            </th:block>
         </div>
-        <div class="search">
-            <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
+        <div class="top-nav-box2 fixed">
+            <div class="search-container">
+                <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
+            </div>
+
+            <div class="search">
+                <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
+            </div>
         </div>
+
     </div>
-
-    <th:block th:if="${userId == null}">
-        <div class="top-nav-box2">
-            <a href="/user/login">로그인</a>
-<!--            <div class="profile-icon"></div>-->
-        </div>
-    </th:block>
-
-    <th:block th:if="${userId != null}">
-        <div class="top-nav-box2">
-            <a href="/user/logout">로그아웃</a>
-            <img th:src="@{|/uploads/${user.photoUrl}|}" style="width: 40px; height: 40px" alt="">
-            <a href="/user/profile">프로필</a>
-        </div>
-    </th:block>
 </div>
+
+
 
 <script>
     function searchPost() {
@@ -35,5 +44,9 @@
             var searchUrl = '/post/main?search=' + encodeURIComponent(searchValue);
             window.location.href = searchUrl; // 또는 다른 방법으로 처리 가능
         }
+    }
+
+    function scrollNavbar(){
+        var topnav
     }
 </script>
