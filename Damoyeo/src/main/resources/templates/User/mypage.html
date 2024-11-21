@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/basic">
+<link rel="stylesheet" href="../css/navfooter.css"></link>
+<head>
+  <meta charset="UTF-8">
+  <title>마이 페이지</title>
+</head>
+<body>
+<div th:replace="~{topnav.html}"></div>
+<br><br>
+<!--마이 페이지 헤더 부분 시작 -->
+<style>
+  .header-banner {
+    background-color: #d6eaff;
+    padding: 40px 0;
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+  }
+  .header-banner h1 {
+    margin-left: 157px;
+    margin-right: 400px;
+    color: #4D5159;
+    font-size: 2.3em;
+  }
+  .header-banner img {
+    margin-right: 50px;
+    border-radius: 50%; /* 둥근 모양 */
+    object-fit: cover; /* 비율 유지 */
+  }
+  .header-banner p1 {
+    color: #4D5159;
+    font-size: 2.4em;
+    margin-right: 200px;
+  }
+  .header-banner .user-profile-img {
+    width: 70px;
+    height: 70px;
+    margin-right: 10px;
+
+  }
+  .header-banner p2 {
+    color: #4D5159;
+    font-size: 2em;
+  }
+</style>
+
+<div class="header-banner">
+  <h1>내 정보</h1>
+  <a href="/">
+    <img src="/uploads/img.png" style="width: 130px; height: 130px" alt="">
+  </a>
+  <p1>닉네임123123님</p1>
+  <a href="/">
+    <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="">
+  </a>
+  <p2>프로필</p2>
+</div>
+
+<!--마이 페이지 헤더 부분 끝 ---->
+<div th:replace="~{footer.html}"></div>
+</body>
+</html>
