@@ -6,10 +6,11 @@ import Team6.Damoyeo.chat.dto.ChatMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -18,62 +19,52 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 @RequiredArgsConstructor
 public class ChatController {
 
-    // UserService 주입
     private final UserService userService;
 
-    // 채팅 화면으로 이동하는 메서드
     @GetMapping("chat")
     public String chat(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
                        HttpServletRequest request) {
 
-        // 로그인 확인: 사용자 ID가 없으면 로그인 페이지로 리다이렉트
         if (userId == null) {
             return "redirect:/user/login";
         }
-        // 프로필 사진 넣기를 위한 user생성
-        User user = null;
 
+        User user = null;
         if (userId != null) {
             user = userService.findByUser(userId);
         }
 
-        
-        
-        // 사용자 닉네임을 가져와 세션과 모델에 설정
         HttpSession session = request.getSession();
         String userNickName = userService.findByUserId(userId);
         model.addAttribute("userId", userId);
         model.addAttribute("user", user);
         session.setAttribute("userNickName", userNickName);
 
-        return "chat/chat";  // chat 페이지 반환
-
+        return "chat/chat";
     }
 
-    // 채팅 메시지를 전송하는 메서드
-    @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public ChatMessage sendMessage(ChatMessage chatMessage) {
+    // 메시지 전송을 위한 메서드 (특정 방 지원)
+    @MessageMapping("/chat.sendMessage/{roomId}")
+    @SendTo("/topic/chat/{roomId}")
+    public ChatMessage sendMessage(@DestinationVariable("roomId") String roomId, ChatMessage chatMessage) {
+        System.out.println("Received message in room " + roomId + ": "
+                + chatMessage.getSender() + " - " + chatMessage.getContent());
 
-        return chatMessage;  // 메시지를 그대로 반환하여 모든 구독자에게 전송
+        chatMessage.setType(ChatMessage.MessageType.CHAT);
 
+        return chatMessage;
     }
 
-    // 새로운 사용자가 채팅에 참여할 때 호출되는 메서드
-    @MessageMapping("/chat.addUser")
-    @SendTo("/topic/public")
-    public ChatMessage addUser(ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+    // 사용자 입장을 위한 메서드 (특정 방 지원)
+    @MessageMapping("/chat.addUser/{roomId}")
+    @SendTo("/topic/chat/{roomId}")
+    public ChatMessage addUser(@DestinationVariable("roomId") String roomId, ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        System.out.println("User " + chatMessage.getSender() + " joined room " + roomId);
 
-        System.out.println("Sender: " + chatMessage.getSender());
-        System.out.println("Message Type: " + chatMessage.getType());
-
-        // 사용자 이름을 세션에 저장
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
-
-        // 메시지 타입을 JOIN으로 설정하여 참가 메시지로 전환
         chatMessage.setType(ChatMessage.MessageType.JOIN);
+        chatMessage.setContent(chatMessage.getSender() + "님이 채팅방에 입장했습니다.");
 
-        return chatMessage;  // 참가 메시지를 모든 구독자에게 전송
-
+        return chatMessage;
     }
 }

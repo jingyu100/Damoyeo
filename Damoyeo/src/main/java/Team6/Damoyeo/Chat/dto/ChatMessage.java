@@ -1,21 +1,20 @@
 package Team6.Damoyeo.chat.dto;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ChatMessage {
-
+    private MessageType type;
     private String content;
     private String sender;
-    private MessageType type;
+    private String roomId; // 추가된 필드
 
     public enum MessageType {
         CHAT,
         JOIN,
         LEAVE
     }
-
 }
 

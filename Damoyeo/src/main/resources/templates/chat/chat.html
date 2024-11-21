@@ -1,98 +1,151 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
-    <title>Chat Room</title>
-    <!-- SockJS와 STOMP.js 라이브러리 추가 -->
+    <title>Multi-Room Chat</title>
+    <link rel="stylesheet" href="../css/navfooter.css"></link>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
+    <style>
+        #room-selection {
+            margin-top: 30px;
+            margin-bottom: 20px;
+        }
+        #messageArea {
+            height: 400px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 <!-- 네비게이션 바 포함 -->
 <div th:replace="~{topnav.html}"></div>
 
-<!-- 로그인 페이지는 채팅방 자동 로드 시 필요하지 않음 -->
-<div id="login-page" style="display:none;">
-    <button onclick="enterChatRoom()">채팅방 입장</button>
+<!-- 방 선택 -->
+<div id="room-selection">
+    <label for="roomSelect">채팅방 선택:</label>
+    <select id="roomSelect" onchange="switchRoom()">
+        <option value="room1">1번 방</option>
+        <option value="room2">2번 방</option>
+        <option value="room3">3번 방</option>
+    </select>
 </div>
 
 <!-- 채팅방 -->
-<div id="chat-room" style="display:none;">
+<div id="chat-room">
     <ul id="messageArea"></ul>
     <input type="text" id="message" placeholder="메세지를 입력해주세요"/>
-    <button onclick="sendMessage()"> 전송하기</button>
+    <button onclick="sendMessage()">전송하기</button>
 </div>
 
 <script type="text/javascript" th:inline="javascript">
     var stompClient = null;
-    // 세션에 저장된 사용자 닉네임 가져오기
     var username = /*[[${session.userNickName}]]*/ "";
+    var currentRoom = 'room1'; // 기본 방
 
-    // 채팅방 입장 함수
-    function enterChatRoom() {
-        if (username) {
-            document.getElementById("login-page").style.display = 'none';
-            document.getElementById("chat-room").style.display = 'block';
-            connect();
-        }
-    }
-
-    // 서버에 연결하고 메시지 수신 구독 설정
     function connect() {
-        var socket = new SockJS('/ws'); // SockJS를 통해 웹소켓 연결 생성
-        stompClient = Stomp.over(socket); // STOMP 클라이언트 생성
+        var socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            // 공용 채팅방 토픽 구독
-            stompClient.subscribe('/topic/public', function (message) {
-                showMessage(JSON.parse(message.body));
+            console.log('Connected: ' + frame); // 연결 로그 추가
+
+            // 각 방마다 별도의 구독 설정
+            stompClient.subscribe('/topic/chat/room1', function (message) {
+                console.log('Received message in room1: ', message); // 메시지 수신 로그 추가
+                showMessage(JSON.parse(message.body), 'room1');
+            });
+            stompClient.subscribe('/topic/chat/room2', function (message) {
+                console.log('Received message in room2: ', message);
+                showMessage(JSON.parse(message.body), 'room2');
+            });
+            stompClient.subscribe('/topic/chat/room3', function (message) {
+                console.log('Received message in room3: ', message);
+                showMessage(JSON.parse(message.body), 'room3');
             });
 
-            // 사용자 입장 메시지 전송
-            stompClient.send("/app/chat.addUser", {}, JSON.stringify({
-                sender: username,
-                type: 'JOIN'
-            }));
+            // 초기 방 입장 메시지
+            sendJoinMessage(currentRoom);
+        }, function(error) {
+            console.log('Connection error: ', error); // 연결 에러 로그 추가
         });
     }
 
-    // 메시지를 전송하는 함수
+    function sendJoinMessage(roomId) {
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify({
+                sender: username,
+                type: 'JOIN',
+                roomId: roomId
+            }));
+        }
+    }
+
     function sendMessage() {
         var messageContent = document.getElementById("message").value.trim();
         if (messageContent && stompClient) {
             var chatMessage = {
                 sender: username,
                 content: messageContent,
-                type: 'CHAT'
+                type: 'CHAT',
+                roomId: currentRoom
             };
-            stompClient.send("/app/chat.sendMessage", {}, JSON.stringify(chatMessage));
+            console.log('Sending message: ', chatMessage); // 전송 메시지 로그 추가
+            stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessage));
             document.getElementById("message").value = ''; // 입력 창 비우기
         }
     }
 
-    // 받은 메시지를 화면에 표시하는 함수
-    function showMessage(message) {
-        console.log("Received message type: " + message.type); // 확인용 로그 추가
-        var messageArea = document.getElementById("messageArea");
-        var messageElement = document.createElement('li');
+    // 방 변경 함수
+    function switchRoom() {
+        var roomSelect = document.getElementById('roomSelect');
+        var newRoom = roomSelect.value;
 
-        if (message.type === 'JOIN') {
-            messageElement.classList.add('event-message');
-            messageElement.innerHTML = message.sender + ' joined!';
-        } else if (message.type === 'LEAVE') {
-            messageElement.classList.add('event-message');
-            messageElement.innerHTML = message.sender + ' left!';
-        } else {
-            messageElement.innerHTML = message.sender + ": " + message.content;
+        // 이전 방 나가기 메시지 전송
+        if (stompClient && stompClient.connected) {
+            stompClient.send("/app/chat.leaveRoom", {}, JSON.stringify({
+                sender: username,
+                type: 'LEAVE',
+                roomId: currentRoom
+            }));
         }
-        messageArea.appendChild(messageElement);
+
+        // 메시지 영역 초기화
+        document.getElementById('messageArea').innerHTML = '';
+
+        // 새 방 입장
+        currentRoom = newRoom;
+        sendJoinMessage(currentRoom);
     }
 
+    // 메시지 표시 함수 (특정 방 전용)
+    function showMessage(message, roomId) {
+        // 현재 선택된 방의 메시지만 표시
+        if (roomId === currentRoom) {
+            var messageArea = document.getElementById("messageArea");
+            var messageElement = document.createElement('li');
 
-    // 페이지가 로드되면 채팅방에 자동 입장
+            if (message.type === 'JOIN') {
+                messageElement.classList.add('event-message');
+                messageElement.innerHTML = message.sender + ' joined the room!';
+            } else if (message.type === 'LEAVE') {
+                messageElement.classList.add('event-message');
+                messageElement.innerHTML = message.sender + ' left the room!';
+            } else if (message.type === 'CHAT') {
+                messageElement.innerHTML = message.sender + ": " + message.content;
+            }
+            messageArea.appendChild(messageElement);
+
+            // 스크롤을 최신 메시지로 자동 이동
+            messageArea.scrollTop = messageArea.scrollHeight;
+        }
+    }
+
+    // 페이지 로드 시 연결
     window.onload = function () {
-        enterChatRoom();
+        connect();
     };
-
 </script>
 
 <!-- 푸터 포함 -->
