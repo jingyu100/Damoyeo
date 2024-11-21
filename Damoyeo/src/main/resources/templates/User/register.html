@@ -83,6 +83,24 @@
                 alert("아이디를 입력해주세요.");
             }
         }
+
+        function checkNickname() {
+            const nickname = document.getElementById("nickname").value;
+            if (nickname) {
+                fetch(`/user/check-nickname?nickname=${nickname}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.exists) {
+                            alert("이미 사용 중인 닉네임입니다.");
+                        } else {
+                            alert("사용 가능한 닉네임입니다.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            } else {
+                alert("닉네임를 입력해주세요.");
+            }
+        }
     </script>
 </head>
 <body>
@@ -132,7 +150,10 @@
             <td>닉네임</td>
         </tr>
         <tr>
-            <td><input type="text" class="text" th:field="*{nickname}"></td>
+            <td>
+                <input type="text" id="nickname" class="text" th:field="*{nickname}">
+                <button type="button" class="check-btn" onclick="checkNickname()">중복 확인</button>
+            </td>
         </tr>
 
         <tr>
