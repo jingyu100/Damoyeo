@@ -94,7 +94,9 @@
                         updateSubmitButton();
                     });
             } else {
-                alert("아이디를 입력해주세요.");
+                // alert("닉네임를 입력해주세요.");
+                // emailNotice.innerHTML = "아이디를 입력해주세요.";
+                // emailNotice.style.color = "red";
                 emailUnique = false;
                 updateSubmitButton();
             }
@@ -125,7 +127,7 @@
                         updateSubmitButton();
                     });
             } else {
-                alert("닉네임를 입력해주세요.");
+                // alert("닉네임를 입력해주세요.");
                 nicknameUnique = false;
                 updateSubmitButton();
             }
@@ -203,7 +205,7 @@
         <tr>
             <td>
                 <input type="text" id="nickname" class="text" onchange="checkNickname()" th:field="*{nickname}">
-                <p id="nicknameNotice"></p>
+                <p id="nicknameNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
 <!--                <button type="button" class="check-btn" onclick="checkNickname()">중복 확인</button>-->
             </td>
         </tr>
