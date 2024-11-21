@@ -94,6 +94,14 @@ public class UserService {
 
     }
 
+    // 이메일 존재 여부 확인
+    public boolean isNicknameExists(String nickname) {
+
+        // 이메일로 존재 여부 확인 후 반환
+        return userRepository.existsByNickname(nickname);
+
+    }
+
     // 사용자 정보 업데이트
     public void updateUser(User user) {
 

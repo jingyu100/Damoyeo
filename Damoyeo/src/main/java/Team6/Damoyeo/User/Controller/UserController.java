@@ -126,6 +126,21 @@ public class UserController {
 
     }
 
+    // 이메일 중복 체크 API
+    @GetMapping("/check-nickname")
+    public ResponseEntity<Map<String, Boolean>> checkNickname(@RequestParam("nickname") String nickname) {
+
+        // 이메일 중복 여부 확인
+        boolean exists = userService.isNicknameExists(nickname);
+
+        // 응답 데이터 설정
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+
+        return ResponseEntity.ok(response);
+
+    }
+
     // 로그아웃 처리
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
