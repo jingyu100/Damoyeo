@@ -66,6 +66,8 @@
         }
     </style>
     <script>
+        var check = 0;
+
         function checkEmail() {
             const email = document.getElementById("email").value;
             if (email) {
@@ -73,9 +75,13 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
-                            alert("이미 사용 중인 아이디입니다.");
+                            // alert("이미 사용 중인 아이디입니다.");
+                            var alert = "이미 사용 중인 아이디입니다"
+                            document.getElementById("emailNotice").innerHTML = alert;
                         } else {
-                            alert("사용 가능한 아이디입니다.");
+                            // alert("사용 가능한 아이디입니다.");
+                            var alert = "사용 가능한 아이디입니다."
+                            document.getElementById("emailNotice").innerHTML = alert;
                         }
                     })
                     .catch(error => console.error("Error:", error));
@@ -91,9 +97,13 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.exists) {
-                            alert("이미 사용 중인 닉네임입니다.");
+                            // alert("이미 사용 중인 닉네임입니다.");
+                            var alert = "이미 사용 중인 닉네임입니다."
+                            document.getElementById("nicknameNotice").innerHTML = alert;
                         } else {
-                            alert("사용 가능한 닉네임입니다.");
+                            // alert("사용 가능한 닉네임입니다.");
+                            var alert = "사용 가능한 닉네임입니다."
+                            document.getElementById("nicknameNotice").innerHTML = alert;
                         }
                     })
                     .catch(error => console.error("Error:", error));
@@ -120,7 +130,8 @@
         </tr>
         <tr>
             <td>
-                <input id="email" type="email" class="text" th:field="*{email}" placeholder="아이디를 입력해주세요.">
+                <input id="email" type="email" class="text" th:field="*{email}" onchange="checkEmail()" placeholder="아이디를 입력해주세요.">
+                <p id="emailNotice"></p>
                 <button type="button" class="check-btn" onclick="checkEmail()">중복 확인</button>
             </td>
         </tr>
@@ -151,7 +162,8 @@
         </tr>
         <tr>
             <td>
-                <input type="text" id="nickname" class="text" th:field="*{nickname}">
+                <input type="text" id="nickname" class="text" onchange="checkNickname()" th:field="*{nickname}">
+                <p id="nicknameNotice"></p>
                 <button type="button" class="check-btn" onclick="checkNickname()">중복 확인</button>
             </td>
         </tr>
