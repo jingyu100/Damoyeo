@@ -20,7 +20,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
                         .requestMatchers(new AntPathRequestMatcher("/**")).permitAll())
                 .csrf((csrf) -> csrf
-                        .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"), new AntPathRequestMatcher("/post/join/**"))
+                        .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"),
+                                new AntPathRequestMatcher("/post/join/**"),
+                                new AntPathRequestMatcher("/post/out/**"))
                         .ignoringRequestMatchers("/calendar/events/**")
                 )  // calendar 엔드포인트에 대한 CSRF 비활성화 추가
                 .headers((headers) -> headers

@@ -1,6 +1,7 @@
 package Team6.Damoyeo.Post.Controller;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Entity.PostRequest;
 import Team6.Damoyeo.Post.Service.PostRequestService;
 import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.User.Entity.User;
@@ -157,11 +158,16 @@ public class PostController {
         if (userId != null) {
             user = userService.findByUser(userId);
         }
+        
+        //포스트 아이디랑 유저 아이디로 포스트 신청에서 찾기
+        PostRequest postRequest = postRequestService.findClick(post,user);
+
         // 모델에 데이터 추가
         model.addAttribute("user", user);
         model.addAttribute("post", post);
         model.addAttribute("userId", userId);
         model.addAttribute("nearby", nearby);
+        model.addAttribute("postRequest", postRequest);
         model.addAttribute("apiKey", API_KEY);
 
         return "post/detail";  // 상세 페이지로 이동
@@ -202,5 +208,19 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("오류가 발생했습니다: " + e.getMessage());
         }
+    }
+    
+    //참가 취소
+    @PostMapping("/out/{id}")
+    @ResponseBody
+    public ResponseEntity<String> outPost(@PathVariable("id") Integer postId,
+                                          @RequestParam("user_id") Integer userId) throws Exception {
+        Post post = postService.findById(postId);
+        User user = userService.findByUser(userId);
+
+        PostRequest postRequest = postRequestService.findClick(post, user);
+
+        postRequestService.delete(postRequest);
+        return ResponseEntity.ok("참여가 취소되었습니다.");
     }
 }
