@@ -482,7 +482,7 @@
 
             <!-- 로그인되지 않으면 로그인만 표시-->
             <th:block th:if="${userId == null}">
-                <a class="chat_mainpage" id="gotoLogin">로그인</a>
+                <a href="/user/login" class="chat_mainpage" id="gotoLogin">로그인</a>
             </th:block>
             <!-- 로그인된 상태이면 모임 참여하기 또는 참여 취소 버튼 표시 -->
             <th:block th:if="${userId != null}">
@@ -534,9 +534,9 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         // 이벤트 위임 사용
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             // 모임 참여하기 버튼 클릭 시
             if (event.target.id === 'joinParty') {
                 const joinUrl = document.getElementById('joinUrl').value;
@@ -546,6 +546,7 @@
                     input: 'text',
                     inputPlaceholder: '사유를 적어주세요',
                     showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
                     confirmButtonText: '신청하기',
                     cancelButtonText: '취소'
                 }).then((result) => {
@@ -592,7 +593,7 @@
                     title: '정말로 그렇게 하시겠습니까?',
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
+                    confirmButtonColor: '#A7C7E7',
                     cancelButtonColor: '#d33',
                     confirmButtonText: '승인',
                     cancelButtonText: '취소',
