@@ -473,7 +473,7 @@
         <div class="btn_set">
             <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
             <a href="/#" class="chat_mainpage">모임 참여하기</a>
-            <button class="like-button" onclick="toggleLike(postId, userId)">
+            <button class="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
                 <i id="like-icon" class="far fa-heart"></i>
             </button>
         </div>
@@ -497,35 +497,40 @@
 <div th:replace="~{footer.html}"></div>
 
 <script>
+    let isLiked = false;
+
 
     function toggleLike(postId, userId) {
-    const likeIcon = document.getElementById("like-icon");
-    const isLiked = likeIcon.classList.contains('fas');
 
-    // 템플릿 리터럴 대신 문자열 연결로 수정
-    const url = '/likes/' + (isLiked ? 'remove' : 'add');  // 'remove' 또는 'add'를 URL에 연결
+        isLiked = !isLiked;
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ postId: postId, userId: userId }),  // postId, userId를 JSON으로 전달
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            likeIcon.classList.toggle('fas', !isLiked);
-            likeIcon.classList.toggle('far', isLiked);
-        } else {
-            alert('다시 한번 눌러주세요');
+        const likeIcon = document.getElementById('like-icon');
+        if (isLiked) {
+            $.ajax({
+                url : '/likes/' + postId,
+                method : 'POST',
+                contentType : 'application/json',
+                data : JSON.stringify({ postId: postId, userId: userId , isLiked : isLiked}),
+                success : function (data) {
+                    if(data.success) {
+                        if(isLiked) {
+                            likeIcon.classList.remove('far');
+                            likeIcon.classList.add('fas');
+                        } else {
+                            likeIcon.classList.remove('fas');
+                            likeIcon.classList.add('far');
+                        }
+
+                        const countElement = document.getElementById('like-count');
+                        countElement.textContent = `${data.likeCount} 좋아요 ∙ ${data.viewCount} 조회수`;
+                    }
+                },
+                error : function(error) {
+                    console.error("Error ",error);
+                }
+            });
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('에러가 발생했습니다. 다시 한번 눌러주세요');
-    });
-}
+    }
 
 </script>
 </body>

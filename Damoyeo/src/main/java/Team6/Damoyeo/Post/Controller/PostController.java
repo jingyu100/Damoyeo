@@ -1,5 +1,6 @@
 package Team6.Damoyeo.Post.Controller;
 
+import Team6.Damoyeo.Like.Entity.Like;
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.User.Entity.User;
@@ -24,7 +25,9 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/post")
@@ -178,4 +181,6 @@ public class PostController {
         }
 
     }
+
+
 }
