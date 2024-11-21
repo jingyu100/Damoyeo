@@ -76,12 +76,12 @@
                     .then(data => {
                         if (data.exists) {
                             // alert("이미 사용 중인 아이디입니다.");
-                            var alert = "이미 사용 중인 아이디입니다"
-                            document.getElementById("emailNotice").innerHTML = alert;
+                            document.getElementById("emailNotice").innerHTML = "이미 사용 중인 아이디입니다";
+                            document.getElementById("emailNotice").style = "color:red; font-size: 0.9rem; margin-top: 5px;";
                         } else {
                             // alert("사용 가능한 아이디입니다.");
-                            var alert = "사용 가능한 아이디입니다."
-                            document.getElementById("emailNotice").innerHTML = alert;
+                            document.getElementById("emailNotice").innerHTML = "사용 가능한 아이디입니다";
+                            document.getElementById("emailNotice").style = "color:green; font-size: 0.9rem; margin-top: 5px;";
                         }
                     })
                     .catch(error => console.error("Error:", error));
@@ -98,12 +98,12 @@
                     .then(data => {
                         if (data.exists) {
                             // alert("이미 사용 중인 닉네임입니다.");
-                            var alert = "이미 사용 중인 닉네임입니다."
-                            document.getElementById("nicknameNotice").innerHTML = alert;
+                            document.getElementById("nicknameNotice").innerHTML = "이미 사용 중인 닉네임입니다";
+                            document.getElementById("nicknameNotice").style = "color:red; font-size: 0.9rem; margin-top: 5px;";
                         } else {
                             // alert("사용 가능한 닉네임입니다.");
-                            var alert = "사용 가능한 닉네임입니다."
-                            document.getElementById("nicknameNotice").innerHTML = alert;
+                            document.getElementById("nicknameNotice").innerHTML = "사용 가능한 닉네임입니다";
+                            document.getElementById("nicknameNotice").style = "color:green; font-size: 0.9rem; margin-top: 5px;";
                         }
                     })
                     .catch(error => console.error("Error:", error));
@@ -130,8 +130,9 @@
         </tr>
         <tr>
             <td>
-                <input id="email" type="email" class="text" th:field="*{email}" onchange="checkEmail()" placeholder="아이디를 입력해주세요.">
-                <p id="emailNotice"></p>
+                <input id="email" type="email" class="text" th:field="*{email}" onchange="checkEmail()"
+                       placeholder="아이디를 입력해주세요.">
+                <p id="emailNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
                 <button type="button" class="check-btn" onclick="checkEmail()">중복 확인</button>
             </td>
         </tr>
