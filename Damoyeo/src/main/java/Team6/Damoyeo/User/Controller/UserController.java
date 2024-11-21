@@ -66,7 +66,11 @@ public class UserController {
 
     // 로그인 폼 페이지로 이동
     @GetMapping("/login")
-    public String showLoginForm(Model model) {
+    public String showLoginForm(Model model, HttpServletRequest request) {
+        String referer = request.getHeader("Referer");
+        if (referer != null && !referer.contains("/login")) {
+            request.getSession().setAttribute("redirectUrl", referer);
+        }
         return "user/login";
     }
 
@@ -75,39 +79,31 @@ public class UserController {
     public String loginUser(@RequestParam("userEmail") String userEmail,
                             @RequestParam("userPassword") String userPassword,
                             RedirectAttributes redirectAttributes,
-                            HttpServletRequest httpServletRequest) {
+                            HttpServletRequest request) {
 
         try {
-            // 디버깅용 로그 (이메일 + 패스워드 출력)
-            System.out.println("Login attempt - Email: " + userEmail + ", Password: " + userPassword);
+            HttpSession session = request.getSession();
 
-            // 세션 객체 가져오기
-            HttpSession session = httpServletRequest.getSession();
-
-            // 이메일과 비밀번호로 유저 정보 조회
+            // 유저 로그인 처리
             User user = userService.loginUser(userEmail, userPassword);
-
-            // 로그인 성공 시 세션에 유저 ID 저장
             session.setAttribute("userId", user.getUserId());
 
-            System.out.println("Login successful for user: " + user.getEmail());
+            // 리다이렉트 URL 가져오기 (없으면 기본값 "/")
+            String redirectUrl = (String) session.getAttribute("redirectUrl");
+            if (redirectUrl == null || redirectUrl.isEmpty()) {
+                redirectUrl = "/";
+            }
 
-            // 성공 메시지 추가
+            // 세션에서 리다이렉트 URL 삭제 (재사용 방지)
+            session.removeAttribute("redirectUrl");
+
             redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
-
-            return "redirect:/";
+            return "redirect:" + redirectUrl;
 
         } catch (Exception e) {
-
-            // 에러 발생 시 로그 출력
-            System.out.println("Login error: " + e.getMessage());
-
-            // 에러 메시지와 입력한 이메일 유지
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("userEmail", userEmail);
-
             return "redirect:/user/login";
-
         }
     }
 
