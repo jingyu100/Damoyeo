@@ -222,7 +222,12 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(){
+    public String myPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId){
+        // 세션에 저장된 userId로 사용자 정보 조회
+        User user = userService.findByUser(userId);
+
+        model.addAttribute("user", user);
+        model.addAttribute("userId", userId);
         return "user/mypage";
     }
 }
