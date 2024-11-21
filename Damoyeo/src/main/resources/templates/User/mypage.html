@@ -8,30 +8,32 @@
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
-<br><br>
 <!--마이 페이지 헤더 부분 시작 -->
+<br><br>
 <style>
   .header-banner {
     background-color: #d6eaff;
-    padding: 40px 0;
+    padding: 18px 0;
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
   }
   .header-banner h1 {
-    margin-left: 157px;
-    margin-right: 400px;
+    margin-left: 140px;
+    margin-right: 280px;
     color: #4D5159;
-    font-size: 2.3em;
+    font-size: 2.5em;
+    white-space: nowrap;
   }
   .header-banner img {
-    margin-right: 50px;
+    margin-right: 40px;
     border-radius: 50%; /* 둥근 모양 */
     object-fit: cover; /* 비율 유지 */
   }
   .header-banner p1 {
     color: #4D5159;
     font-size: 2.4em;
-    margin-right: 200px;
+    margin-right: 180px;
+    white-space: nowrap;
   }
   .header-banner .user-profile-img {
     width: 70px;
@@ -42,6 +44,7 @@
   .header-banner p2 {
     color: #4D5159;
     font-size: 2em;
+    white-space: nowrap;
   }
 </style>
 
@@ -51,13 +54,127 @@
     <img src="/uploads/img.png" style="width: 130px; height: 130px" alt="">
   </a>
   <p1>닉네임123123님</p1>
-  <a href="/">
+  <a href="">
     <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="">
   </a>
   <p2>프로필</p2>
 </div>
-
 <!--마이 페이지 헤더 부분 끝 ---->
+
+<!--마이 페이지 메인 부분 시작-->
+<style>
+  .main-layout {
+    display: flex;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+    gap: 50px;
+    width: 90%;
+    height: 1200px;
+    margin: 50px auto; /* 가운데 정렬 */
+  }
+
+  .main-banner {
+    display: flex;
+    flex-direction: column; /* 세로로 나열 */
+    gap: 50px;
+  }
+
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* 이미지와 텍스트 간격 */
+    margin-left: 0;
+    transition: opacity 0.3s; /* 부드러운 흐림 효과 */
+  }
+
+  .menu-item img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .custom-heading {
+    font-size: 1.2em;
+    font-weight: bold;
+  }
+
+  .big-box {
+    flex-shrink: 0; /* 오른쪽 박스 크기를 고정 */
+    width: 1000px;
+    height: 600px;
+    border: 2px solid black;
+    background-color: #ffffff;
+  }
+
+  /* 흐림 효과 */
+  .menu-item.dimmed {
+    opacity: 0.3; /* 투명도를 낮춤 */
+  }
+</style>
+
+<div class="main-layout">
+  <!-- 왼쪽 메뉴 -->
+  <div class="main-banner">
+    <div class="menu-item" onclick="handleClick(this)">
+      <a href="">
+        <img src="/uploads/찜한 게시물.png" alt="찜한 게시물">
+      </a>
+      <div class="custom-heading">찜한 게시물</div>
+    </div>
+
+    <div class="menu-item" onclick="handleClick(this)">
+      <a href="">
+        <img src="/uploads/알림.png" alt="알림">
+      </a>
+      <div class="custom-heading">알림</div>
+    </div>
+
+    <div class="menu-item" onclick="handleClick(this)">
+      <a href="">
+        <img src="/uploads/공지사항.png" alt="공지사항">
+      </a>
+      <div class="custom-heading">공지사항</div>
+    </div>
+
+    <div class="menu-item" onclick="handleClick(this)">
+      <a href="">
+        <img src="/uploads/고객센터.png" alt="고객센터">
+      </a>
+      <div class="custom-heading">고객센터</div>
+    </div>
+
+    <div class="menu-item" onclick="handleClick(this)">
+      <a href="">
+        <img src="/uploads/설정.png" alt="설정">
+      </a>
+      <div class="custom-heading">설정</div>
+    </div>
+  </div>
+  <!-- 오른쪽 큰 박스 -->
+  <div class="big-box"></div>
+</div>
+
+<script>
+  // 클릭 이벤트 처리
+  function handleClick(clickedItem) {
+    const items = document.querySelectorAll('.menu-item');
+
+    // 모든 항목을 흐리게 설정
+    items.forEach(item => {
+      if (item !== clickedItem) {
+        item.classList.add('dimmed'); // 흐림 효과 추가
+      } else {
+        item.classList.remove('dimmed'); // 클릭된 항목은 흐리지 않음
+      }
+    });
+
+    // 클릭된 항목을 다시 클릭하면 기본 상태로 되돌림
+    if (clickedItem.classList.contains('dimmed')) {
+      items.forEach(item => item.classList.remove('dimmed'));
+    }
+  }
+</script>
+
+<br><br><br><br><br><br>
+<!--마이 페이지 메인 부분 끝---->
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>
