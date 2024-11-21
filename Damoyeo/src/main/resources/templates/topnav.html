@@ -17,7 +17,7 @@
             <th:block th:if="${userId != null}">
                 <a href="/user/profile" class="top-nav-profile">
                     <img th:src="@{|/uploads/${user.photoUrl}|}" style="width: 40px; height: 40px" alt="">
-                    어 그래 형이야
+                    <div th:text="${user.nickname}"></div>
                 </a>
                 <a href="/user/logout" class="login-btn">로그아웃</a>
             </th:block>
