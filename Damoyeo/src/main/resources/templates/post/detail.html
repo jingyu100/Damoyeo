@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="layout/basic">
-<link rel="stylesheet" href="../css/navfooter.css"></link>
+<html lang="ko" layout:decorate="layout/basic" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org">
+<link href="../css/navfooter.css" rel="stylesheet"></link>
 <head>
     <meta charset="UTF-8">
     <title>상세 페이지</title>
@@ -344,7 +344,7 @@
 <!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 삭제 보이게-->
 <th:block th:if="${userId == post.user.getUserId()}">
     <div>
-        <form th:action="@{'/post/delete/' + ${post.postId}}" method="post">
+        <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
             <button type="submit">삭제</button>
         </form>
     </div>
@@ -354,17 +354,17 @@
     <p>수정</p>
 </th:block>
 <!--참가신청 userId 확인을 위한 코드-->
-<input type="hidden" id="userId" th:value="${userId}">
+<input id="userId" th:value="${userId}" type="hidden">
 <!--포스트보낼때 사용 지우지 마세요-->
-<input type="hidden" id="joinUrl" th:value="@{|/post/join/${post.postId}|}">
-<input type="hidden" id="outUrl" th:value="@{|/post/out/${post.postId}|}">
+<input id="joinUrl" th:value="@{|/post/join/${post.postId}|}" type="hidden">
+<input id="outUrl" th:value="@{|/post/out/${post.postId}|}" type="hidden">
 <div class="section">
     <div class="page_title">
-        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="Post Image">
+        <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
         <div class="profile-container">
             <div class="profile">
                 <div class="profile-img">
-                    <img class="" th:src="@{|/uploads/${post.user.photoUrl}|}" alt="">
+                    <img alt="" class="" th:src="@{|/uploads/${post.user.photoUrl}|}">
                 </div>
                 <div class="profile-text">
                     <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
@@ -397,16 +397,16 @@
             <div id="map" style="width:100%;height:200px;position:relative;overflow:hidden;"></div>
             <!-- 지도타입 컨트롤 div 입니다 -->
             <div class="custom_typecontrol radius_border">
-                <span id="btnRoadmap" class="selected_btn" onclick="setMapType('roadmap')">지도</span>
-                <span id="btnSkyview" class="btn" onclick="setMapType('skyview')">스카이뷰</span>
+                <span class="selected_btn" id="btnRoadmap" onclick="setMapType('roadmap')">지도</span>
+                <span class="btn" id="btnSkyview" onclick="setMapType('skyview')">스카이뷰</span>
             </div>
             <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
             <div class="custom_zoomcontrol radius_border">
-            <span onclick="zoomIn()"><img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"
-                                          alt="확대"></span>
+            <span onclick="zoomIn()"><img alt="확대"
+                                          src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"></span>
                 <span onclick="zoomOut()"><img
-                        src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"
-                        alt="축소"></span>
+                        alt="축소"
+                        src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"></span>
             </div>
         </div>
 
@@ -481,16 +481,16 @@
         </script>
 
         <div class="row" id="count">
-            <div class="value" id="like-count" th:text="${post.likeCount}">좋아요</div>
-            <div class="value" id="view-count" th:text="${post.viewCount}">조회수</div>
+            <div class="value" id="like-count" th:text="${post.likeCount} + ' 좋아요'"></div>
+            <div class="value" id="view-count" th:text="${post.viewCount} + ' 조회수' "></div>
         </div>
 
         <div class="btn_set">
-            <a th:href="@{/post/main}" class="post_mainpage">메인페이지</a>
+            <a class="post_mainpage" th:href="@{/post/main}">메인페이지</a>
 
             <!-- 로그인되지 않으면 로그인만 표시-->
             <th:block th:if="${userId == null}">
-                <a href="/user/login" class="chat_mainpage" id="gotoLogin">로그인</a>
+                <a class="chat_mainpage" href="/user/login" id="gotoLogin">로그인</a>
             </th:block>
             <!-- 로그인된 상태이면 모임 참여하기 또는 참여 취소 버튼 표시 -->
             <th:block th:if="${userId != null}">
@@ -518,8 +518,8 @@
             </th:block>
 
 
-            <button class="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
-                <i id="like-icon" class="far fa-heart"></i>
+            <button class="like-button" id="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
+                <i class="far fa-heart" id="like-icon"></i>
             </button>
         </div>
     </div>
@@ -529,8 +529,8 @@
     <ul>
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
-                <img th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}"
-                     alt="Nearby Post Image" style="width: 250px; height: 250px;">
+                <img alt="Nearby Post Image"
+                     style="width: 250px; height: 250px;" th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}">
                 <div class="nearby-title" th:text="${nearby.title}">제목</div>
                 <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
                         th:text="${nearby.maxParticipants}">0</span></div>
@@ -543,9 +543,59 @@
 <div th:replace="~{footer.html}"></div>
 
 <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    const postId = [[${post.postId}]]; // 현재 게시물 ID
+    const userId = [[${user.userId}]]; // 현재 사용자 ID
 
-    let isLiked = false;
+    const likeButton = document.getElementById('like-button');
+    const likeIcon = document.getElementById('like-icon');
+    const likeCountElement = document.getElementById('like-count');
+    // 페이지 로드 시 좋아요 상태 확인 및 초기화
+    fetch(`/likes/${postId}/liked?userId=${userId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.liked) {
+                likeIcon.classList.add('fas');
+                likeIcon.classList.remove('far');
+            } else {
+                likeIcon.classList.add('far');
+                likeIcon.classList.remove('fas');
+            }
 
+        })
+        .catch(error => console.error("Error fetching like status:", error));
+
+    // 좋아요 토글 작업
+    function toggleLike(postId, userId) {
+        fetch(`/likes/${postId}/toggle`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: userId }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // 서버 응답에 따라 UI 업데이트
+                if (data.liked === "1") {
+                    likeIcon.classList.add('fas');
+                    likeIcon.classList.remove('far');
+                } else {
+                    likeIcon.classList.add('far');
+                    likeIcon.classList.remove('fas');
+                }
+                likeCountElement.textContent = data.likeCount + " 좋아요";
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+        // 버튼 클릭 이벤트 추가
+        likeButton.addEventListener('click', function () {
+            toggleLike(postId, userId);
+        });
+    });
+/*
+let isLiked = false;
+
+document.addEventListener("DOMContentLoaded", function () {
     function toggleLike(postId, userId) {
         // 현재 상태 변경
         isLiked = !isLiked;
@@ -562,8 +612,9 @@
             data: JSON.stringify({ userId: userId }),
             success: function (response) {
                 if (response.success) {
-                    // 좋아요 수와 상태 업데이트
+                    // 좋아요 수
                     document.getElementById('like-count').textContent = response.likeCount + " 좋아요";
+
                     const likeIcon = document.getElementById('like-icon');
                     if (response.liked === "1") {
                         likeIcon.classList.remove('far');
@@ -579,101 +630,127 @@
             }
         });
     }
+});
+document.addEventListener("DOMContentLoaded", function () {
+const postId = [[${post.postId}]]; // 현재 게시물 ID
+const userId = [[${user.userId}]]; // 현재 사용자 ID
 
-    document.addEventListener('DOMContentLoaded', function () {
-        // 이벤트 위임 사용
-        document.addEventListener('click', function (event) {
-            // 모임 참여하기 버튼 클릭 시
-            if (event.target.id === 'joinParty') {
-                const joinUrl = document.getElementById('joinUrl').value;
+    // 서버에서 좋아요 상태 확인
+    fetch(`/likes/${postId}/liked?userId=${userId}`)
+    .then(response => response.json())
+    .then(data => {
+        const liked = data.liked; // 서버에서 반환된 좋아요 상태
 
-                Swal.fire({
-                    title: '참가 사유를 적어주세요',
-                    input: 'text',
-                    inputPlaceholder: '사유를 적어주세요',
-                    showCancelButton: true,
-                    confirmButtonColor: '#A7C7E7',
-                    confirmButtonText: '신청하기',
-                    cancelButtonText: '취소'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        const text = result.value;
-                        const userId = document.getElementById('userId').value;
+        // UI에서 좋아요 버튼의 상태를 갱신
+        const likeIcon = document.getElementById('like-icon');
+        if (liked) {
+            likeIcon.classList.remove('far');
+            likeIcon.classList.add('fas');
+        } else {
+            likeIcon.classList.remove('fas');
+            likeIcon.classList.add('far');
+        }
 
-                        // FormData 사용
-                        const formData = new FormData();
-                        formData.append('message', text);
-                        formData.append('user_id', userId);
+        // 초기 상태 설정
+        isLiked = liked; // 서버에서 받은 값으로 isLiked 초기화
+    })
+    .catch(error => console.error("Error fetching like status:", error));
+});
+*/
+document.addEventListener('DOMContentLoaded', function () {
+    // 이벤트 위임 사용
+    document.addEventListener('click', function (event) {
+        // 모임 참여하기 버튼 클릭 시
+        if (event.target.id === 'joinParty') {
+            const joinUrl = document.getElementById('joinUrl').value;
 
-                        $.ajax({
-                            url: joinUrl,
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
-                                console.log("Success:", response);
-                                Swal.fire('신청 완료!', '모임 신청이 완료되었습니다.', 'success')
-                                    .then(() => {
-                                        // 페이지 새로고침
-                                        location.reload();
-                                    });
-                            },
-                            error: function (xhr, status, error) {
-                                console.log("Status:", status);
-                                console.log("Error:", error);
-                                console.log("Response:", xhr.responseText);
-                                Swal.fire('오류 발생', '모임 신청에 실패했습니다.', 'error');
-                            }
-                        });
-                    }
-                });
-            }
+            Swal.fire({
+                title: '참가 사유를 적어주세요',
+                input: 'text',
+                inputPlaceholder: '사유를 적어주세요',
+                showCancelButton: true,
+                confirmButtonColor: '#A7C7E7',
+                confirmButtonText: '신청하기',
+                cancelButtonText: '취소'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const text = result.value;
+                    const userId = document.getElementById('userId').value;
 
-            // 모임 참여 취소 버튼 클릭 시
-            if (event.target.id === 'partyCancel') {
-                const outUrl = document.getElementById('outUrl').value;
-                const userId = document.getElementById('userId').value;
+                    // FormData 사용
+                    const formData = new FormData();
+                    formData.append('message', text);
+                    formData.append('user_id', userId);
 
-                Swal.fire({
-                    title: '정말로 그렇게 하시겠습니까?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#A7C7E7',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: '승인',
-                    cancelButtonText: '취소',
-                }).then(result => {
-                    if (result.isConfirmed) {
-                        const formData = new FormData();
-                        formData.append('user_id', userId);
+                    $.ajax({
+                        url: joinUrl,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            console.log("Success:", response);
+                            Swal.fire('신청 완료!', '모임 신청이 완료되었습니다.', 'success')
+                                .then(() => {
+                                    // 페이지 새로고침
+                                    location.reload();
+                                });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Status:", status);
+                            console.log("Error:", error);
+                            console.log("Response:", xhr.responseText);
+                            Swal.fire('오류 발생', '모임 신청에 실패했습니다.', 'error');
+                        }
+                    });
+                }
+            });
+        }
 
-                        $.ajax({
-                            url: outUrl,
-                            type: 'POST',
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            success: function (response) {
-                                console.log("Success:", response);
-                                Swal.fire('취소 완료!', '모임 신청이 취소 되었습니다.', 'success')
-                                    .then(() => {
-                                        // 페이지 새로고침
-                                        location.reload();
-                                    });
-                            },
-                            error: function (xhr, status, error) {
-                                console.log("Status:", status);
-                                console.log("Error:", error);
-                                console.log("Response:", xhr.responseText);
-                                Swal.fire('오류 발생', '취소 신청이 실패했습니다.', 'error');
-                            }
-                        });
-                    }
-                });
-            }
-        });
+        // 모임 참여 취소 버튼 클릭 시
+        if (event.target.id === 'partyCancel') {
+            const outUrl = document.getElementById('outUrl').value;
+            const userId = document.getElementById('userId').value;
+
+            Swal.fire({
+                title: '정말로 그렇게 하시겠습니까?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#A7C7E7',
+                cancelButtonColor: '#d33',
+                confirmButtonText: '승인',
+                cancelButtonText: '취소',
+            }).then(result => {
+                if (result.isConfirmed) {
+                    const formData = new FormData();
+                    formData.append('user_id', userId);
+
+                    $.ajax({
+                        url: outUrl,
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            console.log("Success:", response);
+                            Swal.fire('취소 완료!', '모임 신청이 취소 되었습니다.', 'success')
+                                .then(() => {
+                                    // 페이지 새로고침
+                                    location.reload();
+                                });
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("Status:", status);
+                            console.log("Error:", error);
+                            console.log("Response:", xhr.responseText);
+                            Swal.fire('오류 발생', '취소 신청이 실패했습니다.', 'error');
+                        }
+                    });
+                }
+            });
+        }
     });
+});
 </script>
 </body>
 </html>
