@@ -498,7 +498,7 @@
             </th:block>
 
 
-            <button class="like-button" onclick="toggleLike()">
+            <button class="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
                 <i id="like-icon" class="far fa-heart"></i>
             </button>
         </div>
