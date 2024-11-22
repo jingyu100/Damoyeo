@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -56,5 +57,23 @@ public class PostRequestService {
         postRequestRepository.delete(postRequest);
     }
 
-
+    //수락했을때
+    public void accet(Integer prId){
+        Optional<PostRequest> opr = postRequestRepository.findById(prId);
+        if (opr.isPresent()) {
+            PostRequest pr = opr.get();
+            pr.setStatus("1");
+            pr.getPost().setNowParticipants(pr.getPost().getNowParticipants() + 1);
+            postRequestRepository.save(pr);
+            postRepository.save(pr.getPost());
+        }
+    }
+    public void refusal(Integer prId){
+        Optional<PostRequest> opr = postRequestRepository.findById(prId);
+        if (opr.isPresent()) {
+            PostRequest pr = opr.get();
+            pr.setStatus("2");
+            postRequestRepository.save(pr);
+        }
+    }
 }

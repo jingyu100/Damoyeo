@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+<script src="/js/sweetalert2.min.js"></script>
+<div th:each="postWithRequests : ${postsWithRequests}">
+  <h3 th:text="${postWithRequests.post.title}">게시글 제목</h3>
+  <div>
+    <p>새로운 참가신청이 있습니다:</p>
+    <div th:each="request : ${postWithRequests.requests}">
+      <p>신청자: <span th:text="${request.user.nickname}"></span></p>
+      <p>메시지: <span th:text="${request.message}"></span></p>
+      <p>신청일: <span th:text="${#temporals.format(request.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
+      <div>
+        <form th:action="@{'/post/requestAccept/' + ${request.prId}}" method="post">
+          <button type="submit">수락</button>
+        </form>
+        <form th:action="@{'/post/requestRefusal/' + ${request.prId}}" method="post">
+          <button type="submit">거절</button>
+        </form>
+      </div>
+      <hr/>
+    </div>
+  </div>
+</div>
+
+<!-- 참가신청이 있는 게시글이 없는 경우 -->
+<div th:if="${postsWithRequests.isEmpty()}">
+  <p>새로운 참가신청이 없습니다.</p>
+</div>
+
+</body>
+</html>

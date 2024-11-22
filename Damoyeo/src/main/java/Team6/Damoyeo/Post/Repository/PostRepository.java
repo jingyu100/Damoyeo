@@ -1,6 +1,7 @@
 package Team6.Damoyeo.Post.Repository;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.User.Entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,5 +30,8 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // 태그 검색 기능
     Page<Post> findByTagContaining(String tag, Pageable pageable);
+
+    // 유저가 적은글 찾기
+    List<Post> findByUser(User user);
 
 }
