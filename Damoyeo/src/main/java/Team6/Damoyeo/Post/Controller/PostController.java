@@ -133,6 +133,8 @@ public class PostController {
 
         }
 
+        post.setStatus("1");
+
         // 게시물 저장
         postService.savePost(post, userId);
 
