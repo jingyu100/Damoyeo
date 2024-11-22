@@ -64,23 +64,21 @@ public class UserController {
         return "redirect:/user/login";
     }
 
-    // 로그인 폼 페이지로 이동
     @GetMapping("/login")
     public String showLoginForm(Model model, HttpServletRequest request) {
         String referer = request.getHeader("Referer");
-        if (referer != null && !referer.contains("/login")) {
+        // 회원가입 페이지나 로그인 페이지에서 왔을 경우 리다이렉트 URL을 저장하지 않음
+        if (referer != null && !referer.contains("/login") && !referer.contains("/register")) {
             request.getSession().setAttribute("redirectUrl", referer);
         }
         return "user/login";
     }
 
-    // 로그인 처리
     @PostMapping("/login")
     public String loginUser(@RequestParam("userEmail") String userEmail,
                             @RequestParam("userPassword") String userPassword,
                             RedirectAttributes redirectAttributes,
                             HttpServletRequest request) {
-
         try {
             HttpSession session = request.getSession();
 
@@ -88,18 +86,20 @@ public class UserController {
             User user = userService.loginUser(userEmail, userPassword);
             session.setAttribute("userId", user.getUserId());
 
-            // 리다이렉트 URL 가져오기 (없으면 기본값 "/")
+            // 리다이렉트 URL 가져오기
             String redirectUrl = (String) session.getAttribute("redirectUrl");
-            if (redirectUrl == null || redirectUrl.isEmpty()) {
+
+            // 리다이렉트 URL이 없거나, 회원가입/로그인 페이지인 경우 홈으로 이동
+            if (redirectUrl == null || redirectUrl.isEmpty() ||
+                    redirectUrl.contains("/register") || redirectUrl.contains("/login")) {
                 redirectUrl = "/";
             }
 
-            // 세션에서 리다이렉트 URL 삭제 (재사용 방지)
+            // 세션에서 리다이렉트 URL 삭제
             session.removeAttribute("redirectUrl");
 
             redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
             return "redirect:" + redirectUrl;
-
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", e.getMessage());
             redirectAttributes.addFlashAttribute("userEmail", userEmail);
