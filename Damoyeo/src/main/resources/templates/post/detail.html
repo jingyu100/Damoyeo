@@ -104,11 +104,11 @@
         }
 
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /** {*/
+        /*    margin: 0;*/
+        /*    padding: 0;*/
+        /*    box-sizing: border-box;*/
+        /*}*/
 
 
         @font-face {
@@ -530,7 +530,8 @@
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
                 <img alt="Nearby Post Image"
-                     style="width: 250px; height: 250px;" th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}">
+                     style="width: 250px; height: 250px;"
+                     th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}">
                 <div class="nearby-title" th:text="${nearby.title}">제목</div>
                 <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
                         th:text="${nearby.maxParticipants}">0</span></div>
@@ -544,213 +545,149 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-    const postId = [[${post.postId}]]; // 현재 게시물 ID
-    const userId = [[${user.userId}]]; // 현재 사용자 ID
+        const postId = [[${post.postId}]];
+        const userId = document.getElementById('userId').value;
 
-    const likeButton = document.getElementById('like-button');
-    const likeIcon = document.getElementById('like-icon');
-    const likeCountElement = document.getElementById('like-count');
-    // 페이지 로드 시 좋아요 상태 확인 및 초기화
-    fetch(`/likes/${postId}/liked?userId=${userId}`)
-        .then(response => response.json())
-        .then(data => {
-            if (data.liked) {
-                likeIcon.classList.add('fas');
-                likeIcon.classList.remove('far');
-            } else {
-                likeIcon.classList.add('far');
-                likeIcon.classList.remove('fas');
-            }
-
-        })
-        .catch(error => console.error("Error fetching like status:", error));
-
-    // 좋아요 토글 작업
-    function toggleLike(postId, userId) {
-        fetch(`/likes/${postId}/toggle`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ userId: userId }),
-        })
+        const likeButton = document.getElementById('like-button');
+        const likeIcon = document.getElementById('like-icon');
+        const likeCountElement = document.getElementById('like-count');
+        // 페이지 로드 시 좋아요 상태 확인 및 초기화
+        fetch(`/likes/${postId}/liked?userId=${userId}`)
             .then(response => response.json())
             .then(data => {
-                // 서버 응답에 따라 UI 업데이트
-                if (data.liked === "1") {
+                if (data.liked) {
                     likeIcon.classList.add('fas');
                     likeIcon.classList.remove('far');
                 } else {
                     likeIcon.classList.add('far');
                     likeIcon.classList.remove('fas');
                 }
-                likeCountElement.textContent = data.likeCount + " 좋아요";
+
             })
-            .catch(error => console.error("Error:", error));
-    }
+            .catch(error => console.error("Error fetching like status:", error));
+
+        // 좋아요 토글 작업
+        function toggleLike(postId, userId) {
+            fetch(`/likes/${postId}/toggle`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: userId}),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 서버 응답에 따라 UI 업데이트
+                    if (data.liked === "1") {
+                        likeIcon.classList.add('fas');
+                        likeIcon.classList.remove('far');
+                    } else {
+                        likeIcon.classList.add('far');
+                        likeIcon.classList.remove('fas');
+                    }
+                    likeCountElement.textContent = data.likeCount + " 좋아요";
+                })
+                .catch(error => console.error("Error:", error));
+        }
 
         // 버튼 클릭 이벤트 추가
         likeButton.addEventListener('click', function () {
             toggleLike(postId, userId);
         });
     });
-/*
-let isLiked = false;
 
-document.addEventListener("DOMContentLoaded", function () {
-    function toggleLike(postId, userId) {
-        // 현재 상태 변경
-        isLiked = !isLiked;
+    document.addEventListener('DOMContentLoaded', function () {
+        // 이벤트 위임 사용
+        document.addEventListener('click', function (event) {
+            // 모임 참여하기 버튼 클릭 시
+            if (event.target.id === 'joinParty') {
+                const joinUrl = document.getElementById('joinUrl').value;
 
-        // 좋아요 아이콘과 카운트 요소 가져오기
-        const likeIcon = document.getElementById('like-icon');
-        const likeCountElement = document.getElementById('like-count');
+                Swal.fire({
+                    title: '참가 사유를 적어주세요',
+                    input: 'text',
+                    inputPlaceholder: '사유를 적어주세요',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    confirmButtonText: '신청하기',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const text = result.value;
+                        const userId = document.getElementById('userId').value;
 
-        // AJAX 요청 실행
-        $.ajax({
-            url: '/likes/' + postId,
-            method: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({ userId: userId }),
-            success: function (response) {
-                if (response.success) {
-                    // 좋아요 수
-                    document.getElementById('like-count').textContent = response.likeCount + " 좋아요";
+                        // FormData 사용
+                        const formData = new FormData();
+                        formData.append('message', text);
+                        formData.append('user_id', userId);
 
-                    const likeIcon = document.getElementById('like-icon');
-                    if (response.liked === "1") {
-                        likeIcon.classList.remove('far');
-                        likeIcon.classList.add('fas');
-                    } else {
-                        likeIcon.classList.remove('fas');
-                        likeIcon.classList.add('far');
+                        $.ajax({
+                            url: joinUrl,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                console.log("Success:", response);
+                                Swal.fire('신청 완료!', '모임 신청이 완료되었습니다.', 'success')
+                                    .then(() => {
+                                        // 페이지 새로고침
+                                        location.reload();
+                                    });
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("Status:", status);
+                                console.log("Error:", error);
+                                console.log("Response:", xhr.responseText);
+                                Swal.fire('오류 발생', '모임 신청에 실패했습니다.', 'error');
+                            }
+                        });
                     }
-                }
-            },
-            error: function (error) {
-                console.error("Error:", error);
+                });
+            }
+
+            // 모임 참여 취소 버튼 클릭 시
+            if (event.target.id === 'partyCancel') {
+                const outUrl = document.getElementById('outUrl').value;
+                const userId = document.getElementById('userId').value;
+
+                Swal.fire({
+                    title: '정말로 그렇게 하시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '승인',
+                    cancelButtonText: '취소',
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        const formData = new FormData();
+                        formData.append('user_id', userId);
+
+                        $.ajax({
+                            url: outUrl,
+                            type: 'POST',
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                            success: function (response) {
+                                console.log("Success:", response);
+                                Swal.fire('취소 완료!', '모임 신청이 취소 되었습니다.', 'success')
+                                    .then(() => {
+                                        // 페이지 새로고침
+                                        location.reload();
+                                    });
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("Status:", status);
+                                console.log("Error:", error);
+                                console.log("Response:", xhr.responseText);
+                                Swal.fire('오류 발생', '취소 신청이 실패했습니다.', 'error');
+                            }
+                        });
+                    }
+                });
             }
         });
-    }
-});
-document.addEventListener("DOMContentLoaded", function () {
-const postId = [[${post.postId}]]; // 현재 게시물 ID
-const userId = [[${user.userId}]]; // 현재 사용자 ID
-
-    // 서버에서 좋아요 상태 확인
-    fetch(`/likes/${postId}/liked?userId=${userId}`)
-    .then(response => response.json())
-    .then(data => {
-        const liked = data.liked; // 서버에서 반환된 좋아요 상태
-
-        // UI에서 좋아요 버튼의 상태를 갱신
-        const likeIcon = document.getElementById('like-icon');
-        if (liked) {
-            likeIcon.classList.remove('far');
-            likeIcon.classList.add('fas');
-        } else {
-            likeIcon.classList.remove('fas');
-            likeIcon.classList.add('far');
-        }
-
-        // 초기 상태 설정
-        isLiked = liked; // 서버에서 받은 값으로 isLiked 초기화
-    })
-    .catch(error => console.error("Error fetching like status:", error));
-});
-*/
-document.addEventListener('DOMContentLoaded', function () {
-    // 이벤트 위임 사용
-    document.addEventListener('click', function (event) {
-        // 모임 참여하기 버튼 클릭 시
-        if (event.target.id === 'joinParty') {
-            const joinUrl = document.getElementById('joinUrl').value;
-
-            Swal.fire({
-                title: '참가 사유를 적어주세요',
-                input: 'text',
-                inputPlaceholder: '사유를 적어주세요',
-                showCancelButton: true,
-                confirmButtonColor: '#A7C7E7',
-                confirmButtonText: '신청하기',
-                cancelButtonText: '취소'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const text = result.value;
-                    const userId = document.getElementById('userId').value;
-
-                    // FormData 사용
-                    const formData = new FormData();
-                    formData.append('message', text);
-                    formData.append('user_id', userId);
-
-                    $.ajax({
-                        url: joinUrl,
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            console.log("Success:", response);
-                            Swal.fire('신청 완료!', '모임 신청이 완료되었습니다.', 'success')
-                                .then(() => {
-                                    // 페이지 새로고침
-                                    location.reload();
-                                });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log("Status:", status);
-                            console.log("Error:", error);
-                            console.log("Response:", xhr.responseText);
-                            Swal.fire('오류 발생', '모임 신청에 실패했습니다.', 'error');
-                        }
-                    });
-                }
-            });
-        }
-
-        // 모임 참여 취소 버튼 클릭 시
-        if (event.target.id === 'partyCancel') {
-            const outUrl = document.getElementById('outUrl').value;
-            const userId = document.getElementById('userId').value;
-
-            Swal.fire({
-                title: '정말로 그렇게 하시겠습니까?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#A7C7E7',
-                cancelButtonColor: '#d33',
-                confirmButtonText: '승인',
-                cancelButtonText: '취소',
-            }).then(result => {
-                if (result.isConfirmed) {
-                    const formData = new FormData();
-                    formData.append('user_id', userId);
-
-                    $.ajax({
-                        url: outUrl,
-                        type: 'POST',
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-                        success: function (response) {
-                            console.log("Success:", response);
-                            Swal.fire('취소 완료!', '모임 신청이 취소 되었습니다.', 'success')
-                                .then(() => {
-                                    // 페이지 새로고침
-                                    location.reload();
-                                });
-                        },
-                        error: function (xhr, status, error) {
-                            console.log("Status:", status);
-                            console.log("Error:", error);
-                            console.log("Response:", xhr.responseText);
-                            Swal.fire('오류 발생', '취소 신청이 실패했습니다.', 'error');
-                        }
-                    });
-                }
-            });
-        }
     });
-});
 </script>
 </body>
 </html>
