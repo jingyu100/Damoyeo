@@ -457,7 +457,7 @@
             currentDate.getFullYear(),
             currentDate.getMonth(),
             day,
-            parseInt(hours) + 18,
+            parseInt(hours) + 9,
             parseInt(minutes)
         );
 
@@ -575,7 +575,7 @@
                 }
 
                 // 시간 정보 추가 (adjustedEventDate 기준)
-                const hours = adjustedEventDate.getHours();
+                const hours = adjustedEventDate.getHours() + 9;
                 const minutes = adjustedEventDate.getMinutes();
                 const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 
