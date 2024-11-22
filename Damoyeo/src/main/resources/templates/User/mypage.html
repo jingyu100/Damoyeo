@@ -13,13 +13,15 @@
 <style>
   .header-banner {
     background-color: #d6eaff;
-    padding: 16px 0;
+    padding: 16px; /* 내부 여백은 유지 */
+    margin: 0 auto; /* 양쪽 여백 자동으로 설정 */
+    max-width: 950px; /* 원하는 최대 너비 설정 */
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
-  }
+}
   .header-banner h1 {
-    margin-left: 320px;
-    margin-right: 150px;
+    margin-left: 40px;
+    margin-right: 180px;
     color: #4D5159;
     font-size: 1.5em;
     white-space: nowrap;
@@ -76,7 +78,7 @@
   .main-banner {
     display: flex;
     flex-direction: column; /* 세로로 나열 */
-    gap: 40px; /* 메뉴 항목 간 간격 */
+    gap: 60px; /* 메뉴 항목 간 간격 */
     margin-left: 180px; /* 메뉴를 왼쪽에서 떨어뜨림 */
   }
 
@@ -89,8 +91,8 @@
   }
 
   .menu-item img {
-    width: 50px;
-    height: 60px;
+    width: 30px;
+    height: 30px;
     cursor: pointer; /* 클릭 가능한 상태로 설정 */
   }
 
@@ -103,7 +105,7 @@
   .big-box {
     flex-shrink: 0; /* 오른쪽 박스 크기를 고정 */
     width: 800px;
-    height: 500px;
+    height: 400px;
     border: 2px solid black;
     background-color: #ffffff;
   }
@@ -119,35 +121,35 @@
   <div class="main-banner">
     <div class="menu-item">
       <a href="#">
-        <img src="/uploads/찜한 게시물.png" alt="찜한 게시물" onclick="handleClick(this)">
+        <img src="/uploads/찜한 게시물흑백.png" alt="찜한 게시물" onclick="handleClick(this)">
       </a>
       <div class="custom-heading" onclick="handleClick(this)">찜한 게시물</div>
     </div>
 
     <div class="menu-item">
       <a href="#">
-        <img src="/uploads/알림.png" alt="알림" onclick="handleClick(this)">
+        <img src="/uploads/알림흑백.png" alt="알림" onclick="handleClick(this)">
       </a>
       <div class="custom-heading" onclick="handleClick(this)">알림</div>
     </div>
 
     <div class="menu-item">
       <a href="#">
-        <img src="/uploads/공지사항.png" alt="공지사항" onclick="handleClick(this)">
+        <img src="/uploads/공지사항흑백.png" alt="공지사항" onclick="handleClick(this)">
       </a>
       <div class="custom-heading" onclick="handleClick(this)">공지사항</div>
     </div>
 
     <div class="menu-item">
       <a href="#">
-        <img src="/uploads/고객센터.png" alt="고객센터" onclick="handleClick(this)">
+        <img src="/uploads/고객센터흑백.png" alt="고객센터" onclick="handleClick(this)">
       </a>
       <div class="custom-heading" onclick="handleClick(this)">고객센터</div>
     </div>
 
     <div class="menu-item">
       <a href="#">
-        <img src="/uploads/설정.png" alt="설정" onclick="handleClick(this)">
+        <img src="/uploads/설정흑백.png" alt="설정" onclick="handleClick(this)">
       </a>
       <div class="custom-heading" onclick="handleClick(this)">설정</div>
     </div>
@@ -177,7 +179,7 @@
   }
 </script>
 
-<br><br><br><br>
+<br><br>
 <!--마이 페이지 메인 부분 끝---->
 <div th:replace="~{footer.html}"></div>
 </body>
