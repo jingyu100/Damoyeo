@@ -453,6 +453,7 @@
         const day = parseInt(selectedDayContent.querySelector('.date-number').textContent);
         const [hours, minutes] = timeStr.split(':');
 
+        // KST로 Date 객체 생성
         const startTime = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
@@ -461,11 +462,16 @@
             parseInt(minutes)
         );
 
+        // UTC로 변환하지 않고 KST 시간 그대로 ISO 문자열로 변환
+        const kstISOString = new Date(
+            startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
+        ).toISOString();
+
         const eventData = {
             title: title,
             description: title,
-            startTime: startTime.toISOString(),
-            endTime: startTime.toISOString() // 시작 시간과 동일하게 설정
+            startTime: kstISOString,
+            endTime: kstISOString
         };
 
         try {
@@ -478,7 +484,6 @@
             });
 
             if (response.ok) {
-                // 원래 있던 텍스트 삭제 후 리로드
                 const events = selectedDayContent.querySelectorAll('.event-text, .events-overflow');
                 events.forEach(e => e.remove());
                 await loadEvents();
@@ -553,19 +558,19 @@
                 return;
             }
 
-            // Group events by date
+            // Group events by date with KST handling
             const eventsByDate = {};
             events.forEach(event => {
+                // KST로 날짜 변환
                 const eventDate = new Date(event.start_time);
-                const localEventDate = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
-                localEventDate.setHours(0, 0, 0, 0);
+                // 이미 KST로 저장되어 있으므로 timezone 조정이 필요없음
+                const dateKey = eventDate.toISOString().split('T')[0];
 
-                const dateKey = localEventDate.toISOString().split('T')[0];
                 if (!eventsByDate[dateKey]) {
                     eventsByDate[dateKey] = [];
                 }
 
-                // 시간 정보 추가
+                // 시간 포맷팅 (이미 KST)
                 const hours = eventDate.getHours();
                 const minutes = eventDate.getMinutes();
                 const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
@@ -584,15 +589,20 @@
             // Add events to calendar
             const dayContents = document.querySelectorAll('.day-content');
             dayContents.forEach(content => {
-                // 먼저 기존의 모든 이벤트 요소들을 제거
+                // 기존 이벤트 제거
                 const existingEvents = content.querySelectorAll('.event-text, .events-overflow');
                 existingEvents.forEach(event => event.remove());
 
                 const day = parseInt(content.querySelector('.date-number').textContent);
-                const dateKey = new Date(
+
+                // KST 기준으로 dateKey 생성
+                const dateObj = new Date(
                     currentDate.getFullYear(),
                     currentDate.getMonth(),
                     day
+                );
+                const dateKey = new Date(
+                    dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)
                 ).toISOString().split('T')[0];
 
                 const dayEvents = eventsByDate[dateKey] || [];
@@ -602,20 +612,16 @@
                     const eventSpan = document.createElement('span');
                     eventSpan.classList.add('event-text');
 
-                    // Create time element
                     const timeSpan = document.createElement('span');
                     timeSpan.classList.add('event-time');
                     timeSpan.textContent = event.formattedTime;
 
-                    // Create title element
                     const titleSpan = document.createElement('span');
                     titleSpan.classList.add('event-title');
                     titleSpan.textContent = event.title;
 
-                    // Add both to event span
                     eventSpan.appendChild(timeSpan);
                     eventSpan.appendChild(titleSpan);
-
                     content.appendChild(eventSpan);
                 });
 
