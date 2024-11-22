@@ -1,94 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
-<link rel="stylesheet" href="../css/navfooter.css"></link>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Calendar</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Modern Calendar</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        /* 캘린더 전체 스타일 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fd;
+            color: #1a1f36;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
         .calendar {
-            width: 1200px;
-            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 24px rgba(0,0,0,0.05);
+            padding: 2rem;
         }
 
-        /* 캘린더 헤더와 날짜 줄을 flex로 정렬 */
-        .calendar-header, .calendar-row {
+        .calendar-header {
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
         }
 
-        /* 날짜와 요일 제목 스타일 설정 */
-        .day, .header-day {
-            width: 14.28%; /* 7개의 칸으로 균등 분배 */
-            height: 100px;
-            border: 1px solid #ddd;
+        #monthYear {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #1a1f36;
+            margin: 0;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: #f0f4ff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4f46e5;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .days-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #f0f4ff;
+            padding-bottom: 1rem;
+        }
+
+        .header-day {
+            font-weight: 600;
+            color: #6b7280;
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
+
+        .day {
+            aspect-ratio: 1;
+            border-radius: 16px;
+            padding: 0.5rem;
+            cursor: pointer;
+            background: #ffffff;
+            border: 1px solid #f0f4ff;
+            transition: all 0.2s ease;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            font-weight: bold;
             position: relative;
-            cursor: pointer;
         }
 
-        /* 요일 제목 스타일 */
-        .header-day {
-            background-color: #f1f1f1;
-            font-weight: bold;
-            cursor: default;
+        .day:not(.empty):hover {
+            background: #f8f9ff;
+            border-color: #4f46e5;
+            transform: translateY(-2px);
         }
 
-        /* 빈 날짜 스타일 */
         .day.empty {
-            background-color: #f8f9fa;
+            background: #fafbff;
             cursor: default;
         }
 
-        .day:hover {
-            background-color: #D3D3D3;
+        .date-number {
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
         }
 
-        /* 이벤트 텍스트 스타일 */
         .event-text {
-            font-weight: normal;
-            font-size: 0.9em;
-            margin-top: 5px;
-            color: #333;
+            font-size: 0.75rem;
+            color: #4f46e5;
+            background: #f0f4ff;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            margin-top: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .today {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .today .event-text {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .calendar {
+                padding: 1rem;
+            }
+
+            .day {
+                padding: 0.25rem;
+            }
+
+            .date-number {
+                font-size: 0.8rem;
+            }
+
+            .event-text {
+                font-size: 0.65rem;
+            }
+        }
+
+        /* Events overflow indicator */
+        .events-overflow {
+            position: absolute;
+            bottom: 4px;
+            right: 4px;
+            width: 16px;
+            height: 16px;
+            background: #4f46e5;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
 <body>
-<div th:replace="~{topnav.html}"></div>
-<div class="container calendar mt-5">
-    <h2 class="text-center" id="monthYear"></h2>
-    <!-- 요일 헤더 -->
-    <div class="calendar-header text-center">
-        <div class="header-day">Sun</div>
-        <div class="header-day">Mon</div>
-        <div class="header-day">Tue</div>
-        <div class="header-day">Wed</div>
-        <div class="header-day">Thu</div>
-        <div class="header-day">Fri</div>
-        <div class="header-day">Sat</div>
-    </div>
-    <!-- 날짜 영역 -->
-    <div id="calendarDays"></div>
-    <!-- 이전/다음 버튼 -->
-    <div class="text-center mt-3">
-        <button class="btn btn-primary" onclick="prevMonth()">Previous</button>
-        <button class="btn btn-primary" onclick="nextMonth()">Next</button>
+<div class="container">
+    <div class="calendar">
+        <div class="calendar-header">
+            <h2 id="monthYear"></h2>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="prevMonth()">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="nav-btn" onclick="nextMonth()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+
+        <div class="days-header">
+            <div class="header-day">Sun</div>
+            <div class="header-day">Mon</div>
+            <div class="header-day">Tue</div>
+            <div class="header-day">Wed</div>
+            <div class="header-day">Thu</div>
+            <div class="header-day">Fri</div>
+            <div class="header-day">Sat</div>
+        </div>
+
+        <div id="calendarDays" class="calendar-grid"></div>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', async function() {
-        await renderCalendar();
-        await loadEvents(); // 페이지 로드 시 이벤트 로드
-    });
+    let currentDate = new Date();
+    const monthYearLabel = document.getElementById('monthYear');
+    const calendarDays = document.getElementById('calendarDays');
+
+    async function renderCalendar() {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+
+        // Format the month and year in a more sophisticated way
+        const monthName = new Date(year, month).toLocaleString('default', { month: 'long' });
+        monthYearLabel.textContent = `${monthName} ${year}`;
+
+        calendarDays.innerHTML = '';
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const today = new Date();
+
+        // Add empty days
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            const emptyDay = document.createElement('div');
+            emptyDay.classList.add('day', 'empty');
+            calendarDays.appendChild(emptyDay);
+        }
+
+        // Add days
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dayDiv = document.createElement('div');
+            dayDiv.classList.add('day');
+
+            // Check if it's today
+            if (year === today.getFullYear() &&
+                month === today.getMonth() &&
+                day === today.getDate()) {
+                dayDiv.classList.add('today');
+            }
+
+            const dateSpan = document.createElement('span');
+            dateSpan.classList.add('date-number');
+            dateSpan.textContent = day;
+            dayDiv.appendChild(dateSpan);
+
+            dayDiv.addEventListener('click', () => addEvent(dayDiv));
+            calendarDays.appendChild(dayDiv);
+        }
+    }
 
     async function loadEvents() {
         try {
@@ -100,36 +268,46 @@
                 return;
             }
 
-            // 모든 이벤트 텍스트 초기화
-            const existingEventTexts = document.querySelectorAll('.event-text');
-            existingEventTexts.forEach(text => text.remove());
-
+            // Group events by date
+            const eventsByDate = {};
             events.forEach(event => {
-                // ISO 날짜 문자열을 Date 객체로 변환 후 로컬 시간으로 변환
                 const eventDate = new Date(event.start_time);
-
-                // 로컬 시간대로 날짜를 변환
                 const localEventDate = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
-                localEventDate.setHours(0, 0, 0, 0);  // 시간은 00:00:00으로 설정
+                localEventDate.setHours(0, 0, 0, 0);
 
-                // 날짜 컴포넌트 추출
-                const day = localEventDate.getDate();
-                const month = localEventDate.getMonth();
-                const year = localEventDate.getFullYear();
+                const dateKey = localEventDate.toISOString().split('T')[0];
+                if (!eventsByDate[dateKey]) {
+                    eventsByDate[dateKey] = [];
+                }
+                eventsByDate[dateKey].push(event);
+            });
 
-                // 현재 표시된 캘린더의 년월과 일치하는지 확인
-                if (year === currentDate.getFullYear() && month === currentDate.getMonth()) {
-                    const dayDivs = document.querySelectorAll('.day:not(.empty)');
-                    dayDivs.forEach(div => {
-                        const divDay = parseInt(div.childNodes[0].textContent, 10); // 날짜 숫자로 변환해서 비교
+            // Add events to calendar
+            const dayDivs = document.querySelectorAll('.day:not(.empty)');
+            dayDivs.forEach(div => {
+                const day = parseInt(div.querySelector('.date-number').textContent);
+                const dateKey = new Date(
+                    currentDate.getFullYear(),
+                    currentDate.getMonth(),
+                    day
+                ).toISOString().split('T')[0];
 
-                        if (divDay === day) {
-                            const eventSpan = document.createElement('span');
-                            eventSpan.classList.add('event-text');
-                            eventSpan.textContent = event.title; // 이벤트 제목 표시
-                            div.appendChild(eventSpan);
-                        }
-                    });
+                const dayEvents = eventsByDate[dateKey] || [];
+
+                // Show up to 2 events
+                dayEvents.slice(0, 2).forEach(event => {
+                    const eventSpan = document.createElement('span');
+                    eventSpan.classList.add('event-text');
+                    eventSpan.textContent = event.title;
+                    div.appendChild(eventSpan);
+                });
+
+                // If there are more events, show overflow indicator
+                if (dayEvents.length > 2) {
+                    const overflow = document.createElement('div');
+                    overflow.classList.add('events-overflow');
+                    overflow.textContent = '+' + (dayEvents.length - 2);
+                    div.appendChild(overflow);
                 }
             });
         } catch (error) {
@@ -137,71 +315,10 @@
         }
     }
 
-
-
-
-
-
-    const monthYearLabel = document.getElementById('monthYear');
-    const calendarDays = document.getElementById('calendarDays');
-    let currentDate = new Date();  // 현재 날짜를 기준으로 초기 설정
-
-    // 캘린더를 렌더링하는 함수
-    function renderCalendar() {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        monthYearLabel.textContent = `${year} ${currentDate.toLocaleString('default', {month: 'long'})}`;
-
-        calendarDays.innerHTML = '';
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-        let dayRow = document.createElement('div');
-        dayRow.classList.add('calendar-row');
-
-        for (let i = 0; i < firstDayOfMonth; i++) {
-            const emptyDay = document.createElement('div');
-            emptyDay.classList.add('day', 'empty');
-            dayRow.appendChild(emptyDay);
-        }
-
-        for (let day = 1; day <= daysInMonth; day++) {
-            const dayDiv = document.createElement('div');
-            dayDiv.classList.add('day');
-            // 날짜를 span으로 감싸서 추가
-            const dateSpan = document.createElement('span');
-            dateSpan.textContent = day;
-            dayDiv.appendChild(dateSpan);
-
-            dayDiv.addEventListener('click', function() {
-                addEvent(dayDiv);
-            });
-            dayRow.appendChild(dayDiv);
-
-            if ((day + firstDayOfMonth) % 7 === 0 || day === daysInMonth) {
-                calendarDays.appendChild(dayRow);
-                dayRow = document.createElement('div');
-                dayRow.classList.add('calendar-row');
-            }
-        }
-    }
-
-    // // 날짜 클릭 시 이벤트를 추가하는 함수
-    // function addEvent(dayDiv) {
-    //     const eventText = prompt("Enter your event:"); // 이벤트 내용 입력받기
-    //     if (eventText) {  // 입력값이 있는 경우에만 추가
-    //         const eventSpan = document.createElement('span');
-    //         eventSpan.classList.add('event-text');
-    //         eventSpan.textContent = eventText;
-    //         dayDiv.appendChild(eventSpan); // 날짜 박스에 이벤트 텍스트 추가
-    //     }
-    // }
-
-    // 이벤트 추가 함수 수정
     async function addEvent(dayDiv) {
         const eventText = prompt("Enter your event:");
         if (eventText) {
-            const day = parseInt(dayDiv.textContent);
+            const day = parseInt(dayDiv.querySelector('.date-number').textContent);
             const startTime = new Date(
                 currentDate.getFullYear(),
                 currentDate.getMonth(),
@@ -233,10 +350,10 @@
                 });
 
                 if (response.ok) {
-                    const eventSpan = document.createElement('span');
-                    eventSpan.classList.add('event-text');
-                    eventSpan.textContent = eventText;
-                    dayDiv.appendChild(eventSpan);
+                    // Clear existing events and reload
+                    const events = dayDiv.querySelectorAll('.event-text, .events-overflow');
+                    events.forEach(e => e.remove());
+                    await loadEvents();
                 } else {
                     const errorData = await response.text();
                     console.error('Failed to save event:', errorData);
@@ -249,34 +366,23 @@
         }
     }
 
-    // // 이전 달로 이동
-    // function prevMonth() {
-    //     currentDate.setMonth(currentDate.getMonth() - 1); // 현재 월에서 -1
-    //     renderCalendar();
-    // }
-    //
-    // // 다음 달로 이동
-    // function nextMonth() {
-    //     currentDate.setMonth(currentDate.getMonth() + 1); // 현재 월에서 +1
-    //     renderCalendar();
-    // }
-
-    // prevMonth와 nextMonth 함수 수정
     async function prevMonth() {
         currentDate.setMonth(currentDate.getMonth() - 1);
         await renderCalendar();
-        await loadEvents(); // 월 변경 시 이벤트 다시 로드
+        await loadEvents();
     }
 
     async function nextMonth() {
         currentDate.setMonth(currentDate.getMonth() + 1);
         await renderCalendar();
-        await loadEvents(); // 월 변경 시 이벤트 다시 로드
+        await loadEvents();
     }
 
-    // 페이지 로드 시 초기 캘린더 렌더링
-    document.addEventListener('DOMContentLoaded', renderCalendar);
+    // Initialize calendar
+    document.addEventListener('DOMContentLoaded', async function() {
+        await renderCalendar();
+        await loadEvents();
+    });
 </script>
-<div th:replace="~{footer.html}"></div>
 </body>
 </html>
