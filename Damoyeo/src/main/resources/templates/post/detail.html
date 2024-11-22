@@ -342,17 +342,9 @@
 
 <div th:replace="~{topnav.html}"></div>
 <!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 삭제 보이게-->
-<th:block th:if="${userId == post.user.getUserId()}">
-    <div>
-        <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
-            <button type="submit">삭제</button>
-        </form>
-    </div>
-</th:block>
+
 <!--세션으로 들어온 유저 아이디가 게시글을 쓴 유저 아이디랑 같다면 게시글 수정 보이게-->
-<th:block th:if="${userId == post.user.getUserId()}">
-    <p>수정</p>
-</th:block>
+
 <!--참가신청 userId 확인을 위한 코드-->
 <input id="userId" th:value="${userId}" type="hidden">
 <!--포스트보낼때 사용 지우지 마세요-->
@@ -512,15 +504,29 @@
                     </th:block>
                 </th:block>
                 <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
+                <th:block th:if="${userId != post.user.getUserId()}">
                 <th:block th:if="${postRequest == null or postRequest.user.userId != userId}">
                     <a class="chat_mainpage" id="joinParty">모임 참여하기</a>
                 </th:block>
+                </th:block>
+                <th:block th:if="${userId == post.user.getUserId()}">
+                    <div>
+                        <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
+                            <button class="chat_mainpage" type="submit">삭제</button>
+                        </form>
+                        <form method="post" th:action="@{'/post/mositipy/' + ${post.postId}}">
+                            <button class="chat_mainpage" type="submit">수정</button>
+                        </form>
+                    </div>
+                </th:block>
+<!--                로그인 하면 보이게-->
+                <button class="like-button" id="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
+                    <i class="far fa-heart" id="like-icon"></i>
+                </button>
             </th:block>
 
 
-            <button class="like-button" id="like-button" th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
-                <i class="far fa-heart" id="like-icon"></i>
-            </button>
+
         </div>
     </div>
 </div>
