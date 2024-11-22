@@ -9,19 +9,19 @@
 <body>
 <div th:replace="~{topnav.html}"></div>
 <!--마이 페이지 헤더 부분 시작 -->
-<br><br>
+<br>
 <style>
   .header-banner {
     background-color: #d6eaff;
-    padding: 18px 0;
+    padding: 16px 0;
     display: flex;
     align-items: center; /* 세로 중앙 정렬 */
   }
   .header-banner h1 {
-    margin-left: 140px;
-    margin-right: 280px;
+    margin-left: 320px;
+    margin-right: 150px;
     color: #4D5159;
-    font-size: 2.5em;
+    font-size: 1.5em;
     white-space: nowrap;
   }
   .header-banner img {
@@ -31,19 +31,19 @@
   }
   .header-banner p1 {
     color: #4D5159;
-    font-size: 2.4em;
+    font-size: 1.5em;
     margin-right: 180px;
     white-space: nowrap;
   }
   .header-banner .user-profile-img {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 50px;
     margin-right: 10px;
 
   }
   .header-banner p2 {
     color: #4D5159;
-    font-size: 2em;
+    font-size: 1.5em;
     white-space: nowrap;
   }
 </style>
@@ -51,7 +51,7 @@
 <div class="header-banner">
   <h1>내 정보</h1>
   <a href="/">
-    <img src="/uploads/img.png" style="width: 130px; height: 130px" alt="">
+    <img src="/uploads/img.png" style="width: 100px; height: 100px" alt="">
   </a>
   <p1>닉네임123123님</p1>
   <a href="">
@@ -69,13 +69,15 @@
     gap: 50px;
     width: 90%;
     height: 1200px;
+    margin-left: 140px;
     margin: 50px auto; /* 가운데 정렬 */
   }
 
   .main-banner {
     display: flex;
     flex-direction: column; /* 세로로 나열 */
-    gap: 50px; /* 메뉴 항목 간 간격 */
+    gap: 40px; /* 메뉴 항목 간 간격 */
+    margin-left: 180px; /* 메뉴를 왼쪽에서 떨어뜨림 */
   }
 
   .menu-item {
@@ -87,21 +89,21 @@
   }
 
   .menu-item img {
-    width: 70px;
-    height: 70px;
+    width: 50px;
+    height: 60px;
     cursor: pointer; /* 클릭 가능한 상태로 설정 */
   }
 
   .custom-heading {
-    font-size: 1.2em;
+    font-size: 1.0em;
     font-weight: bold;
     cursor: pointer; /* 텍스트도 클릭 가능하게 설정 */
   }
 
   .big-box {
     flex-shrink: 0; /* 오른쪽 박스 크기를 고정 */
-    width: 1000px;
-    height: 600px;
+    width: 800px;
+    height: 500px;
     border: 2px solid black;
     background-color: #ffffff;
   }
@@ -175,7 +177,7 @@
   }
 </script>
 
-<br><br><br><br><br><br>
+<br><br><br><br>
 <!--마이 페이지 메인 부분 끝---->
 <div th:replace="~{footer.html}"></div>
 </body>
