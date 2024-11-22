@@ -128,16 +128,17 @@
     <h1>내 정보</h1>
 
     <!-- 메인 프로필 이미지 -->
-    <a href="/">
+<!--    아래 이미지랑 이거 뭔차이야?-->
+    <a href="/user/profile">
         <img src="/uploads/img.png" style="width: 100px; height: 100px" alt="프로필 메인 이미지">
     </a>
 
     <!-- 사용자 닉네임 -->
-    <p1>닉네임123123님</p1>
+    <p1 th:text="${user.nickname} + '님 '"></p1>
 
     <!-- 프로필 설정 링크 -->
-    <a href="">
-        <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="프로필 설정">
+    <a href="/user/profile">
+        <img class="user-profile-img" th:src="@{|/uploads/${user.photoUrl}|}" alt="프로필 설정">
     </a>
     <p2>프로필</p2>
 </div>

@@ -152,7 +152,10 @@ public class UserController {
     // 프로필 페이지로 이동
     @GetMapping("/profile")
     public String profile(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
-
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
         // 세션에 저장된 userId로 사용자 정보 조회
         User user = userService.findByUser(userId);
 
@@ -166,7 +169,10 @@ public class UserController {
     // 프로필 수정 폼 페이지로 이동
     @GetMapping("/editprofile")
     public String editProfile(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
-
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
         // 세션에 저장된 userId로 사용자 정보 조회
         User user = userService.findByUser(userId);
 
@@ -223,6 +229,10 @@ public class UserController {
 
     @GetMapping("/mypage")
     public String myPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId){
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
         // 세션에 저장된 userId로 사용자 정보 조회
         User user = userService.findByUser(userId);
 

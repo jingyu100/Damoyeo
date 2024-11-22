@@ -104,8 +104,11 @@ public class PostController {
 
     // 게시물 작성 페이지
     @GetMapping("/create")
-    public String createPost(Model model) {
-
+    public String createPost(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
         // API 키와 새 Post 객체를 모델에 추가
         model.addAttribute("apiKey", API_KEY);
         model.addAttribute("post", new Post());
@@ -164,9 +167,9 @@ public class PostController {
         if (userId != null) {
             user = userService.findByUser(userId);
         }
-        
+
         //포스트 아이디랑 유저 아이디로 포스트 신청에서 찾기
-        PostRequest postRequest = postRequestService.findClick(post,user);
+        PostRequest postRequest = postRequestService.findClick(post, user);
 
         // 모델에 데이터 추가
         model.addAttribute("user", user);
@@ -199,13 +202,13 @@ public class PostController {
         }
 
     }
-    
+
     //참가 신청
     @PostMapping("/join/{id}")
     @ResponseBody
-    public ResponseEntity<String> joinPost( @PathVariable("id") Integer postId,
-                                            @RequestParam("message") String message,
-                                            @RequestParam("user_id") Integer userId) {
+    public ResponseEntity<String> joinPost(@PathVariable("id") Integer postId,
+                                           @RequestParam("message") String message,
+                                           @RequestParam("user_id") Integer userId) {
         try {
             postRequestService.saveRequest(userId, postId, message);
             return ResponseEntity.ok("성공적으로 신청되었습니다.");
@@ -215,7 +218,7 @@ public class PostController {
                     .body("오류가 발생했습니다: " + e.getMessage());
         }
     }
-    
+
     //참가 취소
     @PostMapping("/out/{id}")
     @ResponseBody
@@ -231,10 +234,10 @@ public class PostController {
     }
 
     @GetMapping("/alarm")
-    public String alarm(Model model,@SessionAttribute(name = "userId", required = false) Integer userId) {
+    public String alarm(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
         //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
         if (userId == null) {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
         List<PostWithRequest> postsWithRequests = alarmService.getPostsWithRequests(userId);
         List<PostWithRequest> rejectedPostsWithRequests = alarmService.rejectedPostsWithRequests(userId);
@@ -245,19 +248,21 @@ public class PostController {
 
     //모임참가 수락
     @PostMapping("/requestAccept/{id}")
-    public String requestAccept(@PathVariable("id") Integer prId){
+    public String requestAccept(@PathVariable("id") Integer prId) {
         postRequestService.accet(prId);
         return "redirect:/post/alarm";
     }
+
     //모임 참가 거절
     @PostMapping("/requestRefusal/{id}")
-    public String requestRefusal(@PathVariable("id") Integer prId){
+    public String requestRefusal(@PathVariable("id") Integer prId) {
         postRequestService.refusal(prId);
         return "redirect:/post/alarm";
     }
+
     //모임 참가 거절 확인
     @PostMapping("/requestRejected/{id}")
-    public String requestRejected(@PathVariable("id") Integer prId){
+    public String requestRejected(@PathVariable("id") Integer prId) {
         // 일단은 삭제임
         postRequestService.rejected(prId);
         return "redirect:/post/alarm";
