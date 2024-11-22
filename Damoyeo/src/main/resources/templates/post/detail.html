@@ -489,7 +489,20 @@
             <th:block th:if="${userId != null}">
                 <!-- 로그인했고 참여 신청한 상태인 경우에만 취소 버튼 표시 -->
                 <th:block th:if="${postRequest != null and postRequest.user.userId == userId}">
-                    <a class="chat_mainpage" id="partyCancel">참여 취소</a>
+                    <!-- status가 0일 때는 채팅방 버튼 -->
+                    <th:block th:if="${postRequest.status == '0'}">
+                        <a class="chat_mainpage" id="partyCancel">참여 취소</a>
+                    </th:block>
+
+                    <!-- status가 1(수락)일 때는 채팅방 버튼 -->
+                    <th:block th:if="${postRequest.status == '1'}">
+                        <a class="chat_mainpage" href="/chat">채팅방으로</a>
+                    </th:block>
+
+                    <!-- status가 2(거절)일 때는 참여버튼을 누를 수 없음 버튼 -->
+                    <th:block th:if="${postRequest.status == '2'}">
+                        <p class="chat_mainpage">거절 당했습니다.</p>
+                    </th:block>
                 </th:block>
                 <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
                 <th:block th:if="${postRequest == null or postRequest.user.userId != userId}">

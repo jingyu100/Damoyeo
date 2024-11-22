@@ -1,7 +1,9 @@
 package Team6.Damoyeo.Post.Service;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Entity.PostRequest;
 import Team6.Damoyeo.Post.Repository.PostRepository;
+import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,8 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final PostRequestRepository postRequestRepository;
+
 
     // 특정 페이지에 해당하는 게시글을 가져오는 메서드
     public Page<Post> findPostsByPage(int page, int pageSize) {
@@ -125,5 +129,15 @@ public class PostService {
     //포스트 삭제하는 메서드
     public void deletePost(Post post) {
         postRepository.delete(post);
+    }
+
+    // 자기글 찾기 위한 메서드
+    public List<Post> postSerch(Integer userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (ou.isEmpty()){
+            return null;
+        }
+        User user = ou.get();
+        return postRepository.findByUser(user);
     }
 }

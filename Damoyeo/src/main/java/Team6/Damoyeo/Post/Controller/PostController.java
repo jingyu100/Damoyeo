@@ -2,8 +2,10 @@ package Team6.Damoyeo.Post.Controller;
 
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Entity.PostRequest;
+import Team6.Damoyeo.Post.Service.AlarmService;
 import Team6.Damoyeo.Post.Service.PostRequestService;
 import Team6.Damoyeo.Post.Service.PostService;
+import Team6.Damoyeo.Post.dto.PostWithRequest;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import jakarta.annotation.Nullable;
@@ -54,6 +56,8 @@ public class PostController {
 
     // User관련 서비스 클래스
     private final UserService userService;
+
+    private final AlarmService alarmService;
 
     // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
@@ -223,4 +227,29 @@ public class PostController {
         postRequestService.delete(postRequest);
         return ResponseEntity.ok("참여가 취소되었습니다.");
     }
+
+    @GetMapping("/alarm")
+    public String alarm(Model model,@SessionAttribute(name = "userId", required = false) Integer userId) {
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/login";
+        }
+        List<PostWithRequest> postsWithRequests = alarmService.getPostsWithRequests(userId);
+        model.addAttribute("postsWithRequests", postsWithRequests);
+
+        return "/post/alarm";
+    }
+
+    @PostMapping("/requestAccept/{id}")
+    public String requestAccept(@PathVariable("id") Integer prId){
+        postRequestService.accet(prId);
+        return "redirect:/post/alarm";
+    }
+
+    @PostMapping("/requestRefusal/{id}")
+    public String requestRefusal(@PathVariable("id") Integer prId){
+        postRequestService.refusal(prId);
+        return "redirect:/post/alarm";
+    }
+
 }
