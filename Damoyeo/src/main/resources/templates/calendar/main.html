@@ -457,7 +457,7 @@
             currentDate.getFullYear(),
             currentDate.getMonth(),
             day,
-            parseInt(hours),
+            parseInt(hours) + 9,
             parseInt(minutes)
         );
 
@@ -557,17 +557,26 @@
             const eventsByDate = {};
             events.forEach(event => {
                 const eventDate = new Date(event.start_time);
-                const localEventDate = new Date(eventDate.getTime() - eventDate.getTimezoneOffset() * 60000);
-                localEventDate.setHours(0, 0, 0, 0);
 
-                const dateKey = localEventDate.toISOString().split('T')[0];
+                // UTC 시간에서 9시간 빼기 (KST 기준으로 9시간 전으로 이동)
+                const NINE_HOURS_MS = 9 * 60 * 60 * 1000;
+                const adjustedEventDate = new Date(eventDate.getTime() - NINE_HOURS_MS);
+
+                // 로컬 기준으로 날짜를 계산
+                const adjustedDate = new Date(
+                    adjustedEventDate.getFullYear(),
+                    adjustedEventDate.getMonth(),
+                    adjustedEventDate.getDate()
+                );
+
+                const dateKey = adjustedDate.toISOString().split('T')[0];
                 if (!eventsByDate[dateKey]) {
                     eventsByDate[dateKey] = [];
                 }
 
-                // 시간 정보 추가
-                const hours = eventDate.getHours();
-                const minutes = eventDate.getMinutes();
+                // 시간 정보 추가 (adjustedEventDate 기준)
+                const hours = adjustedEventDate.getHours() + 9;
+                const minutes = adjustedEventDate.getMinutes();
                 const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 
                 eventsByDate[dateKey].push({
@@ -584,7 +593,7 @@
             // Add events to calendar
             const dayContents = document.querySelectorAll('.day-content');
             dayContents.forEach(content => {
-                // 먼저 기존의 모든 이벤트 요소들을 제거
+                // 기존 이벤트 요소 제거
                 const existingEvents = content.querySelectorAll('.event-text, .events-overflow');
                 existingEvents.forEach(event => event.remove());
 
@@ -631,6 +640,7 @@
             console.error('Error loading events:', error);
         }
     }
+
 
     async function prevMonth() {
         currentDate.setMonth(currentDate.getMonth() - 1);
