@@ -1,186 +1,233 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/basic">
+<!-- 네비게이션 및 푸터 CSS 링크 -->
 <link rel="stylesheet" href="../css/navfooter.css"></link>
+
 <head>
-  <meta charset="UTF-8">
-  <title>마이 페이지</title>
+    <meta charset="UTF-8">
+    <title>마이 페이지</title>
 </head>
 <body>
+<!-- 상단 네비게이션 바 삽입 (topnav.html) -->
 <div th:replace="~{topnav.html}"></div>
-<!--마이 페이지 헤더 부분 시작 -->
+
+<!-- 마이 페이지 헤더 부분 시작 -->
 <br>
-<style>
-  .header-banner {
-    background-color: #d6eaff;
-    padding: 16px; /* 내부 여백은 유지 */
-    margin: 0 auto; /* 양쪽 여백 자동으로 설정 */
-    max-width: 950px; /* 원하는 최대 너비 설정 */
-    display: flex;
-    align-items: center; /* 세로 중앙 정렬 */
-}
-  .header-banner h1 {
-    margin-left: 40px;
-    margin-right: 180px;
-    color: #4D5159;
-    font-size: 1.5em;
-    white-space: nowrap;
-  }
-  .header-banner img {
-    margin-right: 40px;
-    border-radius: 50%; /* 둥근 모양 */
-    object-fit: cover; /* 비율 유지 */
-  }
-  .header-banner p1 {
-    color: #4D5159;
-    font-size: 1.5em;
-    margin-right: 180px;
-    white-space: nowrap;
-  }
-  .header-banner .user-profile-img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
 
-  }
-  .header-banner p2 {
-    color: #4D5159;
-    font-size: 1.5em;
-    white-space: nowrap;
-  }
+<!-- 페이지 헤더 스타일 정의 -->
+<style>
+    /* 헤더 배너 컨테이너 스타일 */
+    .header-banner {
+        background-color: #d6eaff; /* 배경색 연한 파랑 */
+        padding: 16px; /* 내부 여백 */
+        margin: 0 auto; /* 수평 중앙 정렬 */
+        max-width: 950px; /* 최대 너비 제한 */
+        display: flex; /* 플렉스 레이아웃 */
+        align-items: center; /* 수직 중앙 정렬 */
+    }
+
+    /* 헤더 제목 스타일 */
+    .header-banner h1 {
+        margin-left: 40px;
+        margin-right: 180px;
+        color: #4D5159; /* 어두운 회색 텍스트 */
+        font-size: 1.5em;
+        white-space: nowrap; /* 줄바꿈 방지 */
+    }
+
+    /* 프로필 이미지 스타일 */
+    .header-banner img {
+        margin-right: 40px;
+        border-radius: 50%; /* 원형 이미지 */
+        object-fit: cover; /* 이미지 비율 유지 */
+    }
+
+    /* 사용자 정보 텍스트 스타일 */
+    .header-banner p1, .header-banner p2 {
+        color: #4D5159;
+        font-size: 1.5em;
+        white-space: nowrap;
+    }
+
+    /* 작은 프로필 이미지 스타일 */
+    .header-banner .user-profile-img {
+        width: 50px;
+        height: 50px;
+        margin-right: 10px;
+    }
+
+    /* 메인 레이아웃 컨테이너 스타일 */
+    .main-layout {
+        display: flex; /* 플렉스 레이아웃 */
+        justify-content: flex-start; /* 왼쪽 정렬 */
+        gap: 50px; /* 메뉴와 콘텐츠 사이 간격 */
+        width: 90%;
+        height: 1200px;
+        margin: 50px auto; /* 수평 중앙 정렬 */
+    }
+
+    /* 왼쪽 메뉴 배너 스타일 */
+    .main-banner {
+        display: flex;
+        flex-direction: column; /* 세로 배치 */
+        gap: 60px; /* 메뉴 항목 간 간격 */
+        margin-left: 180px;
+    }
+
+    /* 메뉴 아이템 스타일 */
+    .menu-item {
+        display: flex;
+        align-items: center; /* 아이콘과 텍스트 수직 중앙 정렬 */
+        gap: 10px; /* 아이콘과 텍스트 간 간격 */
+        margin-left: 0;
+        transition: opacity 0.3s; /* 부드러운 흐림 효과 */
+        cursor: pointer;
+    }
+
+    /* 메뉴 아이콘 스타일 */
+    .menu-item img {
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+    }
+
+    /* 메뉴 텍스트 스타일 */
+    .custom-heading {
+        font-size: 1.0em;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    /* 메인 컨텐츠 박스 스타일 */
+    .big-box {
+        flex-shrink: 0;
+        width: 800px;
+        height: 800px; /* iframe을 위해 높이 증가 */
+        border: 2px solid black;
+        background-color: #ffffff;
+        overflow: hidden; /* iframe 넘침 방지 */
+    }
+
+    /* 메뉴 아이템 흐림 효과 */
+    .menu-item.dimmed {
+        opacity: 0.3; /* 투명도 낮춤 */
+    }
+
+    /* iframe 스타일 */
+    .content-iframe {
+        width: 100%;
+        height: 100%;
+        border: none; /* 테두리 제거 */
+    }
 </style>
 
+<!-- 페이지 헤더 -->
 <div class="header-banner">
-  <h1>내 정보</h1>
-  <a href="/">
-    <img src="/uploads/img.png" style="width: 100px; height: 100px" alt="">
-  </a>
-  <p1>닉네임123123님</p1>
-  <a href="">
-    <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="">
-  </a>
-  <p2>프로필</p2>
+    <!-- 페이지 제목 -->
+    <h1>내 정보</h1>
+
+    <!-- 메인 프로필 이미지 -->
+    <a href="/">
+        <img src="/uploads/img.png" style="width: 100px; height: 100px" alt="프로필 메인 이미지">
+    </a>
+
+    <!-- 사용자 닉네임 -->
+    <p1>닉네임123123님</p1>
+
+    <!-- 프로필 설정 링크 -->
+    <a href="">
+        <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="프로필 설정">
+    </a>
+    <p2>프로필</p2>
 </div>
-<!--마이 페이지 헤더 부분 끝 ---->
 
-<!--마이 페이지 메인 부분 시작-->
-<style>
-  .main-layout {
-    display: flex;
-    justify-content: flex-start; /* 왼쪽 정렬 */
-    gap: 50px;
-    width: 90%;
-    height: 1200px;
-    margin-left: 140px;
-    margin: 50px auto; /* 가운데 정렬 */
-  }
-
-  .main-banner {
-    display: flex;
-    flex-direction: column; /* 세로로 나열 */
-    gap: 60px; /* 메뉴 항목 간 간격 */
-    margin-left: 180px; /* 메뉴를 왼쪽에서 떨어뜨림 */
-  }
-
-  .menu-item {
-    display: flex;
-    align-items: center; /* 이미지와 텍스트 수직 정렬 */
-    gap: 10px; /* 이미지와 텍스트 간격 */
-    margin-left: 0; /* 왼쪽 여백 제거 */
-    transition: opacity 0.3s; /* 부드러운 흐림 효과 */
-  }
-
-  .menu-item img {
-    width: 30px;
-    height: 30px;
-    cursor: pointer; /* 클릭 가능한 상태로 설정 */
-  }
-
-  .custom-heading {
-    font-size: 1.0em;
-    font-weight: bold;
-    cursor: pointer; /* 텍스트도 클릭 가능하게 설정 */
-  }
-
-  .big-box {
-    flex-shrink: 0; /* 오른쪽 박스 크기를 고정 */
-    width: 800px;
-    height: 400px;
-    border: 2px solid black;
-    background-color: #ffffff;
-  }
-
-  /* 흐림 효과 */
-  .menu-item.dimmed {
-    opacity: 0.3; /* 투명도를 낮춤 */
-  }
-</style>
-
+<!-- 메인 레이아웃 -->
 <div class="main-layout">
-  <!-- 왼쪽 메뉴 -->
-  <div class="main-banner">
-    <div class="menu-item">
-      <a href="#">
-        <img src="/uploads/찜한 게시물흑백.png" alt="찜한 게시물" onclick="handleClick(this)">
-      </a>
-      <div class="custom-heading" onclick="handleClick(this)">찜한 게시물</div>
+    <!-- 왼쪽 메뉴 섹션 -->
+    <div class="main-banner">
+        <!-- 찜한 게시물 메뉴: Thymeleaf로 동적 URL 생성 -->
+        <div class="menu-item" th:data-page="@{|/likes/${user.userId}|}">
+            <img src="/uploads/찜한 게시물흑백.png" alt="찜한 게시물">
+            <div class="custom-heading">찜한 게시물</div>
+        </div>
+
+        <!-- 알림 메뉴 -->
+        <div class="menu-item" data-page="/post/alarm">
+            <img src="/uploads/알림흑백.png" alt="알림">
+            <div class="custom-heading">알림</div>
+        </div>
+
+        <!-- 공지사항 메뉴 -->
+        <div class="menu-item" data-page="">
+            <img src="/uploads/공지사항흑백.png" alt="공지사항">
+            <div class="custom-heading">공지사항</div>
+        </div>
+
+        <!-- 고객센터 메뉴 -->
+        <div class="menu-item" data-page="">
+            <img src="/uploads/고객센터흑백.png" alt="고객센터">
+            <div class="custom-heading">고객센터</div>
+        </div>
+
+        <!-- 설정 메뉴 -->
+        <div class="menu-item" data-page="">
+            <img src="/uploads/설정흑백.png" alt="설정">
+            <div class="custom-heading">설정</div>
+        </div>
     </div>
 
-    <div class="menu-item">
-      <a href="#">
-        <img src="/uploads/알림흑백.png" alt="알림" onclick="handleClick(this)">
-      </a>
-      <div class="custom-heading" onclick="handleClick(this)">알림</div>
+    <!-- 오른쪽 컨텐츠 박스 (iframe 포함) -->
+    <div class="big-box">
+        <!-- 동적 컨텐츠 로딩을 위한 iframe -->
+        <iframe id="contentFrame" class="content-iframe" src="about:blank"></iframe>
     </div>
-
-    <div class="menu-item">
-      <a href="#">
-        <img src="/uploads/공지사항흑백.png" alt="공지사항" onclick="handleClick(this)">
-      </a>
-      <div class="custom-heading" onclick="handleClick(this)">공지사항</div>
-    </div>
-
-    <div class="menu-item">
-      <a href="#">
-        <img src="/uploads/고객센터흑백.png" alt="고객센터" onclick="handleClick(this)">
-      </a>
-      <div class="custom-heading" onclick="handleClick(this)">고객센터</div>
-    </div>
-
-    <div class="menu-item">
-      <a href="#">
-        <img src="/uploads/설정흑백.png" alt="설정" onclick="handleClick(this)">
-      </a>
-      <div class="custom-heading" onclick="handleClick(this)">설정</div>
-    </div>
-  </div>
-  <!-- 오른쪽 큰 박스 -->
-  <div class="big-box"></div>
 </div>
 
+<!-- 메뉴 상호작용을 위한 JavaScript -->
 <script>
-  // 클릭 이벤트 처리
-  function handleClick(clickedItem) {
-    const items = document.querySelectorAll('.menu-item');
+    // 모든 메뉴 아이템에 클릭 이벤트 리스너 추가
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function () {
+            // 클릭된 메뉴 아이템을 제외한 모든 메뉴 아이템 흐리게 만들기
+            document.querySelectorAll('.menu-item').forEach(menuItem => {
+                if (menuItem !== this) {
+                    menuItem.classList.add('dimmed');
+                } else {
+                    menuItem.classList.remove('dimmed');
+                }
+            });
 
-    // 모든 항목을 흐리게 설정
-    items.forEach(item => {
-      if (!item.contains(clickedItem)) {
-        item.classList.add('dimmed'); // 흐림 효과 추가
-      } else {
-        item.classList.remove('dimmed'); // 클릭된 항목은 흐리지 않음
-      }
+            // 클릭된 메뉴 아이템의 데이터 페이지 URL 가져오기
+            const pageUrl = this.getAttribute('data-page');
+            const iframe = document.getElementById('contentFrame');
+
+            // URL이 존재하는 경우에만 iframe의 src 변경
+            if (pageUrl) {
+                iframe.src = pageUrl;
+            }
+        });
     });
 
-    // 클릭된 항목을 다시 클릭하면 기본 상태로 되돌림
-    if (clickedItem.parentElement.parentElement.classList.contains('dimmed')) {
-      items.forEach(item => item.classList.remove('dimmed'));
-    }
-  }
+    // 같은 메뉴 아이템을 다시 클릭했을 때 초기화
+    document.querySelectorAll('.menu-item').forEach(item => {
+        item.addEventListener('click', function (e) {
+            // 현재 메뉴 아이템이 흐려진 상태라면
+            if (this.classList.contains('dimmed')) {
+                // 모든 메뉴 아이템의 흐림 효과 제거
+                document.querySelectorAll('.menu-item').forEach(menuItem => {
+                    menuItem.classList.remove('dimmed');
+                });
+
+                // iframe의 src를 빈 페이지로 초기화
+                document.getElementById('contentFrame').src = 'about:blank';
+            }
+        });
+    });
 </script>
 
 <br><br>
-<!--마이 페이지 메인 부분 끝---->
+<!-- 페이지 하단 푸터 삽입 (footer.html) -->
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>
