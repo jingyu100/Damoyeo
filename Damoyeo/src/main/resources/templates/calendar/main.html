@@ -150,7 +150,7 @@
     function renderCalendar() {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        monthYearLabel.textContent = `${year} ${currentDate.toLocaleString('default', {month: 'long'})}`;
+        monthYearLabel.textContent = `${year}년 ${currentDate.toLocaleString('default', {month: 'long'})}`;
 
         calendarDays.innerHTML = '';
         const firstDayOfMonth = new Date(year, month, 1).getDay();
