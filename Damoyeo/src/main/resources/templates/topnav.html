@@ -7,7 +7,12 @@
                 <a href="/post/main" class="top-nav">모임 찾기</a>
                 <a href="/chat" class="top-nav">채팅하기</a>
                 <a href="/calendar/main" class="top-nav">캘린더</a>
-                <a href="/">마이페이지</a>
+                <th:block th:if="${userId == null}">
+                    <a href="/user/login">마이페이지</a>
+                </th:block>
+                <th:block th:if="${userId != null}">
+                    <a href="/user/mypage">마이페이지</a>
+                </th:block>
             </div>
 
             <th:block th:if="${userId == null}">
