@@ -16,4 +16,6 @@ public interface PostRequestRepository extends JpaRepository<PostRequest, Intege
      List<PostRequest> findByPost(Post post);
      // 스테이터스가 0일때 찾기 위해 만듬
      List<PostRequest> findByPostAndStatus(Post post, String status);
+
+     List<PostRequest> findByUserAndStatus(User user, String status);
 }

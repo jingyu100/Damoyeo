@@ -7,8 +7,10 @@
 </head>
 <body>
 <script src="/js/sweetalert2.min.js"></script>
+
 <div th:each="postWithRequests : ${postsWithRequests}">
   <h3 th:text="${postWithRequests.post.title}">게시글 제목</h3>
+  <img th:src="@{|/uploads/${postWithRequests.post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
   <div>
     <p>새로운 참가신청이 있습니다:</p>
     <div th:each="request : ${postWithRequests.requests}">
@@ -27,10 +29,22 @@
     </div>
   </div>
 </div>
+<!--참가 거절 창-->
+<div th:each="rejectedPostsWithRequests : ${rejectedPostsWithRequests}">
+  <h3 th:text="${rejectedPostsWithRequests.post.title}">게시글 제목</h3>
+  <img th:src="@{|/uploads/${rejectedPostsWithRequests.post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+  <p th:text="${rejectedPostsWithRequests.post.content}">게시글 내용</p>
+  <p>거절 되었습니다.</p>
+  <div th:each="request : ${rejectedPostsWithRequests.requests}">
+    <form th:id="rejectedForm + ${request.prId}" th:action="@{'/post/requestRejected/' + ${request.prId}}" method="post" onsubmit="return handleRejected(event)" >
+      <button type="submit">확인</button>
+    </form>
+  </div>
+</div>
 
 <!-- 참가신청이 있는 게시글이 없는 경우 -->
-<div th:if="${postsWithRequests.isEmpty()}">
-  <p>새로운 참가신청이 없습니다.</p>
+<div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()}">
+  <p>새로운 알람이 없습니다.</p>
 </div>
 
 <script>
@@ -38,7 +52,7 @@
     toast: true,
     position: 'center-center',
     showConfirmButton: false,
-    timer: 1000,
+    timer: 800,
     timerProgressBar: true,
     didOpen: (toast) => {
       toast.addEventListener('mouseenter', Swal.stopTimer)
@@ -87,6 +101,33 @@
                   title: '참가 신청이 거절되었습니다.'
                 }).then(() => {
                   location.reload(); // 페이지 새로고침
+                });
+              }
+            })
+            .catch(error => {
+              Toast.fire({
+                icon: 'error',
+                title: '처리 중 오류가 발생했습니다.'
+              });
+            });
+
+    return false;
+  }
+
+  function handleRejected(event) {
+    event.preventDefault();
+    const form = event.target;
+
+    fetch(form.action, {
+      method: 'POST',
+    })
+            .then(response => {
+              if (response.ok) {
+                Toast.fire({
+                  icon: 'success',
+                  title: '아쉽지만 다른 모임을 찾아보세요.'
+                }).then(() => {
+                  location.reload();
                 });
               }
             })

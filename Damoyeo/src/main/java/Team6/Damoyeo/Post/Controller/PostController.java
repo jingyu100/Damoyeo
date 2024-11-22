@@ -237,20 +237,29 @@ public class PostController {
             return "redirect:/login";
         }
         List<PostWithRequest> postsWithRequests = alarmService.getPostsWithRequests(userId);
+        List<PostWithRequest> rejectedPostsWithRequests = alarmService.rejectedPostsWithRequests(userId);
         model.addAttribute("postsWithRequests", postsWithRequests);
-
+        model.addAttribute("rejectedPostsWithRequests", rejectedPostsWithRequests);
         return "/post/alarm";
     }
 
+    //모임참가 수락
     @PostMapping("/requestAccept/{id}")
     public String requestAccept(@PathVariable("id") Integer prId){
         postRequestService.accet(prId);
         return "redirect:/post/alarm";
     }
-
+    //모임 참가 거절
     @PostMapping("/requestRefusal/{id}")
     public String requestRefusal(@PathVariable("id") Integer prId){
         postRequestService.refusal(prId);
+        return "redirect:/post/alarm";
+    }
+    //모임 참가 거절 확인
+    @PostMapping("/requestRejected/{id}")
+    public String requestRejected(@PathVariable("id") Integer prId){
+        // 일단은 삭제임
+        postRequestService.rejected(prId);
         return "redirect:/post/alarm";
     }
 

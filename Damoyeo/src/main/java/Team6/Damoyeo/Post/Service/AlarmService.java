@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +40,25 @@ public class AlarmService {
             }
         }
         return postWithRequests;
+    }
+
+    public List<PostWithRequest> rejectedPostsWithRequests(Integer userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if(ou.isEmpty()){
+            return null;
+        }
+        User user = ou.get();
+        List<PostRequest> rejectedRequests = postRequestRepository.findByUserAndStatus(user, "2");
+
+        List<PostWithRequest> rejectedPostWithRequests = new ArrayList<>();
+
+        for (PostRequest request : rejectedRequests) {
+            Post post = request.getPost();
+            PostWithRequest pwRequest = new PostWithRequest(post, Arrays.asList(request));
+            rejectedPostWithRequests.add(pwRequest);
+        }
+
+        return rejectedPostWithRequests;
     }
 
 }
