@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LikeService {
 
-    private final LikeRepository likeRepository;
+    public final LikeRepository likeRepository;
 
     private final PostRepository postRepository;
 
@@ -54,5 +54,14 @@ public class LikeService {
 
     public int getLikeCount(int postId) {
         return likeRepository.countByPostId(postId);
+    }
+
+    public boolean checkIfUserLiked(int postId, int userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        Post post = postRepository.findById(postId).orElseThrow();
+
+        Optional<Like> like = likeRepository.findByUserAndPost(user,post);
+        log.info(String.valueOf(like.isPresent()));
+        return like.isPresent();
     }
 }
