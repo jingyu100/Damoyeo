@@ -4,13 +4,14 @@ package Team6.Damoyeo.Like.Controller;
 import Team6.Damoyeo.Like.Service.LikeService;
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
-import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,4 +56,6 @@ public ResponseEntity<Map<String, Object>> toggleLike(@PathVariable("postId") in
         response.put("liked", isLiked); // 'liked' 값은 true 또는 false로 전달
         return ResponseEntity.ok(response);
     }
+
+
 }

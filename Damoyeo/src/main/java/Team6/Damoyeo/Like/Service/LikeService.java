@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,7 +25,8 @@ public class LikeService {
 
     private final UserRepository userRepository;
 
-
+    
+    // 좋아요 토글 기능 메서드
     public String toggleLike(int postId, int userId) {
         User user = userRepository.findById(userId).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
@@ -52,10 +54,7 @@ public class LikeService {
         return result;
     }
 
-    public int getLikeCount(int postId) {
-        return likeRepository.countByPostId(postId);
-    }
-
+    // 체크를 했는지 안했는지 체크하는 메서드
     public boolean checkIfUserLiked(int postId, int userId) {
         User user = userRepository.findById(userId).orElseThrow();
         Post post = postRepository.findById(postId).orElseThrow();
@@ -63,5 +62,10 @@ public class LikeService {
         Optional<Like> like = likeRepository.findByUserAndPost(user,post);
         log.info(String.valueOf(like.isPresent()));
         return like.isPresent();
+    }
+    
+    // 유저가 좋아요 눌렀던 게시글 보여주는 메서드
+    public List<Post> findByLikedUser(int userId) {
+        return likeRepository.findLikeedPostByUserId(userId);
     }
 }
