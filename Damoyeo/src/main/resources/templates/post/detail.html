@@ -474,7 +474,8 @@
         </script>
 
         <div class="row" id="count">
-            <div class="value" th:text="${post.likeCount} + '좋아요 ∙ ' + ${post.viewCount} + 조회수"></div>
+            <div class="value" id="like-count" th:text="${post.likeCount}">좋아요</div>
+            <div class="value" id="view-count" th:text="${post.viewCount}">조회수</div>
         </div>
 
         <div class="btn_set">
@@ -523,15 +524,40 @@
 
 <script>
 
-    function toggleLike() {
-        const likeIcon = document.getElementById("like-icon");
-        if (likeIcon.classList.contains("far")) {
-            likeIcon.classList.remove("far");
-            likeIcon.classList.add("fas");
-        } else {
-            likeIcon.classList.remove("fas");
-            likeIcon.classList.add("far");
-        }
+    let isLiked = false;
+
+    function toggleLike(postId, userId) {
+        // 현재 상태 변경
+        isLiked = !isLiked;
+
+        // 좋아요 아이콘과 카운트 요소 가져오기
+        const likeIcon = document.getElementById('like-icon');
+        const likeCountElement = document.getElementById('like-count');
+
+        // AJAX 요청 실행
+        $.ajax({
+            url: '/likes/' + postId,
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ userId: userId }),
+            success: function (response) {
+                if (response.success) {
+                    // 좋아요 수와 상태 업데이트
+                    document.getElementById('like-count').textContent = response.likeCount + " 좋아요";
+                    const likeIcon = document.getElementById('like-icon');
+                    if (response.liked === "1") {
+                        likeIcon.classList.remove('far');
+                        likeIcon.classList.add('fas');
+                    } else {
+                        likeIcon.classList.remove('fas');
+                        likeIcon.classList.add('far');
+                    }
+                }
+            },
+            error: function (error) {
+                console.error("Error:", error);
+            }
+        });
     }
 
     document.addEventListener('DOMContentLoaded', function () {

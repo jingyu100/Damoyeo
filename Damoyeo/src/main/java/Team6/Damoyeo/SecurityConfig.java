@@ -22,7 +22,8 @@ public class SecurityConfig {
                 .csrf((csrf) -> csrf
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"),
                                 new AntPathRequestMatcher("/post/join/**"),
-                                new AntPathRequestMatcher("/post/out/**"))
+                                new AntPathRequestMatcher("/post/out/**"),
+                                new AntPathRequestMatcher("/likes/**"))
                         .ignoringRequestMatchers("/calendar/events/**")
                 )  // calendar 엔드포인트에 대한 CSRF 비활성화 추가
                 .headers((headers) -> headers

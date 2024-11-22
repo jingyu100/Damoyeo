@@ -48,6 +48,12 @@ public class PostService {
 
     }
 
+    //좋아요 메서드
+    public void saveLike(Post post) {
+        postRepository.save(post);
+    }
+
+
     // ID로 게시글을 조회하는 메서드 (상세 페이지용)
     public Post findById(Integer id) throws Exception {
 
