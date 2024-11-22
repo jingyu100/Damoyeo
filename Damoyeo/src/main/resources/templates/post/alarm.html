@@ -16,10 +16,10 @@
       <p>메시지: <span th:text="${request.message}"></span></p>
       <p>신청일: <span th:text="${#temporals.format(request.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
       <div>
-        <form th:action="@{'/post/requestAccept/' + ${request.prId}}" method="post">
+        <form th:id="'acceptForm' + ${request.prId}" th:action="@{'/post/requestAccept/' + ${request.prId}}" method="post" onsubmit="return handleAccept(event)">
           <button type="submit">수락</button>
         </form>
-        <form th:action="@{'/post/requestRefusal/' + ${request.prId}}" method="post">
+        <form th:id="'refusalForm' + ${request.prId}" th:action="@{'/post/requestRefusal/' + ${request.prId}}" method="post" onsubmit="return handleRefusal(event)">
           <button type="submit">거절</button>
         </form>
       </div>
@@ -33,5 +33,72 @@
   <p>새로운 참가신청이 없습니다.</p>
 </div>
 
+<script>
+  const Toast = Swal.mixin({
+    toast: true,
+    position: 'center-center',
+    showConfirmButton: false,
+    timer: 1000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener('mouseenter', Swal.stopTimer)
+      toast.addEventListener('mouseleave', Swal.resumeTimer)
+    }
+  });
+
+  function handleAccept(event) {
+    event.preventDefault();
+    const form = event.target;
+
+    fetch(form.action, {
+      method: 'POST',
+    })
+            .then(response => {
+              if (response.ok) {
+                Toast.fire({
+                  icon: 'success',
+                  title: '참가 신청이 수락되었습니다.'
+                }).then(() => {
+                  location.reload(); // 페이지 새로고침
+                });
+              }
+            })
+            .catch(error => {
+              Toast.fire({
+                icon: 'error',
+                title: '처리 중 오류가 발생했습니다.'
+              });
+            });
+
+    return false;
+  }
+
+  function handleRefusal(event) {
+    event.preventDefault();
+    const form = event.target;
+
+    fetch(form.action, {
+      method: 'POST',
+    })
+            .then(response => {
+              if (response.ok) {
+                Toast.fire({
+                  icon: 'success',
+                  title: '참가 신청이 거절되었습니다.'
+                }).then(() => {
+                  location.reload(); // 페이지 새로고침
+                });
+              }
+            })
+            .catch(error => {
+              Toast.fire({
+                icon: 'error',
+                title: '처리 중 오류가 발생했습니다.'
+              });
+            });
+
+    return false;
+  }
+</script>
 </body>
 </html>
