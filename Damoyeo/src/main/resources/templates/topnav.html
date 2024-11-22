@@ -1,3 +1,7 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
 <div class="null"></div>
 <div class="top-nav-wrap">
     <div class="top-nav-bar">
@@ -14,7 +18,7 @@
                     <a href="/user/mypage">마이페이지</a>
                 </th:block>
             </div>
-
+            <span class="search-icon hidden" onClick="clickIcon()"><i class="fas fa-search"></i></span>
             <th:block th:if="${userId == null}">
                 <a href="/user/login" class="login-btn">로그인</a>
                 <!--            <div class="profile-icon"></div>-->
@@ -27,14 +31,13 @@
                 <a href="/user/logout" class="login-btn">로그아웃</a>
             </th:block>
         </div>
-        <div class="top-nav-box2 fixed">
+        <div class="top-nav-box2">
             <div class="search-container">
                 <input type="text" id="search" name="search" placeholder="모임이나 동네를 검색해보세요..">
+                <a href="javascript:void(0);" onclick="searchPost()"><i class="fas fa-search"></i></a>
             </div>
 
-            <div class="search">
-                <a href="javascript:void(0);" onclick="searchPost()">검색하기</a>
-            </div>
+
         </div>
 
     </div>
@@ -51,7 +54,29 @@
         }
     }
 
-    function scrollNavbar(){
-        var topnav
+    window.addEventListener("scroll" , function (){
+        const nav2 = document.querySelector(".top-nav-box2");
+        const icon = document.querySelector(".search-icon");
+        const scrollY = window.scrollY;
+
+        if (scrollY > 50) {
+            nav2.classList.add("hidden");
+            icon.classList.remove("hidden");
+        } else{
+            nav2.classList.remove("hidden");
+            icon.classList.add("hidden");
+        }
+    });
+
+
+    function clickIcon(){
+        const icon = document.querySelector(".search-icon");
+        const nav2 = document.querySelector(".top-nav-box2");
+
+
+        nav2.classList.toggle("hidden");
+
     }
+
+
 </script>

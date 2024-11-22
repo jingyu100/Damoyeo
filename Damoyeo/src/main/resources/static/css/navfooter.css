@@ -1,14 +1,10 @@
-
-    body{
-        font-family: 'Pretendard-Regular','sans-serif';
-    }
-
     .top-nav-wrap{
         z-index: 999;
         width: 100%;
         position: fixed;
         top: 0;
         background-color: white;
+        border-bottom: 0.5px solid lightgray;
     }
 
     .top-nav-bar{
@@ -66,27 +62,57 @@
         align-items: center;
         justify-content: center;
         width: 80%;
-        padding-bottom: 20px;
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, height 0.2s;
+        height: 60px;
+        overflow: hidden;
+    }
+
+    .top-nav-box2.hidden{
+        opacity: 0;
+        visibility: hidden;
+        height: 0;
     }
 
     .search-container{
         width: 100%;
         position: relative;
+        padding-bottom: 15px;
     }
 
     .search-container > input{
         width: 100%;
         padding-right: 40px;
+        padding-left: 10px;
+        height: 40px;
+        line-height: 40px;
+        border: 0.5px solid lightgray;
+        border-radius: 5px;
     }
 
-    .search{
-        position: absolute;
-        right: 10px;
+    .search-container > input::placeholder{
+        padding-left: 10px;
+        padding-top: 50px;
     }
+
+    .search-container > input:focus{
+        border: 0.5px solid #A7C7E7;
+        outline: none;
+    }
+
+    .search-container > a {
+        position: absolute;
+        color: black;
+        right: 13px;
+        top: 10px;
+    }
+
+
 
     .null{
         width: 100%;
-        height: 124px;
+        height: 165px;
         background-color: white;
     }
 
@@ -99,12 +125,32 @@
         text-decoration: none;
         color: black;
         position: absolute;
-        right: 210px;
+        right: 250px;
     }
 
     .top-nav-profile > img{
         margin-right: 10px;
     }
+
+    .search-icon{
+        font-size: 18px;
+        margin-right: 10px;
+        cursor: pointer;
+        position: absolute;
+        left: 980px;
+        visibility: visible;
+        opacity: 1;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .search-icon.hidden{
+        opacity: 0;
+        visibility: hidden;
+    }
+
+
+
+
 
 
 
