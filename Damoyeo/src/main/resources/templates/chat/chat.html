@@ -339,24 +339,16 @@
         </div>
 
         <div class="room-list">
-            <div class="room-item" data-room="room1" onclick="selectRoom(this, 'room1')">
+            <!-- 채팅방 없을 경우 처리 -->
+            <div th:if="${#lists.isEmpty(chatRooms)}" class="no-rooms-message">
+                <p>참가한 채팅방이 없습니다.</p>
+            </div>
+
+            <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}"
+                 onclick="selectRoom(this, [[${room.roomId}]])">
                 <div class="room-icon"><i class="fas fa-comments"></i></div>
                 <div class="room-info">
-                    <div class="room-name">일반 채팅방1</div>
-                    <div class="room-preview">환영합니다!</div>
-                </div>
-            </div>
-            <div class="room-item" data-room="room2" onclick="selectRoom(this, 'room2')">
-                <div class="room-icon"><i class="fas fa-users"></i></div>
-                <div class="room-info">
-                    <div class="room-name">일반 채팅방2</div>
-                    <div class="room-preview">환영합니다!</div>
-                </div>
-            </div>
-            <div class="room-item" data-room="room3" onclick="selectRoom(this, 'room3')">
-                <div class="room-icon"><i class="fas fa-star"></i></div>
-                <div class="room-info">
-                    <div class="room-name">일반 채팅방3</div>
+                    <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
                     <div class="room-preview">환영합니다!</div>
                 </div>
             </div>
@@ -401,7 +393,7 @@
 <script type="text/javascript" th:inline="javascript">
     var stompClient = null;
     var username = /*[[${session.userNickName}]]*/ "";
-    var currentRoom = 'room1'; // 기본 방
+    var currentRoom = /*[[${#lists.isEmpty(chatRooms) ? null : chatRooms[0].roomId}]]*/ null;
 
 
     // 메시지 표시 함수 개선
@@ -435,52 +427,51 @@
     }
 
     function connect() {
+        // 채팅방이 없으면 연결하지 않음
+        if (!currentRoom) {
+            console.log('No chat rooms available');
+            return;
+        }
+
         var socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
         stompClient.connect({}, function (frame) {
-            console.log('Connected: ' + frame); // 연결 로그 추가
+            console.log('Connected: ', JSON.stringify(frame));
 
-            // 각 방마다 별도의 구독 설정
-            stompClient.subscribe('/topic/chat/room1', function (message) {
-                console.log('Received message in room1: ', message); // 메시지 수신 로그 추가
-                showMessage(JSON.parse(message.body), 'room1');
-            });
-            stompClient.subscribe('/topic/chat/room2', function (message) {
-                console.log('Received message in room2: ', message);
-                showMessage(JSON.parse(message.body), 'room2');
-            });
-            stompClient.subscribe('/topic/chat/room3', function (message) {
-                console.log('Received message in room3: ', message);
-                showMessage(JSON.parse(message.body), 'room3');
+            /*[[${chatRooms}]]*/.forEach(function(room) {
+                stompClient.subscribe('/topic/chat/' + room.roomId, function (message) {
+                    console.log('Received message in ' + room.roomId + ': ', message);
+                    showMessage(JSON.parse(message.body), room.roomId);
+                });
             });
 
             // 초기 방 입장 메시지
             sendJoinMessage(currentRoom);
         }, function (error) {
-            console.log('Connection error: ', error); // 연결 에러 로그 추가
+            console.log('Connection error: ', error);
         });
     }
 
 
     function selectRoom(element, roomId) {
-        // 이전 선택된 방의 active 클래스 제거
+        if (!roomId) return;
+
         document.querySelectorAll('.room-item').forEach(item => {
             item.classList.remove('active');
         });
 
-        // 선택된 방에 active 클래스 추가
         element.classList.add('active');
 
-        // 방 이름 업데이트
         document.getElementById('currentRoomName').textContent =
             element.querySelector('.room-name').textContent;
 
-        // 기존 방 전환 로직 실행
         currentRoom = roomId;
         switchRoom();
     }
 
     function sendJoinMessage(roomId) {
+        if (!roomId) return;
+
         if (stompClient && stompClient.connected) {
             stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify({
                 sender: username,
@@ -543,7 +534,11 @@
 
     // 페이지 로드 시 연결
     window.onload = function () {
-        connect();
+        // 채팅방이 있을 때만 connect
+        if (currentRoom) {
+            connect();
+            document.querySelector('.room-item')?.classList.add('active');
+        }
     };
 
 
