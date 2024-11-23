@@ -150,8 +150,8 @@ public class UserController {
     }
 
     // 프로필 페이지로 이동
-    @GetMapping("/profile")
-    public String profile(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
+    @GetMapping("/myprofile")
+    public String myProfile(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
         //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
         if (userId == null) {
             return "redirect:/user/login";
@@ -161,9 +161,31 @@ public class UserController {
 
         model.addAttribute("user", user);
         model.addAttribute("userId", userId);
+        model.addAttribute("isOwner", true);
 
         return "user/profile";
 
+    }
+    
+    //다른 사용자 프로필 확인용
+    @GetMapping("/userprofile{otherUserId}")
+    public String userProfile(@PathVariable("otherUserId") Integer otherUserId,
+                              Model model,
+                              @SessionAttribute(name = "userId", required = false) Integer userId) {
+
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
+
+        // 대상 사용자 정보 조회
+        User user = userService.findByUser(otherUserId);
+
+        model.addAttribute("user", user);
+        model.addAttribute("userId", userId);
+        model.addAttribute("isOwner", userId.equals(otherUserId));
+
+        return "user/profile";
     }
 
     // 프로필 수정 폼 페이지로 이동

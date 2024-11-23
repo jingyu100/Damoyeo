@@ -24,9 +24,9 @@
                 <!--            <div class="profile-icon"></div>-->
             </th:block>
             <th:block th:if="${userId != null}">
-                <a href="/user/profile" class="top-nav-profile">
-                    <img th:src="@{|/uploads/${user.photoUrl}|}" style="width: 40px; height: 40px" alt="">
-                    <div th:text="${user.nickname}"></div>
+                <a href="/user/myprofile" class="top-nav-profile">
+                    <img th:src="@{|/uploads/${logInUser.photoUrl}|}" style="width: 40px; height: 40px" alt="">
+                    <div th:text="${logInUser.nickname}"></div>
                 </a>
                 <a href="/user/logout" class="login-btn">로그아웃</a>
             </th:block>

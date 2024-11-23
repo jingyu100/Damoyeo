@@ -380,7 +380,7 @@
     <div class="page_title">
         <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
         <div class="profile-container">
-            <div class="profile">
+            <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
                 <div class="profile-img">
                     <img alt="" class="" th:src="@{|/uploads/${post.user.photoUrl}|}">
                 </div>
@@ -388,7 +388,7 @@
                     <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
                     <div class="profile-address" th:text="${post.user.comment}">사용자 자기소개</div>
                 </div>
-            </div>
+            </a>
         </div>
     </div>
     <div class="content-section">

@@ -150,6 +150,15 @@
       background-color: #fff5f5;
       border-left: 4px solid #fc8181;
     }
+
+    .user-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e2e8f0;
+    }
+
   </style>
 </head>
 <body>
@@ -157,16 +166,17 @@
 <div class="notification-container">
   <!-- 새로운 참가 신청 섹션 -->
   <div th:each="postWithRequests : ${postsWithRequests}" class="notification-card">
-    <div class="post-header">
+    <a th:href="@{/post/detail{id}(id=${postWithRequests.post.postId})}" class="post-header" target="_parent">
       <h3 class="post-title" th:text="${postWithRequests.post.title}">게시글 제목</h3>
       <img class="post-image" th:src="@{|/uploads/${postWithRequests.post.photoUrl}|}" alt="게시글 이미지">
-    </div>
+    </a>
 
     <div th:each="request : ${postWithRequests.requests}" class="request-container">
       <div class="request-info">
-        <div class="user-info">
+        <a th:href="@{/user/userprofile{id}(id=${request.user.userId})}" target="_parent" class="user-info">
+          <img class="user-image" th:src="@{|/uploads/${request.user.photoUrl}|}" alt="사용자 이미지">
           <strong th:text="${request.user.nickname}">신청자</strong>님의 참가신청
-        </div>
+        </a>
         <span class="request-date" th:text="${#temporals.format(request.createdDate, 'yyyy-MM-dd HH:mm')}">신청일</span>
       </div>
 
@@ -192,10 +202,10 @@
   <!-- 거절된 참가 신청 섹션 -->
   <div th:each="rejectedPostsWithRequests : ${rejectedPostsWithRequests}"
        class="notification-card rejected-notification">
-    <div class="post-header">
+    <a th:href="@{/post/detail{id}(id=${rejectedPostsWithRequests.post.postId})}" class="post-header" target="_blank">
       <h3 class="post-title" th:text="${rejectedPostsWithRequests.post.title}">게시글 제목</h3>
       <img class="post-image" th:src="@{|/uploads/${rejectedPostsWithRequests.post.photoUrl}|}" alt="게시글 이미지">
-    </div>
+    </a>
 
     <p class="request-message" th:text="${rejectedPostsWithRequests.post.content}">게시글 내용</p>
     <p class="user-info">거절 되었습니다.</p>
