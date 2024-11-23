@@ -76,4 +76,12 @@ public class ChatController {
 
         return chatMessage;
     }
+
+    @MessageMapping("/chat.leaveRoom/{roomId}")
+    @SendTo("/topic/chat/{roomId}")
+    public ChatMessage leaveRoom(@DestinationVariable String roomId, ChatMessage chatMessage) {
+        System.out.println("User " + chatMessage.getSender() + " left room " + roomId);
+        chatMessage.setType(ChatMessage.MessageType.LEAVE);
+        return chatMessage;
+    }
 }

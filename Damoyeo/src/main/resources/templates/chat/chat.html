@@ -391,118 +391,74 @@
     </div>
 </div>
 <script type="text/javascript" th:inline="javascript">
-    var stompClient = null;
-    var username = /*[[${session.userNickName}]]*/ "";
-    var currentRoom = /*[[${#lists.isEmpty(chatRooms) ? null : chatRooms[0].roomId}]]*/ null;
+    let stompClient = null;
+    let currentRoom = null;
+    let username = /*[[${session.userNickName}]]*/ 'default'; // 서버에서 전달받은 사용자 닉네임
 
 
     // 메시지 표시 함수 개선
+    // function showMessage(message, roomId) {
+    //     if (roomId === currentRoom) {
+    //         var messageArea = document.getElementById("messageArea");
+    //         var messageElement = document.createElement('li');
+    //
+    //         if (message.type === 'JOIN') {
+    //             messageElement.className = 'event-message';
+    //             messageElement.innerHTML = `${message.sender} 님이 입장하셨습니다.`;
+    //         } else if (message.type === 'LEAVE') {
+    //             messageElement.className = 'event-message';
+    //             messageElement.innerHTML = `${message.sender} 님이 퇴장하셨습니다.`;
+    //         } else if (message.type === 'CHAT') {
+    //             // 본인 메시지와 타인 메시지 구분
+    //             if (message.sender === username) {
+    //                 messageElement.className = 'my-message';
+    //             } else {
+    //                 messageElement.className = 'other-message';
+    //             }
+    //             messageElement.innerHTML = `
+    //             ${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}
+    //             ${message.content}
+    //         `;
+    //         }
+    //
+    //         messageArea.appendChild(messageElement);
+    //         messageArea.scrollTop = messageArea.scrollHeight;
+    //     }
+    // }
+
+
+    // 메시지 표시 함수
     function showMessage(message, roomId) {
-        if (roomId === currentRoom) {
-            var messageArea = document.getElementById("messageArea");
-            var messageElement = document.createElement('li');
+        if (roomId !== currentRoom) return;
 
-            if (message.type === 'JOIN') {
-                messageElement.className = 'event-message';
-                messageElement.innerHTML = `${message.sender} 님이 입장하셨습니다.`;
-            } else if (message.type === 'LEAVE') {
-                messageElement.className = 'event-message';
-                messageElement.innerHTML = `${message.sender} 님이 퇴장하셨습니다.`;
-            } else if (message.type === 'CHAT') {
-                // 본인 메시지와 타인 메시지 구분
-                if (message.sender === username) {
-                    messageElement.className = 'my-message';
-                } else {
-                    messageElement.className = 'other-message';
-                }
+        const messageArea = document.getElementById('messageArea');
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+
+        switch(message.type) {
+            case 'JOIN':
+                messageElement.classList.add('event-message');
+                messageElement.textContent = `${message.sender}님이 입장하셨습니다.`;
+                break;
+
+            case 'LEAVE':
+                messageElement.classList.add('event-message');
+                messageElement.textContent = `${message.sender}님이 퇴장하셨습니다.`;
+                break;
+
+            case 'CHAT':
+                messageElement.classList.add(message.sender === username ? 'my-message' : 'other-message');
                 messageElement.innerHTML = `
-                ${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}
-                ${message.content}
+                <span class="sender">${message.sender}</span>
+                <span class="content">${message.content}</span>
             `;
-            }
-
-            messageArea.appendChild(messageElement);
-            messageArea.scrollTop = messageArea.scrollHeight;
-        }
-    }
-
-    function connect() {
-        // 채팅방이 없으면 연결하지 않음
-        if (!currentRoom) {
-            console.log('No chat rooms available');
-            return;
+                break;
         }
 
-        var socket = new SockJS('/ws');
-        stompClient = Stomp.over(socket);
-        stompClient.connect({}, function (frame) {
-            console.log('Connected: ', JSON.stringify(frame));
-
-            /*[[${chatRooms}]]*/.forEach(function(room) {
-                stompClient.subscribe('/topic/chat/' + room.roomId, function (message) {
-                    console.log('Received message in ' + room.roomId + ': ', message);
-                    showMessage(JSON.parse(message.body), room.roomId);
-                });
-            });
-
-            // 초기 방 입장 메시지
-            sendJoinMessage(currentRoom);
-        }, function (error) {
-            console.log('Connection error: ', error);
-        });
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
 
-
-    function selectRoom(element, roomId) {
-        if (!roomId) return;
-
-        document.querySelectorAll('.room-item').forEach(item => {
-            item.classList.remove('active');
-        });
-
-        element.classList.add('active');
-
-        document.getElementById('currentRoomName').textContent =
-            element.querySelector('.room-name').textContent;
-
-        currentRoom = roomId;
-        switchRoom();
-    }
-
-    function sendJoinMessage(roomId) {
-        if (!roomId) return;
-
-        if (stompClient && stompClient.connected) {
-            stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify({
-                sender: username,
-                type: 'JOIN',
-                roomId: roomId
-            }));
-        }
-    }
-
-    function sendMessage() {
-        var messageContent = document.getElementById("message").value.trim();
-        if (messageContent && stompClient) {
-            var chatMessage = {
-                sender: username,
-                content: messageContent,
-                type: 'CHAT',
-                roomId: currentRoom
-            };
-            console.log('Sending message: ', chatMessage); // 전송 메시지 로그 추가
-            stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessage));
-            document.getElementById("message").value = ''; // 입력 창 비우기
-        }
-    }
-
-    // Enter 키로 메시지 전송
-    document.getElementById('message').addEventListener('keypress', function (e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
-    });
 
     // 방 변경 함수
     function switchRoom() {
@@ -526,21 +482,148 @@
         sendJoinMessage(currentRoom);
     }
 
+    // WebSocket 연결 함수
+    function connect() {
+        const socket = new SockJS('/ws');
+        stompClient = Stomp.over(socket);
+
+        stompClient.connect({}, function(frame) {
+            console.log('Connected: ' + frame);
+
+            // Subscribe to all available chat rooms
+            document.querySelectorAll('.room-item').forEach(function(roomElement) {
+                const roomId = roomElement.getAttribute('data-room');
+                if (roomId) {
+                    subscribeToRoom(roomId);
+                }
+            });
+
+            // Select first room by default
+            const firstRoom = document.querySelector('.room-item');
+            if (firstRoom) {
+                const roomId = firstRoom.getAttribute('data-room');
+                selectRoom(firstRoom, roomId);
+            }
+        }, function(error) {
+            console.error('Connection error:', error);
+            setTimeout(connect, 5000);
+        });
+    }
+
+    function subscribeToRoom(roomId) {
+        stompClient.subscribe('/topic/chat/' + roomId, function(message) {
+            const receivedMessage = JSON.parse(message.body);
+            console.log('Received message in room', roomId, ':', receivedMessage);
+            showMessage(receivedMessage, roomId);
+        });
+    }
+
+
+    // 방 선택 함수
+    function selectRoom(element, roomId) {
+        if (!roomId || !stompClient) return;
+
+        // Leave current room if exists
+        if (currentRoom && currentRoom !== roomId) {
+            leaveRoom(currentRoom);
+        }
+
+        // Update UI
+        document.querySelectorAll('.room-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        element.classList.add('active');
+
+        // Update room name
+        const roomName = element.querySelector('.room-name').textContent;
+        document.getElementById('currentRoomName').textContent = roomName;
+
+        // Clear message area
+        document.getElementById('messageArea').innerHTML = '';
+
+        // Set new room and join
+        currentRoom = roomId;
+        joinRoom(roomId);
+    }
+
+    function joinRoom(roomId) {
+        if (!stompClient || !roomId) return;
+
+        const joinMessage = {
+            sender: username,
+            type: 'JOIN',
+            roomId: roomId,
+            content: username + '님이 입장하셨습니다.'
+        };
+
+        stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify(joinMessage));
+    }
+
+    function leaveRoom(roomId) {
+        if (!stompClient || !roomId) return;
+
+        const leaveMessage = {
+            sender: username,
+            type: 'LEAVE',
+            roomId: roomId,
+            content: username + '님이 퇴장하셨습니다.'
+        };
+
+        stompClient.send("/app/chat.leaveRoom/" + roomId, {}, JSON.stringify(leaveMessage));
+    }
+
+    // 입장 메시지 전송
+    function sendJoinMessage(roomId) {
+        if (!roomId || !stompClient) return;
+
+        stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify({
+            sender: username,
+            type: 'JOIN',
+            roomId: roomId
+        }));
+    }
+
+    // 메시지 전송 함수
+    function sendMessage() {
+        const messageInput = document.getElementById('message');
+        const messageContent = messageInput.value.trim();
+
+        if (messageContent && stompClient && currentRoom) {
+            const chatMessage = {
+                sender: username,
+                content: messageContent,
+                type: 'CHAT',
+                roomId: currentRoom
+            };
+
+            stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessage));
+            messageInput.value = '';
+        }
+    }
+
     // 첫 번째 방을 기본으로 활성화
-    window.addEventListener('load', function () {
-        document.querySelector('.room-item').classList.add('active');
+    // window.addEventListener('load', function () {
+    //     document.querySelector('.room-item').classList.add('active');
+    // });
+
+    // 이벤트 리스너 등록
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize username from server-side
+        const userNickNameElement = document.getElementById('userNickName');
+        if (userNickNameElement) {
+            username = userNickNameElement.value;
+        }
+
+        connect();
     });
 
 
-    // 페이지 로드 시 연결
-    window.onload = function () {
-        // 채팅방이 있을 때만 connect
-        if (currentRoom) {
-            connect();
-            document.querySelector('.room-item')?.classList.add('active');
+    document.getElementById('message').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
         }
-    };
-
+    });
 
 </script>
 
