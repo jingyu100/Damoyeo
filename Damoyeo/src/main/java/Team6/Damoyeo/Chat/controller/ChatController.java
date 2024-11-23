@@ -3,6 +3,8 @@ package Team6.Damoyeo.chat.controller;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import Team6.Damoyeo.chat.dto.ChatMessage;
+import Team6.Damoyeo.chat.dto.ChatRoomDto;
+import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +17,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
 
     private final UserService userService;
 
-    @GetMapping("chat")
+    private final ChatService chatService;
+
+    @GetMapping("/chat")
     public String chat(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
                        HttpServletRequest request) {
 
@@ -29,15 +35,18 @@ public class ChatController {
             return "redirect:/user/login";
         }
 
-        User user = null;
-        if (userId != null) {
-            user = userService.findByUser(userId);
-        }
-
-        HttpSession session = request.getSession();
+        User user = userService.findByUser(userId);
         String userNickName = userService.findByUserId(userId);
+
+        // 사용자가 참여한 채팅방 목록 조회
+        List<ChatRoomDto> chatRooms = chatService.getUserChatRooms(userId);
+
+        // 모델에 데이터 추가
         model.addAttribute("userId", userId);
         model.addAttribute("user", user);
+        model.addAttribute("chatRooms", chatRooms);
+
+        HttpSession session = request.getSession();
         session.setAttribute("userNickName", userNickName);
 
         return "chat/chat";

@@ -4,7 +4,10 @@ import Team6.Damoyeo.Post.Entity.Post;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,25 +16,29 @@ import java.util.List;
 @Entity
 @Table(name = "chat_rooms")
 @Getter
-@JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class ChatRoom {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class ChatRoom extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer crId;
+    private Long id;
 
-    @Column
-    private LocalDateTime createdDate;
+    @Column(nullable = false)
+    private String roomName;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @OneToMany(mappedBy = "chatRoom")
-    private List<ChatRoomParticipant> participants = new ArrayList<>();
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
+    private List<ChatParticipant> participants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chatRoom")
+    @OneToMany(mappedBy = "chatRoom", cascade = CascadeType.ALL)
     private List<ChatMessage> messages = new ArrayList<>();
 
+    @Builder
+    public ChatRoom(String roomName, Post post) {
+        this.roomName = roomName;
+        this.post = post;
+    }
 }

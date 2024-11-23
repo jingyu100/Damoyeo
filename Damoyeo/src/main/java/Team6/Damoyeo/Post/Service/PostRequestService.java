@@ -6,6 +6,10 @@ import Team6.Damoyeo.Post.Repository.PostRepository;
 import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
+import Team6.Damoyeo.chat.Entity.ChatParticipant;
+import Team6.Damoyeo.chat.Entity.ChatRoom;
+import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
+import Team6.Damoyeo.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -23,6 +27,10 @@ public class PostRequestService {
     private final PostRepository postRepository;
 
     private final UserRepository userRepository;
+
+    private final ChatRoomRepository chatRoomRepository;
+
+    private final ChatParticipantRepository chatParticipantRepository;
 
     public void saveRequest(Integer userId, Integer postId, String text) {
         PostRequest postRequest = new PostRequest();
@@ -44,7 +52,7 @@ public class PostRequestService {
         postRequestRepository.save(postRequest);
     }
 
-    public PostRequest findClick(Post post, User user)  {
+    public PostRequest findClick(Post post, User user) {
 
         Optional<PostRequest> pru = postRequestRepository.findByPostAndUser(post, user);
         if (pru.isEmpty()) {
@@ -58,17 +66,45 @@ public class PostRequestService {
     }
 
     //수락했을때
-    public void accet(Integer prId){
-        Optional<PostRequest> opr = postRequestRepository.findById(prId);
-        if (opr.isPresent()) {
-            PostRequest pr = opr.get();
-            pr.setStatus("1");
-            pr.getPost().setNowParticipants(pr.getPost().getNowParticipants() + 1);
-            postRequestRepository.save(pr);
-            postRepository.save(pr.getPost());
-        }
+//    public void accet(Integer prId) {
+//        Optional<PostRequest> opr = postRequestRepository.findById(prId);
+//        if (opr.isPresent()) {
+//            PostRequest pr = opr.get();
+//            pr.setStatus("1");
+//            pr.getPost().setNowParticipants(pr.getPost().getNowParticipants() + 1);
+//            postRequestRepository.save(pr);
+//            postRepository.save(pr.getPost());
+//        }
+//    }
+
+    public void accet(Integer prId) {
+        // 1. PostRequest 조회
+        PostRequest postRequest = postRequestRepository.findById(prId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid Post Request ID"));
+
+        // 2. 상태를 '수락'으로 변경
+        postRequest.setStatus("ACCEPTED");
+
+        // 3. 해당 게시물의 채팅방 조회 또는 생성
+        ChatRoom chatRoom = chatRoomRepository.findByPost(postRequest.getPost())
+                .orElseGet(() -> {
+                    ChatRoom newChatRoom = ChatRoom.builder()
+                            .roomName(postRequest.getPost().getTitle() + "의 채팅방")
+                            .post(postRequest.getPost())
+                            .build();
+                    return chatRoomRepository.save(newChatRoom);
+                });
+
+        // 4. 채팅방 참여자로 바로 추가
+        ChatParticipant participant = ChatParticipant.builder()
+                .chatRoom(chatRoom)
+                .user(postRequest.getUser())
+                .build();
+        chatParticipantRepository.save(participant);
     }
-    public void refusal(Integer prId){
+
+
+    public void refusal(Integer prId) {
         Optional<PostRequest> opr = postRequestRepository.findById(prId);
         if (opr.isPresent()) {
             PostRequest pr = opr.get();
@@ -76,9 +112,9 @@ public class PostRequestService {
             postRequestRepository.save(pr);
         }
     }
-    
+
     //거절 메서드인데 일단은 삭제로 함
-    public void rejected(Integer prId){
+    public void rejected(Integer prId) {
         Optional<PostRequest> opr = postRequestRepository.findById(prId);
         if (opr.isPresent()) {
             PostRequest pr = opr.get();
