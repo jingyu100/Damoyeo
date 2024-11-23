@@ -344,8 +344,7 @@
                 <p>참가한 채팅방이 없습니다.</p>
             </div>
 
-            <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}"
-                 onclick="selectRoom(this, [[${room.roomId}]])">
+            <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}">
                 <div class="room-icon"><i class="fas fa-comments"></i></div>
                 <div class="room-info">
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
@@ -393,104 +392,18 @@
 <script type="text/javascript" th:inline="javascript">
     let stompClient = null;
     let currentRoom = null;
-    let username = /*[[${session.userNickName}]]*/ 'default'; // 서버에서 전달받은 사용자 닉네임
+    let username = null;
+    let subscriptions = new Map(); // Store active subscriptions
 
-
-    // 메시지 표시 함수 개선
-    // function showMessage(message, roomId) {
-    //     if (roomId === currentRoom) {
-    //         var messageArea = document.getElementById("messageArea");
-    //         var messageElement = document.createElement('li');
-    //
-    //         if (message.type === 'JOIN') {
-    //             messageElement.className = 'event-message';
-    //             messageElement.innerHTML = `${message.sender} 님이 입장하셨습니다.`;
-    //         } else if (message.type === 'LEAVE') {
-    //             messageElement.className = 'event-message';
-    //             messageElement.innerHTML = `${message.sender} 님이 퇴장하셨습니다.`;
-    //         } else if (message.type === 'CHAT') {
-    //             // 본인 메시지와 타인 메시지 구분
-    //             if (message.sender === username) {
-    //                 messageElement.className = 'my-message';
-    //             } else {
-    //                 messageElement.className = 'other-message';
-    //             }
-    //             messageElement.innerHTML = `
-    //             ${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}
-    //             ${message.content}
-    //         `;
-    //         }
-    //
-    //         messageArea.appendChild(messageElement);
-    //         messageArea.scrollTop = messageArea.scrollHeight;
-    //     }
-    // }
-
-
-    // 메시지 표시 함수
-    function showMessage(message, roomId) {
-        if (roomId !== currentRoom) return;
-
-        const messageArea = document.getElementById('messageArea');
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message');
-
-        switch(message.type) {
-            case 'JOIN':
-                messageElement.classList.add('event-message');
-                messageElement.textContent = `${message.sender}님이 입장하셨습니다.`;
-                break;
-
-            case 'LEAVE':
-                messageElement.classList.add('event-message');
-                messageElement.textContent = `${message.sender}님이 퇴장하셨습니다.`;
-                break;
-
-            case 'CHAT':
-                messageElement.classList.add(message.sender === username ? 'my-message' : 'other-message');
-                messageElement.innerHTML = `
-                <span class="sender">${message.sender}</span>
-                <span class="content">${message.content}</span>
-            `;
-                break;
-        }
-
-        messageArea.appendChild(messageElement);
-        messageArea.scrollTop = messageArea.scrollHeight;
-    }
-
-
-    // 방 변경 함수
-    function switchRoom() {
-        var roomSelect = document.getElementById('roomSelect');
-        var newRoom = roomSelect.value;
-
-        // 이전 방 나가기 메시지 전송
-        if (stompClient && stompClient.connected) {
-            stompClient.send("/app/chat.leaveRoom", {}, JSON.stringify({
-                sender: username,
-                type: 'LEAVE',
-                roomId: currentRoom
-            }));
-        }
-
-        // 메시지 영역 초기화
-        document.getElementById('messageArea').innerHTML = '';
-
-        // 새 방 입장
-        currentRoom = newRoom;
-        sendJoinMessage(currentRoom);
-    }
-
-    // WebSocket 연결 함수
     function connect() {
         const socket = new SockJS('/ws');
         stompClient = Stomp.over(socket);
 
         stompClient.connect({}, function(frame) {
             console.log('Connected: ' + frame);
+            username = /*[[${session.userNickName}]]*/ 'default';
 
-            // Subscribe to all available chat rooms
+            // Subscribe to all available rooms initially
             document.querySelectorAll('.room-item').forEach(function(roomElement) {
                 const roomId = roomElement.getAttribute('data-room');
                 if (roomId) {
@@ -498,30 +411,48 @@
                 }
             });
 
-            // Select first room by default
-            const firstRoom = document.querySelector('.room-item');
-            if (firstRoom) {
-                const roomId = firstRoom.getAttribute('data-room');
-                selectRoom(firstRoom, roomId);
+            // Select first room by default if no room is selected
+            if (!currentRoom) {
+                const firstRoom = document.querySelector('.room-item');
+                if (firstRoom) {
+                    const roomId = firstRoom.getAttribute('data-room');
+                    selectRoom(firstRoom, roomId);
+                }
             }
         }, function(error) {
             console.error('Connection error:', error);
-            setTimeout(connect, 5000);
+            setTimeout(connect, 5000); // Reconnect attempt
         });
     }
 
     function subscribeToRoom(roomId) {
-        stompClient.subscribe('/topic/chat/' + roomId, function(message) {
-            const receivedMessage = JSON.parse(message.body);
-            console.log('Received message in room', roomId, ':', receivedMessage);
-            showMessage(receivedMessage, roomId);
-        });
+        if (!subscriptions.has(roomId)) {
+            const subscription = stompClient.subscribe('/topic/chat/' + roomId, function(message) {
+                const receivedMessage = JSON.parse(message.body);
+                console.log('Received message in room', roomId, ':', receivedMessage);
+                showMessage(receivedMessage, roomId);
+            });
+            subscriptions.set(roomId, subscription);
+            console.log(`Subscribed to room ${roomId}`);
+        }
     }
 
+    function unsubscribeFromRoom(roomId) {
+        const subscription = subscriptions.get(roomId);
+        if (subscription) {
+            subscription.unsubscribe();
+            subscriptions.delete(roomId);
+            console.log(`Unsubscribed from room ${roomId}`);
+        }
+    }
 
-    // 방 선택 함수
     function selectRoom(element, roomId) {
-        if (!roomId || !stompClient) return;
+        if (!roomId || !stompClient) {
+            console.log('Cannot select room: invalid roomId or stompClient');
+            return;
+        }
+
+        console.log('Selecting room:', roomId);
 
         // Leave current room if exists
         if (currentRoom && currentRoom !== roomId) {
@@ -543,6 +474,11 @@
 
         // Set new room and join
         currentRoom = roomId;
+
+        // Ensure subscription exists
+        subscribeToRoom(roomId);
+
+        // Join new room
         joinRoom(roomId);
     }
 
@@ -557,6 +493,7 @@
         };
 
         stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify(joinMessage));
+        console.log(`Joined room ${roomId}`);
     }
 
     function leaveRoom(roomId) {
@@ -570,20 +507,34 @@
         };
 
         stompClient.send("/app/chat.leaveRoom/" + roomId, {}, JSON.stringify(leaveMessage));
+        console.log(`Left room ${roomId}`);
     }
 
-    // 입장 메시지 전송
-    function sendJoinMessage(roomId) {
-        if (!roomId || !stompClient) return;
+    function showMessage(message, roomId) {
+        if (roomId !== currentRoom) return;
 
-        stompClient.send("/app/chat.addUser/" + roomId, {}, JSON.stringify({
-            sender: username,
-            type: 'JOIN',
-            roomId: roomId
-        }));
+        const messageArea = document.getElementById('messageArea');
+        const messageElement = document.createElement('li');
+
+        switch(message.type) {
+            case 'JOIN':
+                messageElement.className = 'event-message';
+                messageElement.textContent = `${message.sender}님이 입장하셨습니다.`;
+                break;
+            case 'LEAVE':
+                messageElement.className = 'event-message';
+                messageElement.textContent = `${message.sender}님이 퇴장하셨습니다.`;
+                break;
+            case 'CHAT':
+                messageElement.className = message.sender === username ? 'my-message' : 'other-message';
+                messageElement.innerHTML = `${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}${message.content}`;
+                break;
+        }
+
+        messageArea.appendChild(messageElement);
+        messageArea.scrollTop = messageArea.scrollHeight;
     }
 
-    // 메시지 전송 함수
     function sendMessage() {
         const messageInput = document.getElementById('message');
         const messageContent = messageInput.value.trim();
@@ -601,28 +552,27 @@
         }
     }
 
-    // 첫 번째 방을 기본으로 활성화
-    // window.addEventListener('load', function () {
-    //     document.querySelector('.room-item').classList.add('active');
-    // });
-
-    // 이벤트 리스너 등록
+    // Event Listeners
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize username from server-side
-        const userNickNameElement = document.getElementById('userNickName');
-        if (userNickNameElement) {
-            username = userNickNameElement.value;
-        }
+        // Add click event listeners to all room items
+        document.querySelectorAll('.room-item').forEach(roomElement => {
+            roomElement.addEventListener('click', function() {
+                const roomId = this.getAttribute('data-room');
+                console.log('Room clicked:', roomId);
+                selectRoom(this, roomId);
+            });
+        });
 
+        // Message input event listener
+        document.getElementById('message').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Initialize WebSocket connection
         connect();
-    });
-
-
-    document.getElementById('message').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage();
-        }
     });
 
 </script>
