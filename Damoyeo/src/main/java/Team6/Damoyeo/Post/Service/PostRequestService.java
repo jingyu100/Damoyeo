@@ -77,6 +77,18 @@ public class PostRequestService {
 //        }
 //    }
 
+
+    // 3. 해당 게시물의 채팅방 조회 또는 생성
+//        ChatRoom chatRoom = chatRoomRepository.findByPost(postRequest.getPost())
+//                .orElseGet(() -> {
+//                    ChatRoom newChatRoom = ChatRoom.builder()
+//                            .roomName(postRequest.getPost().getTitle() + "의 채팅방")
+//                            .post(postRequest.getPost())
+//                            .build();
+//                    return chatRoomRepository.save(newChatRoom);
+//                });
+
+
     public void accet(Integer prId) {
         // 1. PostRequest 조회
         PostRequest postRequest = postRequestRepository.findById(prId)
@@ -85,15 +97,9 @@ public class PostRequestService {
         // 2. 상태를 '수락'으로 변경
         postRequest.setStatus("1");
 
-        // 3. 해당 게시물의 채팅방 조회 또는 생성
+        // 3. 해당 게시물의 채팅방 조회
         ChatRoom chatRoom = chatRoomRepository.findByPost(postRequest.getPost())
-                .orElseGet(() -> {
-                    ChatRoom newChatRoom = ChatRoom.builder()
-                            .roomName(postRequest.getPost().getTitle() + "의 채팅방")
-                            .post(postRequest.getPost())
-                            .build();
-                    return chatRoomRepository.save(newChatRoom);
-                });
+                .orElseThrow(() -> new IllegalArgumentException("Chat room not found for this post"));
 
         // 4. 채팅방 참여자로 바로 추가
         ChatParticipant participant = ChatParticipant.builder()

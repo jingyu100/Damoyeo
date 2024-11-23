@@ -8,6 +8,7 @@ import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.Post.dto.PostWithRequest;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
+import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,8 @@ public class PostController {
     private final UserService userService;
 
     private final AlarmService alarmService;
+
+    private final ChatService chatService;
 
     // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
@@ -143,7 +146,9 @@ public class PostController {
         post.setStatus("1");
 
         // 게시물 저장
-        postService.savePost(post, userId);
+        Post savedPost = postService.savePost(post, userId);
+
+        chatService.createChatRoomForPost(savedPost, userId);
 
         return "redirect:/post/main";  // 메인 페이지로 리다이렉트
 

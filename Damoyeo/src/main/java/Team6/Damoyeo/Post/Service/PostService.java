@@ -34,7 +34,7 @@ public class PostService {
     }
 
     // 게시글 저장 메서드 (작성자 정보 포함)
-    public void savePost(Post post, @SessionAttribute(name = "userId", required = false) Integer userId) {
+    public Post savePost(Post post, @SessionAttribute(name = "userId", required = false) Integer userId) {
 
         // 새로운 게시글 생성 시 참가자 수를 1로 설정
         post.setNowParticipants(1);
@@ -48,7 +48,7 @@ public class PostService {
         post.setUser(user);
 
         // 게시글 저장
-        postRepository.save(post);
+        return postRepository.save(post);
 
     }
 

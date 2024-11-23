@@ -1,7 +1,11 @@
 package Team6.Damoyeo.chat.service;
 
+import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.chat.Entity.ChatParticipant;
+import Team6.Damoyeo.chat.Entity.ChatRoom;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
 import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
+import Team6.Damoyeo.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +21,8 @@ public class ChatService {
     // 채팅 참여자 정보를 관리하는 레포지토리
     private final ChatParticipantRepository chatParticipantRepository;
 
+    private final ChatRoomRepository chatRoomRepository;
+
     public List<ChatRoomDto> getUserChatRooms(Integer userId) {
         // 사용자의 모든 채팅방 참여 기록을 조회한 후
         // 참여 기록에서 각 채팅방 정보를 ChatRoomDto로 변환
@@ -24,6 +30,22 @@ public class ChatService {
                 .stream()
                 .map(participant -> ChatRoomDto.from(participant.getChatRoom()))
                 .collect(Collectors.toList());
+    }
+
+    public void createChatRoomForPost(Post post, Integer userId) {
+        // 1. 채팅방 생성
+        ChatRoom chatRoom = ChatRoom.builder()
+                .roomName("Chat for Post " + post.getPostId())
+                .post(post)
+                .build();
+        chatRoomRepository.save(chatRoom);
+
+        // 2. 작성자를 채팅방 참여자로 추가
+        ChatParticipant participant = ChatParticipant.builder()
+                .chatRoom(chatRoom)
+                .user(post.getUser()) // Post의 작성자
+                .build();
+        chatParticipantRepository.save(participant);
     }
 }
 
