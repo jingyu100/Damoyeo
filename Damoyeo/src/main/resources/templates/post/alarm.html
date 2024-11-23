@@ -1,51 +1,221 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link href="/css/sweetalert2.min.css" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>알림</title>
+  <link href="/css/sweetalert2.min.css" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f8f9fa;
+      padding: 2rem;
+    }
+
+    .notification-container {
+      max-width: 750px;
+      margin: 0 auto;
+    }
+
+    .notification-card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: transform 0.2s;
+    }
+
+    .notification-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-title {
+      color: #2c3e50;
+      font-size: 1.25rem;
+      font-weight: 600;
+      flex-grow: 1;
+    }
+
+    .post-image {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .request-container {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+
+    .request-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .user-info {
+      color: #4a5568;
+    }
+
+    .request-message {
+      color: #2d3748;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: white;
+      border-radius: 6px;
+    }
+
+    .request-date {
+      color: #718096;
+      font-size: 0.875rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    button {
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    button[type="submit"] {
+      background-color: #4299e1;
+      color: white;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3182ce;
+    }
+
+    .reject-button {
+      background-color: #feb2b2;
+      color: #c53030;
+    }
+
+    .reject-button:hover {
+      background-color: #fc8181;
+    }
+
+    .confirm-button {
+      background-color: #68d391;
+      color: white;
+    }
+
+    .confirm-button:hover {
+      background-color: #48bb78;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: #718096;
+    }
+
+    .empty-state p {
+      font-size: 1.125rem;
+      margin-top: 1rem;
+    }
+
+    hr {
+      border: none;
+      height: 1px;
+      background-color: #e2e8f0;
+      margin: 1rem 0;
+    }
+
+    .rejected-notification {
+      background-color: #fff5f5;
+      border-left: 4px solid #fc8181;
+    }
+  </style>
 </head>
 <body>
 <script src="/js/sweetalert2.min.js"></script>
+<div class="notification-container">
+  <!-- 새로운 참가 신청 섹션 -->
+  <div th:each="postWithRequests : ${postsWithRequests}" class="notification-card">
+    <div class="post-header">
+      <h3 class="post-title" th:text="${postWithRequests.post.title}">게시글 제목</h3>
+      <img class="post-image" th:src="@{|/uploads/${postWithRequests.post.photoUrl}|}" alt="게시글 이미지">
+    </div>
 
-<div th:each="postWithRequests : ${postsWithRequests}">
-  <h3 th:text="${postWithRequests.post.title}">게시글 제목</h3>
-  <img th:src="@{|/uploads/${postWithRequests.post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-  <div>
-    <p>새로운 참가신청이 있습니다:</p>
-    <div th:each="request : ${postWithRequests.requests}">
-      <p>신청자: <span th:text="${request.user.nickname}"></span></p>
-      <p>메시지: <span th:text="${request.message}"></span></p>
-      <p>신청일: <span th:text="${#temporals.format(request.createdDate, 'yyyy-MM-dd HH:mm')}"></span></p>
-      <div>
-        <form th:id="'acceptForm' + ${request.prId}" th:action="@{'/post/requestAccept/' + ${request.prId}}" method="post" onsubmit="return handleAccept(event)">
+    <div th:each="request : ${postWithRequests.requests}" class="request-container">
+      <div class="request-info">
+        <div class="user-info">
+          <strong th:text="${request.user.nickname}">신청자</strong>님의 참가신청
+        </div>
+        <span class="request-date" th:text="${#temporals.format(request.createdDate, 'yyyy-MM-dd HH:mm')}">신청일</span>
+      </div>
+
+      <div class="request-message" th:text="${request.message}">메시지 내용</div>
+
+      <div class="button-group">
+        <form th:id="'acceptForm' + ${request.prId}"
+              th:action="@{'/post/requestAccept/' + ${request.prId}}"
+              method="post"
+              onsubmit="return handleAccept(event)">
           <button type="submit">수락</button>
         </form>
-        <form th:id="'refusalForm' + ${request.prId}" th:action="@{'/post/requestRefusal/' + ${request.prId}}" method="post" onsubmit="return handleRefusal(event)">
-          <button type="submit">거절</button>
+        <form th:id="'refusalForm' + ${request.prId}"
+              th:action="@{'/post/requestRefusal/' + ${request.prId}}"
+              method="post"
+              onsubmit="return handleRefusal(event)">
+          <button type="submit" class="reject-button">거절</button>
         </form>
       </div>
-      <hr/>
     </div>
   </div>
-</div>
-<!--참가 거절 창-->
-<div th:each="rejectedPostsWithRequests : ${rejectedPostsWithRequests}">
-  <h3 th:text="${rejectedPostsWithRequests.post.title}">게시글 제목</h3>
-  <img th:src="@{|/uploads/${rejectedPostsWithRequests.post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-  <p th:text="${rejectedPostsWithRequests.post.content}">게시글 내용</p>
-  <p>거절 되었습니다.</p>
-  <div th:each="request : ${rejectedPostsWithRequests.requests}">
-    <form th:id="rejectedForm + ${request.prId}" th:action="@{'/post/requestRejected/' + ${request.prId}}" method="post" onsubmit="return handleRejected(event)" >
-      <button type="submit">확인</button>
-    </form>
+
+  <!-- 거절된 참가 신청 섹션 -->
+  <div th:each="rejectedPostsWithRequests : ${rejectedPostsWithRequests}"
+       class="notification-card rejected-notification">
+    <div class="post-header">
+      <h3 class="post-title" th:text="${rejectedPostsWithRequests.post.title}">게시글 제목</h3>
+      <img class="post-image" th:src="@{|/uploads/${rejectedPostsWithRequests.post.photoUrl}|}" alt="게시글 이미지">
+    </div>
+
+    <p class="request-message" th:text="${rejectedPostsWithRequests.post.content}">게시글 내용</p>
+    <p class="user-info">거절 되었습니다.</p>
+
+    <div th:each="request : ${rejectedPostsWithRequests.requests}">
+      <form th:id="rejectedForm + ${request.prId}"
+            th:action="@{'/post/requestRejected/' + ${request.prId}}"
+            method="post"
+            onsubmit="return handleRejected(event)">
+        <button type="submit" class="confirm-button">확인</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 빈 상태 표시 -->
+  <div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()}" class="empty-state">
+    <p>새로운 알람이 없습니다.</p>
   </div>
 </div>
 
-<!-- 참가신청이 있는 게시글이 없는 경우 -->
-<div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()}">
-  <p>새로운 알람이 없습니다.</p>
-</div>
 
 <script>
   const Toast = Swal.mixin({
