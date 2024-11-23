@@ -3,23 +3,153 @@
 <head>
     <title>찜한 게시글</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8f9fa;
+            padding: 2rem;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .posts-container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
         .post {
-            border: 1px solid #ccc;
-            padding: 16px;
-            margin: 8px 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .post:hover {
+            transform: translateY(-2px);
+        }
+
+        .post-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .post-content {
+            flex-grow: 1;
+        }
+
+        .post-title {
+            color: #2c3e50;
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .post-description {
+            color: #4a5568;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .post-info {
+            color: #718096;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .post-info span {
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: #ebf4ff;
+            color: #4299e1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #718096;
+        }
+
+        .empty-state p {
+            font-size: 1.125rem;
+        }
+
+        @media (max-width: 640px) {
+            .post {
+                flex-direction: column;
+            }
+
+            .post-image {
+                width: 100%;
+                height: 200px;
+            }
         }
     </style>
 </head>
 <body>
-<h1>내가 찜한 게시글</h1>
-<div th:each="post : ${likesPosts}" class="post">
-    <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-    <div th:text="${post.title}">게시글 제목</div>
-    <div th:text="${post.content}">게시글 내용</div>
-    <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
-    <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
-    <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+<div class="posts-container">
+    <h1>내가 찜한 게시글</h1>
+
+    <div th:if="${!likesPosts.empty}">
+        <div th:each="post : ${likesPosts}" class="post">
+            <img class="post-image" th:src="@{|/uploads/${post.photoUrl}|}" alt="게시글 이미지">
+            <div class="post-content">
+                <div class="post-title" th:text="${post.title}">게시글 제목</div>
+                <div class="post-description" th:text="${post.content}">게시글 내용</div>
+                <div class="post-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                        <circle cx="12" cy="10" r="3"></circle>
+                    </svg>
+                    활동 지역: <span th:text="${post.roadAddress}">지역</span>
+                </div>
+                <div class="post-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                    상세주소: <span th:text="${post.detailAddress}">상세주소</span>
+                </div>
+                <div class="post-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path>
+                        <line x1="7" y1="7" x2="7.01" y2="7"></line>
+                    </svg>
+                    분야: <span class="tag" th:text="${post.tag}">분야</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${likesPosts.isEmpty()}" class="empty-state">
+        <p>찜한 게시글이 없습니다.</p>
+    </div>
 </div>
 </body>
 </html>
