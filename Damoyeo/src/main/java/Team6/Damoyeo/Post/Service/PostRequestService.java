@@ -6,6 +6,8 @@ import Team6.Damoyeo.Post.Repository.PostRepository;
 import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
+import Team6.Damoyeo.calendar.Entity.CalendarEvent;
+import Team6.Damoyeo.calendar.repository.CalendarRepository;
 import Team6.Damoyeo.chat.Entity.ChatParticipant;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
@@ -31,6 +33,8 @@ public class PostRequestService {
     private final ChatRoomRepository chatRoomRepository;
 
     private final ChatParticipantRepository chatParticipantRepository;
+
+    private final CalendarRepository calendarRepository;
 
     public void saveRequest(Integer userId, Integer postId, String text) {
         PostRequest postRequest = new PostRequest();
@@ -107,6 +111,19 @@ public class PostRequestService {
                 .user(postRequest.getUser())
                 .build();
         chatParticipantRepository.save(participant);
+
+        // 5. 캘린더 이벤트 저장
+        Post post = postRequest.getPost();
+        CalendarEvent calendarEvent = CalendarEvent.builder()
+                .title(post.getTitle()) // 게시물 제목
+                .description(post.getTitle()) // 게시물 설명
+                .startTime(post.getEndDate())
+                .endTime(post.getEndDate()) // 게시물의 종료 날짜 사용
+                .createdDate(LocalDateTime.now()) // 이벤트 생성 날짜
+                .user(postRequest.getUser()) // 요청한 사용자
+                .build();
+        calendarRepository.save(calendarEvent);
+
     }
 
 
