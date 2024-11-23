@@ -83,7 +83,7 @@ public class PostRequestService {
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Post Request ID"));
 
         // 2. 상태를 '수락'으로 변경
-        postRequest.setStatus("ACCEPTED");
+        postRequest.setStatus("1");
 
         // 3. 해당 게시물의 채팅방 조회 또는 생성
         ChatRoom chatRoom = chatRoomRepository.findByPost(postRequest.getPost())
