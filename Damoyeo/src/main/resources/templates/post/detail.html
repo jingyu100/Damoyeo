@@ -536,7 +536,7 @@
                 </th:block>
                 <th:block th:if="${userId == post.user.getUserId()}">
                     <div class="btn-container">
-                       <form method="post" th:action="@{'/post/mositipy/' + ${post.postId}}">
+                       <form method="get" th:action="@{'/post/mositipy/' + ${post.postId}}">
                             <button class="update-btn" type="submit">수정</button>
                         </form>
                         <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">

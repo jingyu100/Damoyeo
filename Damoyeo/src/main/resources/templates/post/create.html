@@ -2,8 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>새 글 작성</title>
-    
+    <title th:text="${post.postId == null ? '새 글 작성' : '글 수정'}">페이지 제목</title>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
 
@@ -13,52 +13,51 @@
             padding: 0;
             box-sizing: border-box;
         }
-            
-            @font-face {
+
+        @font-face {
             font-family: 'Pretendard-Regular';
             src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
             font-weight: 400;
             font-style: normal;
         }
 
-        
 
         body {
             font-family: 'Pretendard-Regular', sans-serif;
             height: 140vh;
             display: flex;
-            justify-content:center; 
-            align-items: center; 
+            justify-content: center;
+            align-items: center;
             margin: 0;
-            }
-        
-        form{
+        }
+
+        form {
             width: 100%;
             height: 90%;
             display: flex;
             flex-direction: column;
             align-items: center;
             border-radius: 0.5rem;
-            }
-        
-        form div{
-            width: 100%;
-            height: 100%;
-            
         }
 
-    .form-group1{
+        form div {
+            width: 100%;
+            height: 100%;
+
+        }
+
+        .form-group1 {
             display: flex;
             justify-content: center;
             align-items: center;
             border-bottom: 0.5px solid lightgrey;
         }
 
-        .form-group1 input{
+        .form-group1 input {
             width: 95%;
             height: 3rem;
             background-color: #f5f6f8;
-            border: none;  
+            border: none;
             font-size: 16px;
             font-weight: 500;
             border-radius: 0.5rem;
@@ -66,17 +65,17 @@
             font-family: 'Pretendard-Regular', sans-serif;
         }
 
-        
+
         .form-group1 input::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
+            font-family: 'Pretendard-Regular', sans-serif;
             font-size: 16px;
-            color:lightgray; 
+            color: lightgray;
         }
 
-        
+
         .form-group1 input:focus {
             outline: none;
-            border: 2px solid  #A7C7E7;
+            border: 2px solid #A7C7E7;
         }
 
         .form-group2 {
@@ -97,19 +96,19 @@
             resize: none;
             font-family: 'Pretendard-Regular', sans-serif;
         }
-        
+
         .form-group2 textarea:focus {
             outline: none;
             border: none;
         }
 
         .form-group2 textarea::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
+            font-family: 'Pretendard-Regular', sans-serif;
             font-size: 16px;
-            color:lightgray; 
+            color: lightgray;
         }
 
-        .form-group-container{
+        .form-group-container {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -117,36 +116,36 @@
         }
 
 
-        .form-group-container input{
-            width:90%;
+        .form-group-container input {
+            width: 90%;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;
+            color: lightgray;
         }
 
-        .form-group-container select{
-            width:90%;
+        .form-group-container select {
+            width: 90%;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;
+            color: lightgray;
         }
 
 
         .form-group-container input::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
+            font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;
+            color: lightgray;
         }
 
-        .form-group{
+        .form-group {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -156,7 +155,7 @@
 
         .form-group input:focus {
             outline: none;
-            border-bottom: 2px solid  #A7C7E7;
+            border-bottom: 2px solid #A7C7E7;
         }
 
         .form-group-container2 {
@@ -173,7 +172,7 @@
             justify-content: center;
         }
 
-        .file-input-container :hover{
+        .file-input-container :hover {
             cursor: pointer;
 
         }
@@ -197,11 +196,11 @@
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-family: 'Pretendard-Regular', sans-serif; 
+            font-family: 'Pretendard-Regular', sans-serif;
         }
 
         .file-input-container label:hover {
-            background-color: #8FAFD1;  
+            background-color: #8FAFD1;
         }
 
 
@@ -211,210 +210,284 @@
             margin-right: 10px;
         }
 
-        
-        
-        button{
+
+        button {
             width: 200px;
             height: 50px;
             color: white;
             background-color: #A7C7E7;
             font-weight: 800;
-            font-size:1.4rem;
-            font-family:'Pretendard-Regular', sans-serif; 
+            font-size: 1.4rem;
+            font-family: 'Pretendard-Regular', sans-serif;
             border: none;
             border-radius: 0.5rem;
         }
-        
+
         button:hover {
-            background-color: #8FAFD1; 
-            cursor: pointer; 
+            background-color: #8FAFD1;
+            cursor: pointer;
         }
 
-        .form-group-container2 #roadAddress{
-            width:30%;
+        .form-group-container2 #roadAddress {
+            width: 30%;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;    
+            color: lightgray;
         }
 
-        .form-group-container1{
+        .form-group-container1 {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap:30px;
+            gap: 30px;
         }
 
-        #roadAddress{
-            width:300px;
+        #roadAddress {
+            width: 300px;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;
+            color: lightgray;
         }
+
         #roadAddress:focus {
             outline: none;
-            border-bottom: 2px solid  #A7C7E7;
+            border-bottom: 2px solid #A7C7E7;
         }
-        
+
         #roadAddress::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif; 
+            font-family: 'Pretendard-Regular', sans-serif;
             font-size: 12px;
-            color:lightgray;
+            color: lightgray;
         }
 
-        
 
-
-        #addressbutton{
+        #addressbutton {
             width: 70px;
             height: 30px;
             color: white;
             background-color: #A7C7E7;
             font-weight: 800;
-            font-size:0.7rem;
-            font-family:'Pretendard-Regular', sans-serif; 
+            font-size: 0.7rem;
+            font-family: 'Pretendard-Regular', sans-serif;
             border: none;
-            border-radius: 0.2rem; 
+            border-radius: 0.2rem;
         }
 
 
-
-        #map{
+        #map {
             width: 700px;
             height: 400px;
         }
-
-        
-
-
 
 
     </style>
 </head>
 <body>
-    
+
 <!--    사진,사용자ID,조회수,상태 미구현-->
 
-    <div th:if="${message}" th:text="${message}"></div>
+<div th:if="${message}" th:text="${message}"></div>
 
-    <form th:action="@{/post/create}" method="post" th:object="${post}" enctype="multipart/form-data">
-        <div class="form-group1">
-            <input type="text" id="title" placeholder="제목" th:field="*{title}" required/>
+<form th:action="${post.postId == null} ? @{/post/create} : @{/post/update}" method="post"
+      th:object="${post}" enctype="multipart/form-data">
+    <!-- postId가 있다면 hidden으로 전달 -->
+    <input type="hidden" th:if="${post.postId != null}" th:field="*{postId}"/>
+
+    <div class="form-group1">
+        <input type="text" id="title" placeholder="제목" th:field="*{title}" required/>
+    </div>
+
+    <div class="form-group2">
+        <textarea id="content" placeholder="내용을 입력하세요" th:field="*{content}" rows="5" required></textarea>
+    </div>
+
+
+    <div class="form-group-container">
+
+        <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
+        <div class="form-group">
+            <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required readonly/>
         </div>
 
-        <div class="form-group2">
-            <textarea id="content" placeholder="내용을 입력하세요" th:field="*{content}" rows="5" required></textarea>
+        <div class="form-group">
+            <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
         </div>
-        
-        
-        <div class="form-group-container">
 
-            <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
-            <div class="form-group">
-                <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required readonly/>
-            </div>
-
-            <div class="form-group">
-                <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
-            </div>
-
-            <div class="form-group">
-                <select id="tag" th:field="*{tag}">
-                    <!-- 지역 옵션 -->
-                    <option value="운동/스포츠">운동/스포츠</option>
-                    <option value="음악/악기">음악/악기</option>
-                    <option value="아웃도어/여행">아웃도어/여행</option>
-                    <option value="게임/오락">게임/오락</option>
-                    <option value="요리/제조">요리/제조</option>
-                    <option value="외국어/언어">외국어/언어</option>
-                    <option value="스포츠 관람">스포츠 관람</option>
-                    <option value="인문학/철학">인문학/철학</option>
-                    <option value="자기개발">자기개발</option>
-                    <option value="독서">독서</option>
-                    <!-- 다른 지역들 추가 -->
-                </select>
-            </div>
+        <div class="form-group">
+            <select id="tag" th:field="*{tag}">
+                <!-- 지역 옵션 -->
+                <option value="운동/스포츠">운동/스포츠</option>
+                <option value="음악/악기">음악/악기</option>
+                <option value="아웃도어/여행">아웃도어/여행</option>
+                <option value="게임/오락">게임/오락</option>
+                <option value="요리/제조">요리/제조</option>
+                <option value="외국어/언어">외국어/언어</option>
+                <option value="스포츠 관람">스포츠 관람</option>
+                <option value="인문학/철학">인문학/철학</option>
+                <option value="자기개발">자기개발</option>
+                <option value="독서">독서</option>
+                <!-- 다른 지역들 추가 -->
+            </select>
+        </div>
 
 
-            <div class="form-group">
-                <input type="number" id="maxParticipants" placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" min="1" required/>
-            </div>
-
-            <div class="form-group">
-                <input type="datetime-local" id="endDate" th:field="*{endDate}" required/>
+        <div class="form-group">
+            <!--                새 글 작성일때-->
+            <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
+                   placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
+            <!--                나중에 글 수정할때-->
+            <input type="number" id="editPost" th:if="${post.postId != null}" th:min="${post.nowParticipants}"
+                   placeholder="최대참가자 수를 입력해주세요"
+                   th:field="*{maxParticipants}" th:value="${post.maxParticipants}" required/>
+            <div class="error-message" th:if="${#fields.hasErrors('maxParticipants')}"
+                 th:errors="*{maxParticipants}">Error
             </div>
         </div>
-        <div class="form-group-container1">
-                <input type="text" id="roadAddress" readonly  placeholder="주소 검색">
-                <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()"  value="주소 검색"><br>
-                <div id="map" style="display: none;"></div>
-            <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-            <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
-            <script>
-                var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                    mapOption = {
-                        center: new kakao.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-                        level: 5 // 지도의 확대 레벨
-                    };
 
-                //지도를 미리 생성
-                var map = new kakao.maps.Map(mapContainer, mapOption);
+        <div class="form-group">
+            <input type="datetime-local" id="endDate"
+                   th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
+                   th:name="endDate"
+                   required/>
+        </div>
+    </div>
+    <div class="form-group-container1">
+        <input type="text" id="roadAddress" readonly placeholder="주소 검색">
+        <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+        <div id="map" style="display: none;"></div>
+        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+        <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
+        <script>
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                mapOption = {
+                    center: new kakao.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+                    level: 5 // 지도의 확대 레벨
+                };
 
-                //주소-좌표 변환 객체를 생성
-                var geocoder = new kakao.maps.services.Geocoder();
-                //마커를 미리 생성
-                var marker = new kakao.maps.Marker({
-                    position: new kakao.maps.LatLng(37.537187, 127.005476),
-                    map: map
-                });
+            //지도를 미리 생성
+            var map = new kakao.maps.Map(mapContainer, mapOption);
+
+            //주소-좌표 변환 객체를 생성
+            var geocoder = new kakao.maps.services.Geocoder();
+            //마커를 미리 생성
+            var marker = new kakao.maps.Marker({
+                position: new kakao.maps.LatLng(37.537187, 127.005476),
+                map: map
+            });
 
 
-                function sample5_execDaumPostcode() {
-                    new daum.Postcode({
-                        oncomplete: function(data) {
-                            var addr = data.address; // 최종 주소 변수
+            function sample5_execDaumPostcode() {
+                new daum.Postcode({
+                    oncomplete: function (data) {
+                        var addr = data.address; // 최종 주소 변수
 
-                            // 주소 정보를 해당 필드에 넣는다.
-                            document.getElementById("readAddress").value= addr;
-                            document.getElementById("roadAddress").value = addr;
-                            // 주소로 상세 정보를 검색
-                            geocoder.addressSearch(data.address, function(results, status) {
-                                // 정상적으로 검색이 완료됐으면
-                                if (status === daum.maps.services.Status.OK) {
+                        // 주소 정보를 해당 필드에 넣는다.
+                        document.getElementById("readAddress").value = addr;
+                        document.getElementById("roadAddress").value = addr;
+                        // 주소로 상세 정보를 검색
+                        geocoder.addressSearch(data.address, function (results, status) {
+                            // 정상적으로 검색이 완료됐으면
+                            if (status === daum.maps.services.Status.OK) {
 
-                                    var result = results[0]; //첫번째 결과의 값을 활용
+                                var result = results[0]; //첫번째 결과의 값을 활용
 
-                                    // 해당 주소에 대한 좌표를 받아서
-                                    var coords = new daum.maps.LatLng(result.y, result.x);
-                                    // 지도를 보여준다.
-                                    mapContainer.style.display = "block";
-                                    map.relayout();
-                                    // 지도 중심을 변경한다.
-                                    map.setCenter(coords);
-                                    // 마커를 결과값으로 받은 위치로 옮긴다.
-                                    marker.setPosition(coords)
-                                }
-                            });
-                        }
-                    }).open();
-                }
-            </script>
-            </div>    
-            <div class="form-group-container2">
-            <div class="file-input-container">   
-                <input type="file" name="photo" id="photoUrl"/>
-                <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
-                
-            </div>
-            <button type="submit">글 등록</button>
-        </div>   
+                                // 해당 주소에 대한 좌표를 받아서
+                                var coords = new daum.maps.LatLng(result.y, result.x);
+                                // 지도를 보여준다.
+                                mapContainer.style.display = "block";
+                                map.relayout();
+                                // 지도 중심을 변경한다.
+                                map.setCenter(coords);
+                                // 마커를 결과값으로 받은 위치로 옮긴다.
+                                marker.setPosition(coords)
+                            }
+                        });
+                    }
+                }).open();
+            }
+        </script>
+    </div>
+    <div class="form-group-container2">
+        <div class="file-input-container">
+            <input type="file" name="photo" id="photoUrl"/>
+            <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
+
+        </div>
+        <button type="submit">글 등록</button>
+    </div>
 </form>
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 새 글 작성 검증
+        const newPostInput = document.getElementById('newPost');
+        if (newPostInput) {
+            newPostInput.addEventListener('input', function () {
+                const value = parseInt(this.value);
+                if (value < 2) {
+                    this.setCustomValidity('최대 참가자 수는 2명 이상이어야 합니다.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+
+        // 글 수정 검증
+        const editPostInput = document.getElementById('editPost');
+        if (editPostInput) {
+            const currentParticipants = parseInt(editPostInput.getAttribute('th:min'));
+            editPostInput.addEventListener('input', function () {
+                const value = parseInt(this.value);
+                if (value < currentParticipants) {
+                    this.setCustomValidity(`최대 참가자 수는 현재 참가자 수(${currentParticipants}명) 이상이어야 합니다.`);
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
+        }
+
+        const endDateInput = document.getElementById('endDate');
+
+        // 현재 시간을 YYYY-MM-DDTHH:mm 형식으로 변환하는 함수
+        function formatDateTime(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        }
+
+        // 현재 시간으로 최소값 설정
+        const now = new Date();
+        endDateInput.min = formatDateTime(now);
+
+        // 입력값 변경시 검증
+        endDateInput.addEventListener('input', function () {
+            const selectedDate = new Date(this.value);
+            const currentDate = new Date();
+
+            if (selectedDate < currentDate) {
+                this.setCustomValidity('종료 시간은 현재 시간보다 이후여야 합니다.');
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        endDateInput.dispatchEvent(new Event('input'));
+    });
+
+
+</script>
 </body>
 </html>

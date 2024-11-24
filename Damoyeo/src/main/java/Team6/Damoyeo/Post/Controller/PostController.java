@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -124,7 +125,17 @@ public class PostController {
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
                            RedirectAttributes redirectAttributes,
-                           @SessionAttribute(name = "userId", required = false) Integer userId) throws IOException {
+                           BindingResult bindingResult,
+                           @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
+        // 새 글일때
+        if (post.getMaxParticipants() < 2) {
+            bindingResult.rejectValue("maxParticipants", "error.maxParticipants",
+                    "최대 참가자 수는 2명 이상이어야 합니다.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "post/create";
+        }
 
         // 파일 업로드 여부 확인
         if (file.isEmpty()) {
@@ -152,6 +163,78 @@ public class PostController {
 
         return "redirect:/post/main";  // 메인 페이지로 리다이렉트
 
+    }
+
+    // 게시물 수정 페이지
+    @GetMapping("/mositipy/{id}")
+    public String mositipyPost(Model model,@PathVariable("id") Integer id,
+                               @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
+        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
+        Post post = postService.findById(id);
+        User user = userService.findByUser(userId);
+        if (post.getUser() != user){
+            return "redirect:/post/main";
+        }
+
+        // API 키와
+        model.addAttribute("apiKey", API_KEY);
+        model.addAttribute("post", post);
+
+
+        return "post/create";  // 게시물 작성 페이지로 이동
+
+    }
+
+    @PostMapping("/update")
+    public String updatePost(@ModelAttribute("post") Post post,
+                             BindingResult bindingResult,
+                             @RequestParam("photo") MultipartFile file,
+                             @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
+
+        // 로그인 체크
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
+
+        // 기존 게시물 조회
+        Post testPost = postService.findById(post.getPostId());
+        User user = userService.findByUser(userId);
+        if (testPost.getUser() != user) {
+            return "redirect:/post/main";
+        }
+
+        if (post.getMaxParticipants() < testPost.getNowParticipants()) {
+            bindingResult.rejectValue("maxParticipants", "error.maxParticipants",
+                    "최대 참가자 수는 현재 참가자 수(" + testPost.getNowParticipants() + "명)보다 커야 합니다.");
+        }
+
+        if (bindingResult.hasErrors()) {
+            return "post/create";
+        }
+
+        if (!file.isEmpty()) {
+            String uploadDir = UPLOAD_DIRECTORY;
+            Path path = Paths.get(uploadDir + file.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            file.transferTo(path);
+            post.setPhotoUrl(file.getOriginalFilename());
+        } else {
+            // 기존 이미지 유지
+            post.setPhotoUrl(testPost.getPhotoUrl());
+        }
+
+        post.setStatus(testPost.getStatus());
+        post.setNowParticipants(testPost.getNowParticipants());
+        post.setUser(testPost.getUser());
+        post.setCreatedDate(testPost.getCreatedDate());
+
+        // 게시물 업데이트
+        postService.updatePost(post);
+
+        return "redirect:/post/main";
     }
 
     // 게시물 상세 페이지

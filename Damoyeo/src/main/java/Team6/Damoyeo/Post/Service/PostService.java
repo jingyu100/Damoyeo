@@ -140,4 +140,8 @@ public class PostService {
         User user = ou.get();
         return postRepository.findByUser(user);
     }
+
+    public  void updatePost(Post post) {
+         postRepository.save(post);
+    }
 }
