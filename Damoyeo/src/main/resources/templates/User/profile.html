@@ -12,6 +12,82 @@
 <br><br>
 <!--메인 시작부분 -->
 <style>
+
+
+    .post-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 20px;
+        margin-left: 10%;
+        margin-right: 10%;
+    }
+
+    .post {
+        width: 30%;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .post-detail {
+        text-decoration: none;
+    }
+
+    .post-title {
+        color: black;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .post-content {
+        font-size: 0.9em;
+        color: #666;
+        margin-bottom: 10px;
+    }
+
+    .post-info {
+        font-size: 0.8em;
+        color: #888;
+    }
+
+    .post img {
+        width: 100%; /* 너비를 100%로 설정하여 게시물 폭에 맞추기 */
+        height: auto; /* 높이는 자동으로 조정 */
+        border-radius: 5px; /* 모서리를 부드럽게 처리 */
+        margin-bottom: 10px; /* 이미지와 게시물 내용 사이에 여백 추가 */
+    }
+
+    .page-btn {
+        position: fixed;
+        bottom: 20px; /* 화면 하단에서 20px 위 */
+        left: 50%; /* 화면 왼쪽에서 50% */
+        transform: translateX(-50%); /* 가로축을 기준으로 중앙 정렬 */
+        background-color: white; /* 배경색 추가 (선택사항) */
+        padding: 10px; /* 여백 추가 */
+        border-radius: 8px; /* 둥근 모서리 (선택사항) */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 그림자 효과 (선택사항) */
+    }
+
+    .page-btn a {
+        margin: 0 10px;
+        font-size: 1.2em;
+        text-decoration: none;
+        color: #333; /* 링크 색상 */
+    }
+
+    .page-btn a:hover {
+        color: #007bff; /* 호버 시 링크 색상 변경 */
+    }
+
+    .page-btn span {
+        margin: 0 10px;
+        font-size: 1.2em;
+        color: #333; /* 페이지 번호 색상 */
+    }
+
     .content {
         font-family: Arial, sans-serif;
         width: 700px;
@@ -142,8 +218,29 @@
 <div class="divider">
     <span>게시물</span>
 </div>
-<br><br><br><br><br>
-<!--메인 게시물 끝 부분-->
+<div class="post-container">
+<div th:each=" post : ${posts}" class="post">
+    <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
+        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+        <div class="post-title" th:text="${post.title}">제목</div>
+        <div class="post-content" th:text="${post.content}">내용</div>
+        <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
+        <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
+        <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+        <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
+        <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
+        <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span
+                th:text="${post.maxParticipants}">0</span></div>
+        <div class="post-info"><span
+                th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
+        </div>
+        <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">상태: 모집중</span>
+        </div>
+    </a>
+</div>
+</div>
+<br>
+    <!--메인 게시물 끝 부분-->
 <div th:replace="~{footer.html}"></div>
 </body>
 </html>

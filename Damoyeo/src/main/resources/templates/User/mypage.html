@@ -129,7 +129,7 @@
 
     <!-- 메인 프로필 이미지 -->
 <!--    아래 이미지랑 이거 뭔차이야?-->
-    <a href="/user/profile">
+    <a th:href="@{/user/userprofile{id}(id=${user.userId})}">
         <img src="/uploads/img.png" style="width: 100px; height: 100px" alt="프로필 메인 이미지">
     </a>
 
@@ -137,7 +137,7 @@
     <p1 th:text="${user.nickname} + '님 '"></p1>
 
     <!-- 프로필 설정 링크 -->
-    <a href="/user/profile">
+    <a th:href="@{/user/userprofile{id}(id=${user.userId})}" >
         <img class="user-profile-img" th:src="@{|/uploads/${user.photoUrl}|}" alt="프로필 설정">
     </a>
     <p2>프로필</p2>

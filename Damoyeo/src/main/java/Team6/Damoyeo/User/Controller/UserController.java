@@ -1,5 +1,7 @@
 package Team6.Damoyeo.User.Controller;
 
+import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,6 +21,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Controller
@@ -30,6 +33,7 @@ public class UserController {
     private final UserService userService;
     private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
     private final HttpSession httpSession;
+    private final PostService postService;
 
     // 회원가입 폼 페이지로 이동
     @GetMapping("/register")
@@ -149,25 +153,7 @@ public class UserController {
 
     }
 
-    // 프로필 페이지로 이동
-    @GetMapping("/myprofile")
-    public String myProfile(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
-        //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
-        if (userId == null) {
-            return "redirect:/user/login";
-        }
-        // 세션에 저장된 userId로 사용자 정보 조회
-        User user = userService.findByUser(userId);
-
-        model.addAttribute("user", user);
-        model.addAttribute("userId", userId);
-        model.addAttribute("isOwner", true);
-
-        return "user/profile";
-
-    }
-    
-    //다른 사용자 프로필 확인용
+    //사용자 프로필 확인용
     @GetMapping("/userprofile{otherUserId}")
     public String userProfile(@PathVariable("otherUserId") Integer otherUserId,
                               Model model,
@@ -181,9 +167,12 @@ public class UserController {
         // 대상 사용자 정보 조회
         User user = userService.findByUser(otherUserId);
 
+        List<Post> posts = postService.postSerch(otherUserId);
+
         model.addAttribute("user", user);
         model.addAttribute("userId", userId);
         model.addAttribute("isOwner", userId.equals(otherUserId));
+        model.addAttribute("posts", posts);
 
         return "user/profile";
     }
@@ -237,7 +226,7 @@ public class UserController {
         userService.updateUser(existingUser);
 
         // 프로필 페이지로 리다이렉트
-        return "redirect:/user/profile";
+        return "redirect:/user/userprofile" + userId;
 
     }
 
