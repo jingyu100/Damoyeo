@@ -316,9 +316,9 @@
         
         <div class="form-group-container">
 
-            <!--    임시로 텍스트로 받음-->
+            <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
             <div class="form-group">
-                <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required/>
+                <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required readonly/>
             </div>
 
             <div class="form-group">
@@ -352,7 +352,7 @@
             </div>
         </div>
         <div class="form-group-container1">
-                <input type="text" id="roadAddress"  th:field="*{roadAddress}" placeholder="주소 검색">
+                <input type="text" id="roadAddress" readonly  placeholder="주소 검색">
                 <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()"  value="주소 검색"><br>
                 <div id="map" style="display: none;"></div>
             <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
