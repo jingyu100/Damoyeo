@@ -48,7 +48,7 @@
 
     .top-nav-content:hover > a:not(:hover) {
         color: rgba(0, 0, 0, 0.2);
-    }
+    }``
 
     .login-btn{
         all: unset;
