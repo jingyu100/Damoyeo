@@ -16,6 +16,11 @@
         font-family: Arial, sans-serif;
         width: 700px;
         margin: 0 auto;
+        padding: 20px; /* 내부 여백 추가 */
+        border: 1px solid; /* 테두리 추가 */
+        border-radius: 10px; /* 모서리를 살짝 둥글게 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /*그림자 효과*/
+        background-color: #ffffff;
     }
 
     .profile-header {
@@ -55,31 +60,42 @@
         border-radius: 15px;
         outline: none;
         padding-left: 10px;
-        background-color: #f5f5f5;
+        background-color: #ffffff;
+        border: 1px solid #A7C7E7;
     }
 
     .area {
-        width: 250px;
+        width: 200px;
         height: 35px;
         font-size: 15px;
         border-radius: 15px;
         padding-left: 10px;
-        background-color: #f5f5f5;
+        background-color: #ffffff;
+        border: 1px solid #A7C7E7;
     }
 
     .custom-textarea {
         width: 300px;
-        height: 100px;
+        height: 50px;
         font-size: 15px;
-        border: 1px solid #ccc;
+        border: 1px solid #A7C7E7;
         border-radius: 15px;
         padding: 10px;
-        background-color: #f5f5f5;
+        background-color: #ffffff;
+    }
+    .interests {
+        width: 200px;
+        height: 35px;
+        font-size: 15px;
+        border: 1px solid #A7C7E7;
+        border-radius: 15px;
+        padding-left: 10px;
+        background-color: #ffffff;
     }
 
     .profile-photo img {
-        width: 250px;
-        height: 250px;
+        width: 220px;
+        height: 220px;
         border-radius: 50%;
         cursor: pointer;
         transition: background-color 0.2s ease;
@@ -93,9 +109,9 @@
         margin-top: 10px;
         padding: 10px 20px; /* 버튼 크기 조정 */
         font-size: 1.6em;
-        background-color: #ffffff;
-        border: 2px solid black;
-        color: black;
+        background-color: #A7C7E7;
+        border: 2px solid #A7C7E7;
+        color: white;
         cursor: pointer;
         border-radius: 5px;
         font-weight: bold;
@@ -103,7 +119,7 @@
 
     .form-buttons {
         margin-top: 10px; /* 자기소개 아래 공간 조정 */
-        text-align: center; /* 버튼 중앙 정렬 */
+        text-align: right;
     }
 </style>
 
@@ -150,6 +166,8 @@
                     <td>
                         <textarea id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required
                                   class="custom-textarea"></textarea>
+                </tr>
+                <tr>
                     </td>
                     <th scope="row">관심사</th>
                     <td>
@@ -167,17 +185,12 @@
                         </select>
                     </td>
                 </tr>
+                </tr>
             </table>
         </div>
         <div class="form-buttons">
-
             <button type="submit">수정</button>
         </div>
-    </form>
-    <form th:action="@{/user/delete}" method="post">
-        <button type="submit">
-            유저탈퇴
-        </button>
     </form>
 </div>
 

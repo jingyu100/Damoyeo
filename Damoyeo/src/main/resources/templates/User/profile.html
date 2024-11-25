@@ -202,6 +202,7 @@
 
 <!-- 메인 게시물 시작 부분-->
 <style>
+    /* 구분선 스타일 */
     .divider {
         width: 80%;
         border-top: 3px solid #ddd;
@@ -219,7 +220,29 @@
         position: relative;
         top: -10px;
     }
+
+    /* 게시물 컨테이너 */
+    .post-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-start; /* 각 줄 왼쪽부터 정렬 */
+        align-content: flex-start; /* 전체 영역도 위쪽부터 정렬 */
+        gap: 20px; 
+    }
+
+    /* 게시물 아이템 */
+    .post {
+        flex: 0 0 calc(33.333% - 20px); /* 고정된 너비로 한 줄에 3개 */
+        box-sizing: border-box;
+    }
+
+    /* 이미지 크기 */
+    .post img {
+        width: 100%;
+        height: auto;
+    }
 </style>
+
 
 <div class="divider">
     <span>게시물</span>
@@ -235,7 +258,7 @@
         <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
         <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
         <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
-        <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span
+        <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span>
                 th:text="${post.maxParticipants}">0</span></div>
         <div class="post-info"><span
                 th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
