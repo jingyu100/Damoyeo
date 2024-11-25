@@ -5,7 +5,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChatMessage {
+public class ChatMessageDto {
     private MessageType type;
     private String content;
     private String sender;
