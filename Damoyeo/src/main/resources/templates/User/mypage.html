@@ -131,14 +131,14 @@
 
     <!-- 메인 프로필 이미지 -->
     <a th:href="@{/user/userprofile{id}(id=${user.userId})}">
-        <img src="/uploads/img.png" style="width: 80px; height: 80px" alt="프로필 메인 이미지">
+        <img th:src="@{|/uploads/${logInUser.photoUrl}|}" style="width: 80px; height: 80px" alt="프로필 메인 이미지">
     </a>
 
     <!-- 사용자 닉네임 -->
     <p1 th:text="${user.nickname} + '님 '"></p1>
 
     <!-- 프로필 설정 링크 -->
-    <a href="">
+    <a th:href="@{/user/userprofile{id}(id=${user.userId})}">
         <img class="user-profile-img" src="/uploads/유저프로필입장.png" alt="">
     </a>
     <p2>프로필</p2>
