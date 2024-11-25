@@ -496,17 +496,16 @@
             const dateKey = selectedDate.toISOString().split('T')[0];
 
             const dayEvents = events.filter(event => {
-                const utcDate = new Date(event.start_time);
-                const kstDate = toKST(utcDate);
-                return kstDate.toISOString().split('T')[0] === dateKey;
+                const eventDate = new Date(event.start_time);
+                return eventDate.toISOString().split('T')[0] === dateKey;
             });
 
             const eventList = document.getElementById('eventList');
             eventList.innerHTML = '';
 
             dayEvents.forEach(event => {
-                const kstDate = convertToKST(event.start_time);
-                const timeStr = `${String(kstDate.getHours()).padStart(2, '0')}:${String(kstDate.getMinutes()).padStart(2, '0')}`;
+                const eventDate = new Date(event.start_time);
+                const timeStr = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
 
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
