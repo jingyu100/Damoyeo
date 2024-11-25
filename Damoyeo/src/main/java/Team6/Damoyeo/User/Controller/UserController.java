@@ -222,7 +222,7 @@ public class UserController {
         existingUser.setNickname(user.getNickname());
         existingUser.setComment(user.getComment());
         existingUser.setArea(user.getArea());
-
+        existingUser.setInterests(user.getInterests());
         userService.updateUser(existingUser);
 
         // 프로필 페이지로 리다이렉트

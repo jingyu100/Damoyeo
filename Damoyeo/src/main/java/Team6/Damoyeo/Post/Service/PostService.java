@@ -30,7 +30,8 @@ public class PostService {
 
     // 특정 페이지에 해당하는 게시글을 가져오는 메서드
     public Page<Post> findPostsByPage(int page, int pageSize) {
-        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
+//        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
+        return postRepository.findByStatus(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")),"1");
     }
 
     // 게시글 저장 메서드 (작성자 정보 포함)
@@ -106,8 +107,8 @@ public class PostService {
     // 제목을 기준으로 게시글을 검색하는 메서드
     public Page<Post> searchPostsByTitle(String title, Pageable pageable) {
 
-        return postRepository.findByTitleContaining(title, pageable);
-
+//        return postRepository.findByTitleContaining(title, pageable);
+        return postRepository.findByTitleContainingAndStatus(title,"1",pageable);
     }
 
     // 조회수가 높은 상위 게시글 목록을 가져오는 메서드
@@ -122,8 +123,8 @@ public class PostService {
     // 태그를 기준으로 게시글을 검색하는 메서드
     public Page<Post> searchPostByTag(String tag, Pageable pageable) {
 
-        return postRepository.findByTagContaining(tag, pageable);
-
+//        return postRepository.findByTagContaining(tag, pageable);
+        return postRepository.findByTagContainingAndStatus(tag,"1" ,pageable);
     }
 
     //포스트 삭제하는 메서드
