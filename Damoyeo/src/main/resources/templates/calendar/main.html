@@ -462,6 +462,11 @@
     let selectedDate = null;
     let selectedEvent = null;
 
+    function convertToKST(dateStr) {
+        const date = new Date(dateStr);
+        return new Date(date.getTime() + (9 * 60 * 60 * 1000));
+    }
+
     function showEventList(dayContent) {
         selectedDayContent = dayContent;
         const day = parseInt(dayContent.querySelector('.date-number').textContent);
@@ -480,23 +485,19 @@
             const response = await fetch('/calendar/events');
             const events = await response.json();
 
-            // 날짜 비교를 위한 날짜만의 문자열 생성
-            const kstOffset = 9 * 60; // 한국 시간 UTC+9
-            const selectedKSTDate = new Date(selectedDate.getTime() + kstOffset * 60000);
-            const dateKey = selectedKSTDate.toISOString().split('T')[0];
+            const dateKey = selectedDate.toISOString().split('T')[0];
 
             const dayEvents = events.filter(event => {
-                const eventDate = new Date(event.start_time);
-                const eventKSTDate = new Date(eventDate.getTime() + kstOffset * 60000);
-                return eventKSTDate.toISOString().split('T')[0] === dateKey;
+                const kstDate = convertToKST(event.start_time);
+                return kstDate.toISOString().split('T')[0] === dateKey;
             }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
 
             const eventList = document.getElementById('eventList');
             eventList.innerHTML = '';
 
             dayEvents.forEach(event => {
-                const eventTime = new Date(event.start_time);
-                const timeStr = `${String(eventTime.getHours()).padStart(2, '0')}:${String(eventTime.getMinutes()).padStart(2, '0')}`;
+                const kstDate = convertToKST(event.start_time);
+                const timeStr = `${String(kstDate.getHours()).padStart(2, '0')}:${String(kstDate.getMinutes()).padStart(2, '0')}`;
 
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
@@ -632,26 +633,17 @@
             const response = await fetch('/calendar/events');
             const events = await response.json();
 
-            if (!Array.isArray(events)) {
-                console.error('Failed to load events:', events);
-                return;
-            }
-
-            // Group events by date with KST handling
             const eventsByDate = {};
             events.forEach(event => {
-                // KST로 날짜 변환
-                const eventDate = new Date(event.start_time);
-                // 이미 KST로 저장되어 있으므로 timezone 조정이 필요없음
-                const dateKey = eventDate.toISOString().split('T')[0];
+                const kstDate = convertToKST(event.start_time);
+                const dateKey = kstDate.toISOString().split('T')[0];
 
                 if (!eventsByDate[dateKey]) {
                     eventsByDate[dateKey] = [];
                 }
 
-                // 시간 포맷팅 (이미 KST)
-                const hours = eventDate.getHours();
-                const minutes = eventDate.getMinutes();
+                const hours = kstDate.getHours();
+                const minutes = kstDate.getMinutes();
                 const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 
                 eventsByDate[dateKey].push({
@@ -660,33 +652,21 @@
                 });
             });
 
-            // Sort events by time for each date
             Object.values(eventsByDate).forEach(events => {
                 events.sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
             });
 
-            // Add events to calendar
             const dayContents = document.querySelectorAll('.day-content');
             dayContents.forEach(content => {
-                // 기존 이벤트 제거
                 const existingEvents = content.querySelectorAll('.event-text, .events-overflow');
                 existingEvents.forEach(event => event.remove());
 
                 const day = parseInt(content.querySelector('.date-number').textContent);
-
-                // KST 기준으로 dateKey 생성
-                const dateObj = new Date(
-                    currentDate.getFullYear(),
-                    currentDate.getMonth(),
-                    day
-                );
-                const dateKey = new Date(
-                    dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000)
-                ).toISOString().split('T')[0];
+                const dateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                const dateKey = dateObj.toISOString().split('T')[0];
 
                 const dayEvents = eventsByDate[dateKey] || [];
 
-                // Show up to 2 events
                 dayEvents.slice(0, 2).forEach(event => {
                     const eventSpan = document.createElement('span');
                     eventSpan.classList.add('event-text');
@@ -704,7 +684,6 @@
                     content.appendChild(eventSpan);
                 });
 
-                // If there are more events, show overflow indicator
                 if (dayEvents.length > 2) {
                     const overflow = document.createElement('div');
                     overflow.classList.add('events-overflow');
@@ -729,62 +708,6 @@
         await loadEvents();
     }
 
-    // 폼 제출
-    // eventForm.addEventListener('submit', async function(e) {
-    //     e.preventDefault();
-    //
-    //     const title = document.getElementById('eventTitle').value;
-    //     const timeStr = document.getElementById('eventTime').value;
-    //     const [hours, minutes] = timeStr.split(':');
-    //
-    //     const startTime = new Date(
-    //         selectedDate.getFullYear(),
-    //         selectedDate.getMonth(),
-    //         selectedDate.getDate(),
-    //         parseInt(hours),
-    //         parseInt(minutes)
-    //     );
-    //
-    //     const kstISOString = new Date(
-    //         startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
-    //     ).toISOString();
-    //
-    //     const eventData = {
-    //         title: title,
-    //         description: title,
-    //         startTime: kstISOString,
-    //         endTime: kstISOString
-    //     };
-    //
-    //     try {
-    //         const url = selectedEvent
-    //             ? `/calendar/events/${selectedEvent.ce_id}`
-    //             : '/calendar/events';
-    //
-    //         const method = selectedEvent ? 'PUT' : 'POST';
-    //
-    //         const response = await fetch(url, {
-    //             method: method,
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(eventData)
-    //         });
-    //
-    //         if (response.ok) {
-    //             await loadEvents();
-    //             closeModal();
-    //         } else {
-    //             const errorData = await response.text();
-    //             console.error('Failed to save event:', errorData);
-    //             alert('일정 저장에 실패했습니다: ' + errorData);
-    //         }
-    //     } catch (error) {
-    //         console.error('Error saving event:', error);
-    //         alert('일정 저장 중 오류가 발생했습니다');
-    //     }
-    // });
-
     eventForm.addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -792,7 +715,23 @@
         const timeStr = document.getElementById('eventTime').value;
         const [hours, minutes] = timeStr.split(':');
 
-        const startTime = new Date(
+        // KST 날짜 생성
+        // const eventDate = new Date(
+        //     selectedDate.getFullYear(),
+        //     selectedDate.getMonth(),
+        //     selectedDate.getDate(),
+        //     parseInt(hours),
+        //     parseInt(minutes)
+        // );
+        //
+        // const eventData = {
+        //     title: title,
+        //     description: title,
+        //     startTime: eventDate.toISOString(),
+        //     endTime: eventDate.toISOString()
+        // };
+
+        const eventDate = new Date(
             selectedDate.getFullYear(),
             selectedDate.getMonth(),
             selectedDate.getDate(),
@@ -800,15 +739,15 @@
             parseInt(minutes)
         );
 
-        const kstISOString = new Date(
-            startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
-        ).toISOString();
+        // UTC+9로 조정된 시간을 ISO 문자열로 변환
+        const koreanTime = new Date(eventDate.getTime() + (9 * 60 * 60 * 1000));
+        const kstString = koreanTime.toISOString();
 
         const eventData = {
             title: title,
             description: title,
-            startTime: kstISOString,
-            endTime: kstISOString
+            startTime: kstString,
+            endTime: kstString
         };
 
         try {
