@@ -384,10 +384,23 @@
     </div>
 </div>
 
+<div id="eventListModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">일정 목록</h3>
+            <button class="add-event-btn" onclick="openAddEventModal()">+ 새 일정</button>
+        </div>
+        <div id="eventList" class="event-list"></div>
+        <div class="modal-buttons">
+            <button type="button" class="modal-btn modal-btn-cancel" onclick="closeEventListModal()">닫기</button>
+        </div>
+    </div>
+</div>
+
 <div id="eventModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">일정 추가</h3>
+            <h3 class="modal-title">일정 관리</h3>
         </div>
         <form id="eventForm" class="modal-form">
             <div class="form-group">
@@ -399,6 +412,7 @@
                 <input type="time" id="eventTime" required>
             </div>
             <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-delete" onclick="deleteEvent()">삭제</button>
                 <button type="button" class="modal-btn modal-btn-cancel" onclick="closeModal()">취소</button>
                 <button type="submit" class="modal-btn modal-btn-submit">저장</button>
             </div>
@@ -406,98 +420,163 @@
     </div>
 </div>
 
+<style>
+    .event-list {
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .event-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .event-item:hover {
+        background-color: #f5f5f5;
+    }
+
+    .add-event-btn {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .modal-btn-delete {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>
+
 <script>
-    const modal = document.getElementById('eventModal');
+    const eventListModal = document.getElementById('eventListModal');
+    const eventModal = document.getElementById('eventModal');
     const eventForm = document.getElementById('eventForm');
     let selectedDayContent = null;
+    let selectedDate = null;
+    let selectedEvent = null;
 
-    // 모달 열기 함수 수정
-    async function addEvent(dayContent) {
+    function showEventList(dayContent) {
         selectedDayContent = dayContent;
-        modal.classList.add('show');
-
-        // 현재 시간을 기본값으로 설정
-        const now = new Date();
-        const hours = String(now.getHours()).padStart(2, '0');
-        const minutes = String(now.getMinutes()).padStart(2, '0');
-        document.getElementById('eventTime').value = `${hours}:${minutes}`;
-    }
-
-    // 모달 닫기 함수
-    function closeModal() {
-        modal.classList.remove('show');
-        eventForm.reset();
-        selectedDayContent = null;
-    }
-
-    // 모달 외부 클릭 시 닫기
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
-
-    // ESC 키로 모달 닫기
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && modal.classList.contains('show')) {
-            closeModal();
-        }
-    });
-
-    // 폼 제출 처리
-    eventForm.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        const title = document.getElementById('eventTitle').value;
-        const timeStr = document.getElementById('eventTime').value;
-        const day = parseInt(selectedDayContent.querySelector('.date-number').textContent);
-        const [hours, minutes] = timeStr.split(':');
-
-        // KST로 Date 객체 생성
-        const startTime = new Date(
+        const day = parseInt(dayContent.querySelector('.date-number').textContent);
+        selectedDate = new Date(
             currentDate.getFullYear(),
             currentDate.getMonth(),
-            day,
-            parseInt(hours),
-            parseInt(minutes)
+            day
         );
 
-        // UTC로 변환하지 않고 KST 시간 그대로 ISO 문자열로 변환
-        const kstISOString = new Date(
-            startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
-        ).toISOString();
+        loadDayEvents();
+        eventListModal.classList.add('show');
+    }
 
-        const eventData = {
-            title: title,
-            description: title,
-            startTime: kstISOString,
-            endTime: kstISOString
+    async function loadDayEvents() {
+        try {
+            const response = await fetch('/calendar/events');
+            const events = await response.json();
+
+            // 날짜 비교를 위한 날짜만의 문자열 생성
+            const kstOffset = 9 * 60; // 한국 시간 UTC+9
+            const selectedKSTDate = new Date(selectedDate.getTime() + kstOffset * 60000);
+            const dateKey = selectedKSTDate.toISOString().split('T')[0];
+
+            const dayEvents = events.filter(event => {
+                const eventDate = new Date(event.start_time);
+                const eventKSTDate = new Date(eventDate.getTime() + kstOffset * 60000);
+                return eventKSTDate.toISOString().split('T')[0] === dateKey;
+            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+
+            const eventList = document.getElementById('eventList');
+            eventList.innerHTML = '';
+
+            dayEvents.forEach(event => {
+                const eventTime = new Date(event.start_time);
+                const timeStr = `${String(eventTime.getHours()).padStart(2, '0')}:${String(eventTime.getMinutes()).padStart(2, '0')}`;
+
+                const eventItem = document.createElement('div');
+                eventItem.className = 'event-item';
+                eventItem.innerHTML = `<span>${timeStr} ${event.title}</span>`;
+
+                eventItem.onclick = () => editEvent({
+                    id: event.ce_id,
+                    title: event.title,
+                    start_time: event.start_time
+                });
+
+                eventList.appendChild(eventItem);
+            });
+        } catch (error) {
+            console.error('Error loading day events:', error);
+        }
+    }
+
+    function editEvent(event) {
+        selectedEvent = {
+            id: event.id,
+            ce_id: event.id, // Ensure both id and ce_id are set
+            title: event.title,
+            start_time: event.start_time
         };
 
+        const eventDate = new Date(event.start_time);
+
+        document.getElementById('eventTitle').value = event.title;
+        document.getElementById('eventTime').value =
+            `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
+
+        eventListModal.classList.remove('show');
+        eventModal.classList.add('show');
+    }
+
+    function openAddEventModal() {
+        selectedEvent = null;
+        const now = new Date();
+        document.getElementById('eventTime').value =
+            `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+        document.getElementById('eventTitle').value = '';
+
+        eventListModal.classList.remove('show');
+        eventModal.classList.add('show');
+    }
+
+    async function deleteEvent() {
+        console.log('Selected Event:', selectedEvent); // 로깅 추가
+        if (!selectedEvent || !confirm('일정을 삭제하시겠습니까?')) return;
         try {
-            const response = await fetch('/calendar/events', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(eventData)
+            const response = await fetch(`/calendar/events/${selectedEvent.ce_id}`, {
+                method: 'DELETE'
             });
 
             if (response.ok) {
-                const events = selectedDayContent.querySelectorAll('.event-text, .events-overflow');
-                events.forEach(e => e.remove());
                 await loadEvents();
                 closeModal();
+                closeEventListModal();
             } else {
                 const errorData = await response.text();
-                console.error('Failed to save event:', errorData);
-                alert('일정 저장에 실패했습니다: ' + errorData);
+                alert('일정 삭제에 실패했습니다: ' + errorData);
             }
         } catch (error) {
-            console.error('Error saving event:', error);
-            alert('일정 저장 중 오류가 발생했습니다');
+            console.error('Error deleting event:', error);
+            alert('일정 삭제 중 오류가 발생했습니다');
         }
-    });
+    }
+
+    function closeEventListModal() {
+        eventListModal.classList.remove('show');
+        selectedDayContent = null;
+        selectedDate = null;
+    }
+
+    function closeModal() {
+        eventModal.classList.remove('show');
+        eventForm.reset();
+        selectedEvent = null;
+    }
 
     let currentDate = new Date();
     const monthYearLabel = document.getElementById('monthYear');
@@ -543,7 +622,7 @@
             dayContent.appendChild(dateSpan);
 
             dayDiv.appendChild(dayContent);
-            dayDiv.addEventListener('click', () => addEvent(dayContent));
+            dayDiv.addEventListener('click', () => showEventList(dayContent));
             calendarDays.appendChild(dayDiv);
         }
     }
@@ -650,11 +729,124 @@
         await loadEvents();
     }
 
-    // Initialize calendar
+    // 폼 제출
+    // eventForm.addEventListener('submit', async function(e) {
+    //     e.preventDefault();
+    //
+    //     const title = document.getElementById('eventTitle').value;
+    //     const timeStr = document.getElementById('eventTime').value;
+    //     const [hours, minutes] = timeStr.split(':');
+    //
+    //     const startTime = new Date(
+    //         selectedDate.getFullYear(),
+    //         selectedDate.getMonth(),
+    //         selectedDate.getDate(),
+    //         parseInt(hours),
+    //         parseInt(minutes)
+    //     );
+    //
+    //     const kstISOString = new Date(
+    //         startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
+    //     ).toISOString();
+    //
+    //     const eventData = {
+    //         title: title,
+    //         description: title,
+    //         startTime: kstISOString,
+    //         endTime: kstISOString
+    //     };
+    //
+    //     try {
+    //         const url = selectedEvent
+    //             ? `/calendar/events/${selectedEvent.ce_id}`
+    //             : '/calendar/events';
+    //
+    //         const method = selectedEvent ? 'PUT' : 'POST';
+    //
+    //         const response = await fetch(url, {
+    //             method: method,
+    //             headers: {
+    //                 'Content-Type': 'application/json'
+    //             },
+    //             body: JSON.stringify(eventData)
+    //         });
+    //
+    //         if (response.ok) {
+    //             await loadEvents();
+    //             closeModal();
+    //         } else {
+    //             const errorData = await response.text();
+    //             console.error('Failed to save event:', errorData);
+    //             alert('일정 저장에 실패했습니다: ' + errorData);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error saving event:', error);
+    //         alert('일정 저장 중 오류가 발생했습니다');
+    //     }
+    // });
+
+    eventForm.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const title = document.getElementById('eventTitle').value;
+        const timeStr = document.getElementById('eventTime').value;
+        const [hours, minutes] = timeStr.split(':');
+
+        const startTime = new Date(
+            selectedDate.getFullYear(),
+            selectedDate.getMonth(),
+            selectedDate.getDate(),
+            parseInt(hours),
+            parseInt(minutes)
+        );
+
+        const kstISOString = new Date(
+            startTime.getTime() - (startTime.getTimezoneOffset() * 60000)
+        ).toISOString();
+
+        const eventData = {
+            title: title,
+            description: title,
+            startTime: kstISOString,
+            endTime: kstISOString
+        };
+
+        try {
+            const url = selectedEvent
+                ? `/calendar/events/${selectedEvent.ce_id}`
+                : '/calendar/events';
+
+            const method = selectedEvent ? 'PUT' : 'POST';
+
+            const response = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(eventData)
+            });
+
+            if (response.ok) {
+                await loadEvents();
+                closeModal();
+            } else {
+                const errorData = await response.text();
+                console.error('Failed to save event:', errorData);
+                alert('일정 저장에 실패했습니다: ' + errorData);
+            }
+        } catch (error) {
+            console.error('Error saving event:', error);
+            alert('일정 저장 중 오류가 발생했습니다');
+        }
+    });
+
     document.addEventListener('DOMContentLoaded', async function () {
         await renderCalendar();
+
+        // 이벤트 목록도 함께 로드
         await loadEvents();
     });
+
 </script>
 <div th:replace="~{footer.html}"></div>
 </body>

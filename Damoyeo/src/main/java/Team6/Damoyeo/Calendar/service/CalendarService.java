@@ -3,6 +3,7 @@ package Team6.Damoyeo.calendar.service;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,5 +47,31 @@ public class CalendarService {
             log.error("Error creating event", e);
             throw new RuntimeException("Failed to create event: " + e.getMessage(), e);
         }
+    }
+
+    public void deleteEvent(Integer eventId, User user) {
+        CalendarEvent event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new IllegalArgumentException("Event not found with id: " + eventId));
+
+        if (!event.getUser().getUserId().equals(user.getUserId())) {
+            throw new IllegalArgumentException("Unauthorized to delete this event");
+        }
+
+        eventRepository.delete(event);
+    }
+
+    public CalendarEvent updateEvent(Integer id, CalendarEvent updateEvent) {
+        CalendarEvent event = eventRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
+
+        return eventRepository.save(CalendarEvent.builder()
+                .ceId(event.getCeId())
+                .title(updateEvent.getTitle())
+                .description(updateEvent.getDescription())
+                .startTime(updateEvent.getStartTime())
+                .endTime(updateEvent.getEndTime())
+                .createdDate(event.getCreatedDate())
+                .user(event.getUser())
+                .build());
     }
 }
