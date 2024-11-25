@@ -41,6 +41,9 @@ public class User {
     private String email;
 
     @Column
+    private String interests;
+
+    @Column
     private String gender;
 
     @Column
@@ -58,8 +61,6 @@ public class User {
     @Column
     private String photoUrl;
 
-    @OneToMany(mappedBy = "user")
-    private List<UserInterest> interests = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();
