@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -116,8 +117,8 @@ public class PostService {
 
         Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "viewCount"));
 
-        return postRepository.findAll(pageable).getContent();
-
+//        return postRepository.findAll(pageable).getContent();
+        return postRepository.findByStatus(pageable,"1").getContent();
     }
 
     // 태그를 기준으로 게시글을 검색하는 메서드
@@ -144,5 +145,20 @@ public class PostService {
 
     public  void updatePost(Post post) {
          postRepository.save(post);
+    }
+
+    //1분 지날때마다 포스트 갱신
+    @Scheduled(fixedDelay = 60000)
+    @Transactional
+    public void timePost(){
+        LocalDateTime now = LocalDateTime.now();
+        List<Post> endDateBeforeAndStatus = postRepository.findByEndDateBeforeAndStatus(now, "1");
+        if (!endDateBeforeAndStatus.isEmpty()) {
+            for (Post post : endDateBeforeAndStatus) {
+                //스테이터스 3으로 한이유는 게시글 들어갔을떄 완료문을 다르게 하기 위해서
+                post.setStatus("3");
+                postRepository.save(post);
+            }
+        }
     }
 }

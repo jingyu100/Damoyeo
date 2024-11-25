@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Integer> {
@@ -41,6 +42,9 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     
     // 상태로 찾는
     Page<Post>findByStatus(Pageable pageable ,String status);
+
+    //endDate 이전 찾는
+    List<Post> findByEndDateBeforeAndStatus(LocalDateTime now, String status);
 
 
 }
