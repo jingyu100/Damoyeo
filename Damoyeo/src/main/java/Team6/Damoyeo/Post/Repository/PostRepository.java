@@ -33,5 +33,14 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     // 유저가 적은글 찾기
     List<Post> findByUser(User user);
+    
+    // 검색어 조회 기능 및 상태로 찾는 기능
+    Page<Post> findByTitleContainingAndStatus(String title,String status,Pageable pageable);
+    // 태그 검색 및 상태로 찾는 기능
+    Page<Post> findByTagContainingAndStatus(String tag, String status ,Pageable pageable);
+    
+    // 상태로 찾는
+    Page<Post>findByStatus(Pageable pageable ,String status);
+
 
 }

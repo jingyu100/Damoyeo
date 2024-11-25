@@ -123,7 +123,13 @@ public class PostRequestService {
                 .user(postRequest.getUser()) // 요청한 사용자
                 .build();
         calendarRepository.save(calendarEvent);
-
+        // 포스트 참가 수락시 1증가
+        post.setNowParticipants(post.getNowParticipants() + 1);
+        if (post.getNowParticipants()  == post.getMaxParticipants()){
+            post.setStatus("2");
+        }
+        postRepository.save(post);
+        postRequestRepository.save(postRequest);
     }
 
 
