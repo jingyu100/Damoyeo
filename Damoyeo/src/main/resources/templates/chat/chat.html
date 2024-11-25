@@ -561,14 +561,14 @@
         const messageContent = messageInput.value.trim();
 
         if (messageContent && stompClient && currentRoom) {
-            const chatMessage = {
+            const chatMessageDto = {
                 sender: username,
                 content: messageContent,
                 type: 'CHAT',
                 roomId: currentRoom
             };
 
-            stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessage));
+            stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessageDto));
             messageInput.value = ''; // 입력 필드 초기화
         }
     }

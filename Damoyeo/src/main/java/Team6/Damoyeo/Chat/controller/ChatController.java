@@ -2,7 +2,7 @@ package Team6.Damoyeo.chat.controller;
 
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
-import Team6.Damoyeo.chat.dto.ChatMessage;
+import Team6.Damoyeo.chat.dto.ChatMessageDto;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
 import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,46 +58,46 @@ public class ChatController {
     // 메시지 전송을 위한 메서드 (특정 방 지원)
     @MessageMapping("/chat.sendMessage/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessage sendMessage(@DestinationVariable("roomId") String roomId, ChatMessage chatMessage) {
+    public ChatMessageDto sendMessage(@DestinationVariable("roomId") String roomId, ChatMessageDto chatMessageDto) {
         // 채팅방 ID와 메시지 정보 출력
         System.out.println("채팅방 " + roomId + "에서 메시지 수신: "
-                + chatMessage.getSender() + " - " + chatMessage.getContent());
+                + chatMessageDto.getSender() + " - " + chatMessageDto.getContent());
 
         // 메시지 타입을 채팅 메시지로 설정
-        chatMessage.setType(ChatMessage.MessageType.CHAT);
+        chatMessageDto.setType(ChatMessageDto.MessageType.CHAT);
 
         // 전송된 메시지 반환
-        return chatMessage;
+        return chatMessageDto;
     }
 
     // 사용자 입장을 위한 메서드 (특정 방 지원)
     @MessageMapping("/chat.addUser/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessage addUser(@DestinationVariable("roomId") String roomId, ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+    public ChatMessageDto addUser(@DestinationVariable("roomId") String roomId, ChatMessageDto chatMessageDto, SimpMessageHeaderAccessor headerAccessor) {
         // 사용자가 채팅방에 입장했다는 메시지 출력
-        System.out.println("사용자 " + chatMessage.getSender() + "가 채팅방 " + roomId + "에 입장");
+        System.out.println("사용자 " + chatMessageDto.getSender() + "가 채팅방 " + roomId + "에 입장");
 
         // WebSocket 세션에 사용자 이름 저장
-        headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
+        headerAccessor.getSessionAttributes().put("username", chatMessageDto.getSender());
 
         // 입장 메시지 생성
-        chatMessage.setType(ChatMessage.MessageType.JOIN);
-        chatMessage.setContent(chatMessage.getSender() + "님이 채팅방에 입장했습니다");
+        chatMessageDto.setType(ChatMessageDto.MessageType.JOIN);
+        chatMessageDto.setContent(chatMessageDto.getSender() + "님이 채팅방에 입장했습니다");
 
         // 입장 메시지 반환
-        return chatMessage;
+        return chatMessageDto;
     }
 
     @MessageMapping("/chat.leaveRoom/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessage leaveRoom(@DestinationVariable String roomId, ChatMessage chatMessage) {
+    public ChatMessageDto leaveRoom(@DestinationVariable String roomId, ChatMessageDto chatMessageDto) {
         // 사용자가 채팅방을 나갔다는 메시지 출력
-        System.out.println("사용자 " + chatMessage.getSender() + "가 채팅방 " + roomId + "에서 퇴장");
+        System.out.println("사용자 " + chatMessageDto.getSender() + "가 채팅방 " + roomId + "에서 퇴장");
 
         // 메시지 타입을 퇴장 메시지로 설정
-        chatMessage.setType(ChatMessage.MessageType.LEAVE);
+        chatMessageDto.setType(ChatMessageDto.MessageType.LEAVE);
 
         // 퇴장 메시지 반환
-        return chatMessage;
+        return chatMessageDto;
     }
 }
