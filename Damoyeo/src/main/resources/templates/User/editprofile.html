@@ -151,6 +151,21 @@
                         <textarea id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required
                                   class="custom-textarea"></textarea>
                     </td>
+                    <th scope="row">관심사</th>
+                    <td>
+                        <select class="interests" th:field="*{interests}">
+                            <option value="운동/스포츠">운동/스포츠</option>
+                            <option value="음악/악기">음악/악기</option>
+                            <option value="아웃도어/여행">아웃도어/여행</option>
+                            <option value="게임/오락">게임/오락</option>
+                            <option value="요리/제조">요리/제조</option>
+                            <option value="외국어/언어">외국어/언어</option>
+                            <option value="스포츠 관람">스포츠 관람</option>
+                            <option value="인문학/철학">인문학/철학</option>
+                            <option value="자기개발">자기개발</option>
+                            <option value="독서">독서</option>
+                        </select>
+                    </td>
                 </tr>
             </table>
         </div>
