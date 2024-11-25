@@ -355,7 +355,6 @@
     const headerBannerWrap = document.querySelector('.header-banner-wrap');
     const headerImages = document.querySelectorAll('.header-img');
 
-    let currentIndex = 0;
     let currentBannerIndex = 0;
     let currentImageIndex = 0;
 
@@ -385,7 +384,7 @@
         headerImages[currentImageIndex].style.opacity = "1";
 
 
-        headerBannerWrap.style.backgroundColor = backgroundColors[currentIndex];
+        headerBannerWrap.style.backgroundColor = backgroundColors[currentImageIndex];
     }
 
 
@@ -405,7 +404,7 @@
         headerImages[currentImageIndex].style.opacity = "1";
 
 
-        headerBannerWrap.style.backgroundColor = backgroundColors[currentIndex];
+        headerBannerWrap.style.backgroundColor = backgroundColors[currentImageIndex];
     }
 
 
