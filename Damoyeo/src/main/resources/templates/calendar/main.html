@@ -467,6 +467,14 @@
         return new Date(date.getTime() + (9 * 60 * 60 * 1000));
     }
 
+    function toKST(date) {
+        return new Date(date.getTime() + (9 * 60 * 60 * 1000));
+    }
+
+    function toUTC(date) {
+        return new Date(date.getTime() - (9 * 60 * 60 * 1000));
+    }
+
     function showEventList(dayContent) {
         selectedDayContent = dayContent;
         const day = parseInt(dayContent.querySelector('.date-number').textContent);
@@ -488,9 +496,10 @@
             const dateKey = selectedDate.toISOString().split('T')[0];
 
             const dayEvents = events.filter(event => {
-                const kstDate = convertToKST(event.start_time);
+                const utcDate = new Date(event.start_time);
+                const kstDate = toKST(utcDate);
                 return kstDate.toISOString().split('T')[0] === dateKey;
-            }).sort((a, b) => new Date(a.start_time) - new Date(b.start_time));
+            });
 
             const eventList = document.getElementById('eventList');
             eventList.innerHTML = '';
@@ -635,16 +644,14 @@
 
             const eventsByDate = {};
             events.forEach(event => {
-                const kstDate = convertToKST(event.start_time);
-                const dateKey = kstDate.toISOString().split('T')[0];
+                const eventDate = new Date(event.start_time);
+                const dateKey = eventDate.toISOString().split('T')[0];
 
                 if (!eventsByDate[dateKey]) {
                     eventsByDate[dateKey] = [];
                 }
 
-                const hours = kstDate.getHours();
-                const minutes = kstDate.getMinutes();
-                const formattedTime = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+                const formattedTime = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
 
                 eventsByDate[dateKey].push({
                     ...event,
@@ -684,7 +691,7 @@
                     content.appendChild(eventSpan);
                 });
 
-                if (dayEvents.length > 2) {
+                if (dayEvents.length > 3) {
                     const overflow = document.createElement('div');
                     overflow.classList.add('events-overflow');
                     overflow.textContent = '+' + (dayEvents.length - 2);
@@ -708,7 +715,7 @@
         await loadEvents();
     }
 
-    eventForm.addEventListener('submit', async function(e) {
+    eventForm.addEventListener('submit', async function (e) {
         e.preventDefault();
 
         const title = document.getElementById('eventTitle').value;
@@ -739,15 +746,14 @@
             parseInt(minutes)
         );
 
-        // UTC+9로 조정된 시간을 ISO 문자열로 변환
         const koreanTime = new Date(eventDate.getTime() + (9 * 60 * 60 * 1000));
-        const kstString = koreanTime.toISOString();
+        const isoString = koreanTime.toISOString();
 
         const eventData = {
             title: title,
             description: title,
-            startTime: kstString,
-            endTime: kstString
+            startTime: isoString,
+            endTime: isoString
         };
 
         try {
