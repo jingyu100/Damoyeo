@@ -4,6 +4,7 @@ import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.chat.Entity.ChatParticipant;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
+import Team6.Damoyeo.chat.repository.ChatMessageRepository;
 import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
 import Team6.Damoyeo.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
@@ -47,5 +48,6 @@ public class ChatService {
                 .build();
         chatParticipantRepository.save(participant);
     }
+
 }
 
