@@ -114,6 +114,11 @@ public class UserService {
     }
 
     public void deleteUser(Integer userId) {
-        userRepository.deleteById(userId);
+        Optional<User> ou = userRepository.findById(userId);
+        if(!ou.isEmpty()){
+            User user = ou.get();
+            user.setStatus("2");
+            userRepository.save(user);
+        }
     }
 }
