@@ -203,6 +203,10 @@ button {
             <button type="submit">수정</button>
         </div>
     </form>
+<!--    탈퇴용으로 임시로 만듬 나중에 지울꺼-->
+    <form th:action="@{/user/delete}" method="post" th:object="${user}" >
+        <button type="submit">탈퇴</button>
+    </form>
 </div>
 
 <br><br><br><br>
