@@ -455,16 +455,6 @@
         }
     }
 
-    // 특정 채팅방 구독 해제
-    function unsubscribeFromRoom(roomId) {
-        const subscription = subscriptions.get(roomId);
-        if (subscription) {
-            subscription.unsubscribe();
-            subscriptions.delete(roomId);
-            console.log(`Unsubscribed from room ${roomId}`);
-        }
-    }
-
     // 채팅방 선택
     function selectRoom(element, roomId) {
         if (!roomId || !stompClient) {
