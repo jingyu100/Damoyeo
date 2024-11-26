@@ -263,6 +263,26 @@
             cursor: pointer;
         }
 
+        .chat_finsh {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 500px;
+            height: 50px;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #989898;
+            color: #000000;
+            border-radius: 5px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .chat_finsh:hover{
+            background-color: #bdbbbb;
+        }
+
 
         .post_mainpage {
             display: inline-flex;
@@ -531,7 +551,12 @@
                 <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
                 <th:block th:if="${userId != post.user.getUserId()}">
                 <th:block th:if="${postRequest == null or postRequest.user.userId != userId}">
-                    <a class="chat_mainpage" id="joinParty">모임 참여하기</a>
+                    <th:block th:if="${post.status.equals('1')}">
+                        <a class="chat_mainpage" id="joinParty">모임 참여하기</a>
+                    </th:block>
+                    <th:block th:if="${!post.status.equals('1')}">
+                        <p class="chat_finsh" id="finshParty" >모집이 마감 되었습니다.</p>
+                    </th:block>
                 </th:block>
                 </th:block>
                 <th:block th:if="${userId == post.user.getUserId()}">
