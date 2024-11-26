@@ -158,6 +158,10 @@ public class PostService {
                 //스테이터스 3으로 한이유는 게시글 들어갔을떄 완료문을 다르게 하기 위해서
                 post.setStatus("3");
                 postRepository.save(post);
+
+                // 해당 포스트의 상태가 "0"인 모든 요청 삭제
+                List<PostRequest> postStatusZero = postRequestRepository.findByPostAndStatus(post, "0");
+                postRequestRepository.deleteAll(postStatusZero);
             }
         }
     }

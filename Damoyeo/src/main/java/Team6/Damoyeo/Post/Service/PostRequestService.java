@@ -97,9 +97,23 @@ public class PostRequestService {
         // 1. PostRequest 조회
         PostRequest postRequest = postRequestRepository.findById(prId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Post Request ID"));
+        Post post = postRequest.getPost();
 
-        // 2. 상태를 '수락'으로 변경
+        // 현재 참가 인원 1 증가
+        post.setNowParticipants(post.getNowParticipants() + 1);
+
+        // 최대 참가 인원과 같아지면 게시글 상태를 2로 변경
+        if (post.getNowParticipants() == post.getMaxParticipants()) {
+            post.setStatus("2");
+
+            // 상태가 0인 모든 요청 삭제
+            List<PostRequest> postStatusZero = postRequestRepository.findByPostAndStatus(post, "0");
+            postRequestRepository.deleteAll(postStatusZero);
+        }
+
+        // 현재 수락된 요청의 상태를 1 로 변경
         postRequest.setStatus("1");
+
 
         // 3. 해당 게시물의 채팅방 조회
         ChatRoom chatRoom = chatRoomRepository.findByPost(postRequest.getPost())
@@ -113,7 +127,6 @@ public class PostRequestService {
         chatParticipantRepository.save(participant);
 
         // 5. 캘린더 이벤트 저장
-        Post post = postRequest.getPost();
         CalendarEvent calendarEvent = CalendarEvent.builder()
                 .title(post.getTitle()) // 게시물 제목
                 .description(post.getTitle()) // 게시물 설명
@@ -123,13 +136,9 @@ public class PostRequestService {
                 .user(postRequest.getUser()) // 요청한 사용자
                 .build();
         calendarRepository.save(calendarEvent);
-        // 포스트 참가 수락시 1증가
-        post.setNowParticipants(post.getNowParticipants() + 1);
-        if (post.getNowParticipants()  == post.getMaxParticipants()){
-            post.setStatus("2");
-        }
-        postRepository.save(post);
+
         postRequestRepository.save(postRequest);
+        postRepository.save(post);
     }
 
 
