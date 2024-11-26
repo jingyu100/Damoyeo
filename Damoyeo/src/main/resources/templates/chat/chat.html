@@ -316,6 +316,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #bcc0c4;
         }
+
+        .message-time {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 8px;
+        }
+
     </style>
 </head>
 <body>
@@ -348,8 +355,9 @@
             </div>
             <!-- 채팅방 목록 출력 -->
             <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}">
-<!--                <div class="room-icon"><i class="fas fa-comments"></i></div>-->
-                <a th:href="@{|post/detail${room.postId}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt="" style="width: 50px; height: 50px"></a>
+                <!--                <div class="room-icon"><i class="fas fa-comments"></i></div>-->
+                <a th:href="@{|post/detail${room.postId}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt=""
+                                                                 style="width: 50px; height: 50px"></a>
                 <div class="room-info">
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
                     <div class="room-preview">환영합니다!</div>
@@ -369,8 +377,8 @@
             </div>
             <!-- 헤더 액션 버튼 -->
             <div class="header-actions">
-<!--                <button class="action-btn"><i class="fas fa-video"></i></button>-->
-<!--                <button class="action-btn"><i class="fas fa-phone"></i></button>-->
+                <!--                <button class="action-btn"><i class="fas fa-video"></i></button>-->
+                <!--                <button class="action-btn"><i class="fas fa-phone"></i></button>-->
                 <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
             </div>
         </div>
@@ -521,10 +529,72 @@
         console.log(`Left room ${roomId}`);
     }
 
+    // function showMessage(message, roomId) {
+    //     if (roomId !== currentRoom) return;
+    //
+    //     const messageArea = document.getElementById('messageArea');
+    //
+    //     // JOIN 타입이고 채팅 히스토리가 있는 경우, 먼저 히스토리를 표시
+    //     if (message.type === 'JOIN' && message.chatHistory) {
+    //         // 기존 메시지 초기화
+    //         messageArea.innerHTML = '';
+    //
+    //         // 채팅 히스토리 표시
+    //         message.chatHistory.forEach(hist => {
+    //             const historyElement = document.createElement('li');
+    //             historyElement.className = hist.sender === username ? 'my-message' : 'other-message';
+    //             historyElement.innerHTML = `${hist.sender === username ? '' : `<strong>${hist.sender}</strong><br>`}${hist.content}`;
+    //             messageArea.appendChild(historyElement);
+    //         });
+    //     }
+    //
+    //     // 현재 메시지 표시
+    //     const messageElement = document.createElement('li');
+    //
+    //     switch (message.type) {
+    //         case 'JOIN':
+    //             messageElement.className = 'event-message';
+    //             messageElement.textContent = `${message.sender}님이 입장하셨습니다.`;
+    //             break;
+    //         case 'LEAVE':
+    //             messageElement.className = 'event-message';
+    //             messageElement.textContent = `${message.sender}님이 퇴장하셨습니다.`;
+    //             break;
+    //         case 'CHAT':
+    //             messageElement.className = message.sender === username ? 'my-message' : 'other-message';
+    //             messageElement.innerHTML = `${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}${message.content}`;
+    //             break;
+    //     }
+    //
+    //     messageArea.appendChild(messageElement);
+    //     messageArea.scrollTop = messageArea.scrollHeight;
+    // }
+
     function showMessage(message, roomId) {
         if (roomId !== currentRoom) return;
 
         const messageArea = document.getElementById('messageArea');
+
+        // JOIN 타입이고 채팅 히스토리가 있는 경우, 먼저 히스토리를 표시
+        if (message.type === 'JOIN' && message.chatHistory && message.chatHistory.length > 0) {
+            // 기존 메시지 초기화
+            messageArea.innerHTML = '';
+
+            // 채팅 히스토리 표시
+            message.chatHistory.forEach(hist => {
+                const historyElement = document.createElement('li');
+                historyElement.className = hist.sender === username ? 'my-message' : 'other-message';
+                const timestamp = new Date(hist.sentAt).toLocaleTimeString();
+                historyElement.innerHTML = `
+                ${hist.sender === username ? '' : `<strong>${hist.sender}</strong><br>`}
+                ${hist.content}
+                <small class="message-time">${timestamp}</small>
+            `;
+                messageArea.appendChild(historyElement);
+            });
+        }
+
+        // 현재 메시지 표시
         const messageElement = document.createElement('li');
 
         switch (message.type) {
@@ -538,14 +608,18 @@
                 break;
             case 'CHAT':
                 messageElement.className = message.sender === username ? 'my-message' : 'other-message';
-                messageElement.innerHTML = `${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}${message.content}`;
+                const timestamp = new Date().toLocaleTimeString();
+                messageElement.innerHTML = `
+                ${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}
+                ${message.content}
+                <small class="message-time">${timestamp}</small>
+            `;
                 break;
         }
 
         messageArea.appendChild(messageElement);
         messageArea.scrollTop = messageArea.scrollHeight;
     }
-
 
     // 메시지 전송
     function sendMessage() {
