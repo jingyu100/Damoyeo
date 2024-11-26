@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -231,6 +232,14 @@ public class PostController {
         post.setUser(testPost.getUser());
         post.setCreatedDate(testPost.getCreatedDate());
 
+        // 이건 게시글 상태가 변경 됬는데 그 게시글의 인원이나 끝나는 시간이 변경되면 상태를 다시 1로 변환
+        if (!post.getEndDate().equals(LocalDateTime.now()) && (post.getNowParticipants() != post.getMaxParticipants())){
+            post.setStatus("1");
+        }
+        
+        if (post.getNowParticipants() == post.getMaxParticipants()) {
+            post.setStatus("2");
+        }
         // 게시물 업데이트
         postService.updatePost(post);
 

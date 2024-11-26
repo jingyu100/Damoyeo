@@ -268,8 +268,7 @@ body{
         <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
         <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
         <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
-        <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span>
-                th:text="${post.maxParticipants}">0</span></div>
+        <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
         <div class="post-info"><span
                 th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
         </div>
