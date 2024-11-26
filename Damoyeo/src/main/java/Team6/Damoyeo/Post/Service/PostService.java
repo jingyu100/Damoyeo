@@ -130,7 +130,9 @@ public class PostService {
 
     //포스트 삭제하는 메서드
     public void deletePost(Post post) {
-        postRepository.delete(post);
+        //삭제는 4 상태로
+        post.setStatus("4");
+        postRepository.save(post);
     }
 
     // 자기글 찾기 위한 메서드
@@ -140,7 +142,8 @@ public class PostService {
             return null;
         }
         User user = ou.get();
-        return postRepository.findByUser(user);
+        //4를 제외한 게시글
+        return postRepository.findByUserAndStatusNot(user,"4");
     }
 
     public  void updatePost(Post post) {

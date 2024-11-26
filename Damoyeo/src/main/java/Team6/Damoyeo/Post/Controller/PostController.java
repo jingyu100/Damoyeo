@@ -252,7 +252,9 @@ public class PostController {
                              @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
 
         Post post = this.postService.findById(id);  // ID로 게시물 찾기
-
+        if (post.getStatus().equals("4")){
+            return "post/delete_alert";
+        }
         // 조회수 업데이트
         postService.updateView(id);
 

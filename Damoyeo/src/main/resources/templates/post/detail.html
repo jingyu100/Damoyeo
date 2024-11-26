@@ -562,10 +562,10 @@
                 <th:block th:if="${userId == post.user.getUserId()}">
                     <div class="btn-container">
                        <form method="get" th:action="@{'/post/mositipy/' + ${post.postId}}">
-                            <button class="update-btn" type="submit">수정</button>
+                            <button class="update-btn" type="button" id="mositipyButton">수정</button>
                         </form>
                         <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
-                            <button class="delete-btn" type="submit">삭제</button>
+                            <button class="delete-btn" type="button" id="deleteButton">삭제</button>
                         </form>
                     </div>
                 </th:block>
@@ -652,6 +652,59 @@
     });
 
     document.addEventListener('DOMContentLoaded', function () {
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'mositipyButton') {
+                event.preventDefault(); // 폼 제출 기본 동작 중지
+
+                const form = event.target.closest('form');
+
+                Swal.fire({
+                    title: '정말로 수정 하시겠습니까?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '수정',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'deleteButton') {
+                event.preventDefault();
+
+                const form = event.target.closest('form'); // 폼 요소 찾기
+
+                Swal.fire({
+                    title: '정말로 삭제하시겠습니까?',
+                    text: "삭제된 게시물은 복구할 수 없습니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '삭제',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '삭제되었습니다',
+                            icon: 'success',
+                            confirmButtonColor: '#A7C7E7'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                });
+            }
+        });
         // 이벤트 위임 사용
         document.addEventListener('click', function (event) {
             // 모임 참여하기 버튼 클릭 시
