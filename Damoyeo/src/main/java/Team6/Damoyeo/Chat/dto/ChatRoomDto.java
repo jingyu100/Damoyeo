@@ -13,9 +13,13 @@ import java.time.LocalDateTime;
 public class ChatRoomDto {
 
     private Long roomId;
+
     private String postTitle;
+
     private LocalDateTime createdAt;
+
     private String photoUrl;
+
     private Integer postId;
 
     public static ChatRoomDto from(ChatRoom chatRoom) {

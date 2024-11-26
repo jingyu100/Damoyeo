@@ -1,6 +1,5 @@
 package Team6.Damoyeo.chat.Entity;
 
-import Team6.Damoyeo.User.Entity.User;
 import jakarta.persistence.*;
 import lombok.*;
 

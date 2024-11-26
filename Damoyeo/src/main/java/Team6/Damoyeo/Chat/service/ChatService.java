@@ -25,6 +25,7 @@ public class ChatService {
     private final ChatRoomRepository chatRoomRepository;
 
     public List<ChatRoomDto> getUserChatRooms(Integer userId) {
+
         // 사용자의 모든 채팅방 참여 기록을 조회한 후
         // 참여 기록에서 각 채팅방 정보를 ChatRoomDto로 변환
         return chatParticipantRepository.findAllByUserId(userId)
@@ -34,6 +35,7 @@ public class ChatService {
     }
 
     public void createChatRoomForPost(Post post, Integer userId) {
+
         // 1. 채팅방 생성
         ChatRoom chatRoom = ChatRoom.builder()
                 .roomName("Chat for Post " + post.getPostId())
