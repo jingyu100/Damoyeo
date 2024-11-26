@@ -2,8 +2,10 @@ package Team6.Damoyeo.chat.controller;
 
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
+import Team6.Damoyeo.chat.Entity.ChatMessage;
 import Team6.Damoyeo.chat.dto.ChatMessageDto;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
+import Team6.Damoyeo.chat.service.ChatMessageService;
 import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +28,8 @@ public class ChatController {
     private final UserService userService;
 
     private final ChatService chatService;
+
+    private final ChatMessageService chatMessageService;
 
     @GetMapping("/chat")
     public String chat(Model model, @SessionAttribute(name = "userId", required = false) Integer userId,
@@ -65,6 +69,9 @@ public class ChatController {
 
         // 메시지 타입을 채팅 메시지로 설정
         chatMessageDto.setType(ChatMessageDto.MessageType.CHAT);
+
+        // 채팅 메세지를 db에 저장
+        chatMessageService.saveChatMessage(chatMessageDto);
 
         // 전송된 메시지 반환
         return chatMessageDto;

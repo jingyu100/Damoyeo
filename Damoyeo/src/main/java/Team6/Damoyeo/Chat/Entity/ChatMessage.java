@@ -1,15 +1,11 @@
 package Team6.Damoyeo.chat.Entity;
 
 import Team6.Damoyeo.User.Entity.User;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "chat_messages")
@@ -26,7 +22,7 @@ public class ChatMessage extends BaseTimeEntity {
     private ChatRoom chatRoom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sender_id")
+    @JoinColumn(name = "user_id")
     private User sender;
 
     @Column(nullable = false, columnDefinition = "TEXT")
