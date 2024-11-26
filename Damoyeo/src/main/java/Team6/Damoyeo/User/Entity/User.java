@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -61,6 +62,10 @@ public class User {
     @Column
     private String photoUrl;
 
+    @Column
+    // 초기값을 1로 설정 하고 탈퇴하면 0으로 할예정임
+    @ColumnDefault("1")
+    private String status;
 
     @OneToMany(mappedBy = "user")
     private List<Post> posts = new ArrayList<>();

@@ -29,13 +29,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Controller
 @RequestMapping("/post")
@@ -258,7 +256,7 @@ public class PostController {
         // 조회수 업데이트
         postService.updateView(id);
 
-        // 현재 게시물의 주소와 관련된 다른 게시물 조회
+        // 현재 게시물의 주소및 포스트 상태가 1인  관련된 다른 게시물 조회
         List<Post> nearby = postService.findByroadAddress(post.getRoadAddress(), id);
         // 프로필 사진 넣기를 위한 user생성
         User user = null;
@@ -348,7 +346,7 @@ public class PostController {
     //모임참가 수락
     @PostMapping("/requestAccept/{id}")
     public String requestAccept(@PathVariable("id") Integer prId) {
-        postRequestService.accet(prId);
+        postRequestService.accept(prId);
         return "redirect:/post/alarm";
     }
 

@@ -101,7 +101,7 @@ public class PostService {
         String locationfix = locationParts[0] + " " + locationParts[1];
 
         // 주소를 기준으로 게시물 검색
-        return postRepository.findByroadAddress(locationfix, postId);
+        return postRepository.findByRoadAddressContainingAndPostIdNotAndStatus(locationfix, postId,"1");
 
     }
 

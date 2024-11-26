@@ -14,7 +14,6 @@ import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
 import Team6.Damoyeo.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.SessionAttribute;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -93,7 +92,7 @@ public class PostRequestService {
 //                });
 
 
-    public void accet(Integer prId) {
+    public void accept(Integer prId) {
         // 1. PostRequest 조회
         PostRequest postRequest = postRequestRepository.findById(prId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Post Request ID"));
@@ -109,6 +108,7 @@ public class PostRequestService {
             // 상태가 0인 모든 요청 삭제
             List<PostRequest> postStatusZero = postRequestRepository.findByPostAndStatus(post, "0");
             postRequestRepository.deleteAll(postStatusZero);
+
         }
 
         // 현재 수락된 요청의 상태를 1 로 변경

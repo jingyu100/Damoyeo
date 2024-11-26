@@ -70,6 +70,12 @@ public class UserController {
 
     @GetMapping("/login")
     public String showLoginForm(Model model, HttpServletRequest request) {
+        // 이미 로그인한 사용자인지 체크
+        HttpSession session = request.getSession();
+        if (session != null && session.getAttribute("userId") != null) {
+            // 이미 로그인된 경우 홈페이지로 리다이렉트
+            return "redirect:/";
+        }
         String referer = request.getHeader("Referer");
         // 회원가입 페이지나 로그인 페이지에서 왔을 경우 리다이렉트 URL을 저장하지 않음
         if (referer != null && !referer.contains("/login") && !referer.contains("/register")) {
@@ -83,6 +89,7 @@ public class UserController {
                             @RequestParam("userPassword") String userPassword,
                             RedirectAttributes redirectAttributes,
                             HttpServletRequest request) {
+
         try {
             HttpSession session = request.getSession();
 

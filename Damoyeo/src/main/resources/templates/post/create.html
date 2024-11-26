@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${post.postId == null ? '새 글 작성' : '글 수정'}">페이지 제목</title>
-
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
 
@@ -291,7 +291,7 @@
     </style>
 </head>
 <body>
-
+<script src="/js/sweetalert2.min.js"></script>
 <!--    사진,사용자ID,조회수,상태 미구현-->
 
 <div th:if="${message}" th:text="${message}"></div>
@@ -422,12 +422,35 @@
             <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
 
         </div>
-        <button type="submit">글 등록</button>
+        <button type="button" id="createdButton">글 등록</button>
     </div>
 </form>
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
+        //글 작성하면
+        document.addEventListener('click', function(event) {
+            if (event.target.id === 'createdButton') {
+                event.preventDefault(); // 폼 제출 기본 동작 중지
+
+                const form = event.target.closest('form');
+
+                Swal.fire({
+                    title: '작성을 마치겠습니까?',
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '확인',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            }
+        });
+
         // 새 글 작성 검증
         const newPostInput = document.getElementById('newPost');
         if (newPostInput) {
