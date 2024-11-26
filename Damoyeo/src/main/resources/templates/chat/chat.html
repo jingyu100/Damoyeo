@@ -348,7 +348,8 @@
             </div>
             <!-- 채팅방 목록 출력 -->
             <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}">
-                <div class="room-icon"><i class="fas fa-comments"></i></div>
+<!--                <div class="room-icon"><i class="fas fa-comments"></i></div>-->
+                <a th:href="@{|post/detail${room.postId}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt="" style="width: 50px; height: 50px"></a>
                 <div class="room-info">
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
                     <div class="room-preview">환영합니다!</div>
@@ -362,6 +363,7 @@
         <div class="chat-header">
             <!-- 선택한 채팅방 정보 표시 -->
             <div class="current-room-info">
+                <img id="photoZone" src="" alt="">
                 <h2 id="currentRoomName">일반 채팅방</h2>
                 <span class="room-status">활성화</span>
             </div>
