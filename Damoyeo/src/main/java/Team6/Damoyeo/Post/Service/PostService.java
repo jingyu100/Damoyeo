@@ -15,6 +15,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import Team6.Damoyeo.calendar.repository.CalendarRepository;
+import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,12 +29,12 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
     private final PostRequestRepository postRequestRepository;
-
+    private final CalendarRepository calendarRepository;
 
     // 특정 페이지에 해당하는 게시글을 가져오는 메서드
     public Page<Post> findPostsByPage(int page, int pageSize) {
 //        return postRepository.findAll(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")));
-        return postRepository.findByStatus(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")),"1");
+        return postRepository.findByStatus(PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "createdDate")), "1");
     }
 
     // 게시글 저장 메서드 (작성자 정보 포함)
@@ -48,6 +50,16 @@ public class PostService {
         // 작성 시간과 작성자 정보 설정
         post.setCreatedDate(LocalDateTime.now());
         post.setUser(user);
+
+        CalendarEvent calendarEvent = CalendarEvent.builder()
+                .title(post.getTitle()) // 게시물 제목
+                .description(post.getTitle()) // 게시물 설명
+                .startTime(post.getEndDate())
+                .endTime(post.getEndDate()) // 게시물의 종료 날짜 사용
+                .createdDate(LocalDateTime.now()) // 이벤트 생성 날짜
+                .user(post.getUser()) // 요청한 사용자
+                .build();
+        calendarRepository.save(calendarEvent);
 
         // 게시글 저장
         return postRepository.save(post);
@@ -101,7 +113,7 @@ public class PostService {
         String locationfix = locationParts[0] + " " + locationParts[1];
 
         // 주소를 기준으로 게시물 검색
-        return postRepository.findByRoadAddressContainingAndPostIdNotAndStatus(locationfix, postId,"1");
+        return postRepository.findByRoadAddressContainingAndPostIdNotAndStatus(locationfix, postId, "1");
 
     }
 
@@ -109,7 +121,7 @@ public class PostService {
     public Page<Post> searchPostsByTitle(String title, Pageable pageable) {
 
 //        return postRepository.findByTitleContaining(title, pageable);
-        return postRepository.findByTitleContainingAndStatus(title,"1",pageable);
+        return postRepository.findByTitleContainingAndStatus(title, "1", pageable);
     }
 
     // 조회수가 높은 상위 게시글 목록을 가져오는 메서드
@@ -118,14 +130,14 @@ public class PostService {
         Pageable pageable = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "viewCount"));
 
 //        return postRepository.findAll(pageable).getContent();
-        return postRepository.findByStatus(pageable,"1").getContent();
+        return postRepository.findByStatus(pageable, "1").getContent();
     }
 
     // 태그를 기준으로 게시글을 검색하는 메서드
     public Page<Post> searchPostByTag(String tag, Pageable pageable) {
 
 //        return postRepository.findByTagContaining(tag, pageable);
-        return postRepository.findByTagContainingAndStatus(tag,"1" ,pageable);
+        return postRepository.findByTagContainingAndStatus(tag, "1", pageable);
     }
 
     //포스트 삭제하는 메서드
@@ -138,22 +150,22 @@ public class PostService {
     // 자기글 찾기 위한 메서드
     public List<Post> postSerch(Integer userId) {
         Optional<User> ou = userRepository.findById(userId);
-        if (ou.isEmpty()){
+        if (ou.isEmpty()) {
             return null;
         }
         User user = ou.get();
         //4를 제외한 게시글
-        return postRepository.findByUserAndStatusNot(user,"4");
+        return postRepository.findByUserAndStatusNot(user, "4");
     }
 
-    public  void updatePost(Post post) {
-         postRepository.save(post);
+    public void updatePost(Post post) {
+        postRepository.save(post);
     }
 
     //1분 지날때마다 포스트 갱신
     @Scheduled(fixedDelay = 60000)
     @Transactional
-    public void timePost(){
+    public void timePost() {
         LocalDateTime now = LocalDateTime.now();
         List<Post> endDateBeforeAndStatus = postRepository.findByEndDateBeforeAndStatus(now, "1");
         if (!endDateBeforeAndStatus.isEmpty()) {
