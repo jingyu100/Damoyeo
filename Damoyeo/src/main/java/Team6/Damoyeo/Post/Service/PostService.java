@@ -147,6 +147,12 @@ public class PostService {
     public void deletePost(Post post) {
         //삭제는 4 상태로
         post.setStatus("4");
+        List<PostRequest> postRequests = postRequestRepository.findByPostAndStatusNot(post,"2");
+        for (PostRequest postRequest : postRequests) {
+            //게시글 삭제되면 요청은 상태 3로변환
+            postRequest.setStatus("3");
+            postRequestRepository.save(postRequest);
+        }
         postRepository.save(post);
     }
 

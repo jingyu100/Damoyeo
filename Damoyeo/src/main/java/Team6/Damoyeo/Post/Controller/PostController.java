@@ -345,10 +345,19 @@ public class PostController {
         if (userId == null) {
             return "redirect:/user/login";
         }
+        // 1. 모임 신청한 사람
         List<PostWithRequest> postsWithRequests = alarmService.getPostsWithRequests(userId);
+        // 2. 모임 거절 당한거
         List<PostWithRequest> rejectedPostsWithRequests = alarmService.rejectedPostsWithRequests(userId);
+        // 3. 모임 게시글이 삭제 당한거
+        List<PostWithRequest> deltedPostWithRequests = alarmService.deltedPostsWithRequests(userId);
+        // 4. 모임 게시글이 작성자가 탈퇴한거
+        List<PostWithRequest> outPostsWithRequests = alarmService.userOutPostsWithRequests(userId);
+
         model.addAttribute("postsWithRequests", postsWithRequests);
         model.addAttribute("rejectedPostsWithRequests", rejectedPostsWithRequests);
+        model.addAttribute("deltedPostWithRequests", deltedPostWithRequests);
+        model.addAttribute("outPostsWithRequests", outPostsWithRequests);
         return "/post/alarm";
     }
 
