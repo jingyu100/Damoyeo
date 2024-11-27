@@ -88,13 +88,21 @@ public class UserController {
     public String loginUser(@RequestParam("userEmail") String userEmail,
                             @RequestParam("userPassword") String userPassword,
                             RedirectAttributes redirectAttributes,
-                            HttpServletRequest request) {
+                            HttpServletRequest request,
+                            Model model) {
 
         try {
             HttpSession session = request.getSession();
 
             // 유저 로그인 처리
             User user = userService.loginUser(userEmail, userPassword);
+
+            //탈퇴한 계정이면 로그인 방지
+            if (user.getStatus().equals("0")){
+                model.addAttribute("title", "탈퇴한 계정");
+                model.addAttribute("message","탈퇴한 계정 입니다. 메인으로 돌아갑니다. ");
+                return "error_alert";
+            }
             session.setAttribute("userId", user.getUserId());
 
             // 리다이렉트 URL 가져오기
@@ -173,6 +181,12 @@ public class UserController {
 
         // 대상 사용자 정보 조회
         User user = userService.findByUser(otherUserId);
+
+        if (user.getStatus().equals("0")){
+            model.addAttribute("title", "탈퇴한 계정 입니다.");
+            model.addAttribute("message","메인 화면으로 이동합니다.");
+            return "error_alert";
+        }
 
         List<Post> posts = postService.postSerch(otherUserId);
 

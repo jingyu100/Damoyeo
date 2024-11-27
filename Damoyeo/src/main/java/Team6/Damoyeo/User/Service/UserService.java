@@ -117,7 +117,7 @@ public class UserService {
         Optional<User> ou = userRepository.findById(userId);
         if(!ou.isEmpty()){
             User user = ou.get();
-            user.setStatus("2");
+            user.setStatus("0");
             userRepository.save(user);
         }
     }
