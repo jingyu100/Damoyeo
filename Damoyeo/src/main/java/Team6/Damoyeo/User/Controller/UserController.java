@@ -272,4 +272,34 @@ public class UserController {
         model.addAttribute("userId", userId);
         return "user/mypage";
     }
+
+    @GetMapping("/check_password")
+    public String checkpassword() {
+        return "user/check_password";
+    }
+
+    @PostMapping("/setting")
+    public String setting(@SessionAttribute(name = "userId", required = false) Integer userId,
+                                @RequestParam("password") String password,
+                                Model model) {
+
+        User user = userService.findByUser(userId);
+
+        if(userId == null) {
+            return "redirect:/user/login";
+        }
+
+
+        if(userService.checkPassword(user, password)) {
+            return "redirect:/user/setting";
+        }else {
+            model.addAttribute("error","비밀번호가 올바르지 않습니다");
+            return "user/check_password";
+        }
+    }
+
+    @GetMapping("/setting")
+    public String setting() {
+        return "user/setting";
+    }
 }
