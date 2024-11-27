@@ -478,11 +478,17 @@
     function showEventList(dayContent) {
         selectedDayContent = dayContent;
         const day = parseInt(dayContent.querySelector('.date-number').textContent);
-        selectedDate = new Date(
-            currentDate.getFullYear(),
-            currentDate.getMonth(),
-            day
-        );
+        // selectedDate = new Date(
+        //     currentDate.getFullYear(),
+        //     currentDate.getMonth(),
+        //     day
+        // );
+
+        // selectedDate 설정 시 dateKey 형식과 동일하게 맞춤
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth() + 1;
+        const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        selectedDate = dateKey; // Date 객체 대신 dateKey 문자열을 저장
 
         loadDayEvents();
         eventListModal.classList.add('show');
@@ -493,23 +499,46 @@
             const response = await fetch('/calendar/events');
             const events = await response.json();
 
-            const dateKey = selectedDate.toISOString().split('T')[0];
+            // const dateKey = selectedDate.toISOString().split('T')[0];
 
+            // const dayEvents = events.filter(event => {
+            //     const eventDate = new Date(event.start_time);
+            //     return eventDate.toISOString().split('T')[0] === dateKey;
+            // });
+
+            // selectedDate가 이제 "YYYY-MM-DD" 형식의 문자열이므로 직접 비교
             const dayEvents = events.filter(event => {
-                const eventDate = new Date(event.start_time);
-                return eventDate.toISOString().split('T')[0] === dateKey;
+                const eventDateKey = event.start_time.split('T')[0];
+                return eventDateKey === selectedDate;
             });
 
             const eventList = document.getElementById('eventList');
             eventList.innerHTML = '';
 
+            // dayEvents.forEach(event => {
+            //     const eventDate = new Date(event.start_time);
+            //     const timeStr = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
+            //
+            //     const eventItem = document.createElement('div');
+            //     eventItem.className = 'event-item';
+            //     eventItem.innerHTML = `<span>${timeStr} ${event.title}</span>`;
+            //
+            //     eventItem.onclick = () => editEvent({
+            //         id: event.ce_id,
+            //         title: event.title,
+            //         start_time: event.start_time
+            //     });
+            //
+            //     eventList.appendChild(eventItem);
+            // });
+
             dayEvents.forEach(event => {
-                const eventDate = new Date(event.start_time);
-                const timeStr = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
+                const timeStr = event.start_time.split('T')[1];
+                const formattedTime = timeStr.substring(0, 5);
 
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
-                eventItem.innerHTML = `<span>${timeStr} ${event.title}</span>`;
+                eventItem.innerHTML = `<span>${formattedTime} ${event.title}</span>`;
 
                 eventItem.onclick = () => editEvent({
                     id: event.ce_id,
@@ -603,14 +632,14 @@
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const today = new Date();
 
-        // Add empty days
+        // 날짜 칸 생성
         for (let i = 0; i < firstDayOfMonth; i++) {
             const emptyDay = document.createElement('div');
             emptyDay.classList.add('day', 'empty');
             calendarDays.appendChild(emptyDay);
         }
 
-        // Add days
+        // 날짜 추가
         for (let day = 1; day <= daysInMonth; day++) {
             const dayDiv = document.createElement('div');
             dayDiv.classList.add('day');
@@ -618,7 +647,7 @@
             const dayContent = document.createElement('div');
             dayContent.classList.add('day-content');
 
-            // Check if it's today
+            // 오늘인지 확인
             if (year === today.getFullYear() &&
                 month === today.getMonth() &&
                 day === today.getDate()) {
@@ -643,14 +672,21 @@
 
             const eventsByDate = {};
             events.forEach(event => {
-                const eventDate = new Date(event.start_time);
-                const dateKey = eventDate.toISOString().split('T')[0];
+                // const eventDate = new Date(event.start_time);
+                // const dateKey = eventDate.toISOString().split('T')[0];
+
+                // 이미 KST인 데이터이므로 직접 날짜만 추출
+                const dateKey = event.start_time.split('T')[0];
 
                 if (!eventsByDate[dateKey]) {
                     eventsByDate[dateKey] = [];
                 }
 
-                const formattedTime = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
+                // 시간 직접 파싱
+                const timeStr = event.start_time.split('T')[1];
+                const formattedTime = timeStr.substring(0, 5); // "HH:mm" 형식으로 추출
+
+                // const formattedTime = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
 
                 eventsByDate[dateKey].push({
                     ...event,
@@ -667,9 +703,14 @@
                 const existingEvents = content.querySelectorAll('.event-text, .events-overflow');
                 existingEvents.forEach(event => event.remove());
 
+                // const day = parseInt(content.querySelector('.date-number').textContent);
+                // const dateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+                // const dateKey = dateObj.toISOString().split('T')[0];
+
                 const day = parseInt(content.querySelector('.date-number').textContent);
-                const dateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-                const dateKey = dateObj.toISOString().split('T')[0];
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
+                const dateKey = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
 
                 const dayEvents = eventsByDate[dateKey] || [];
 
@@ -690,7 +731,7 @@
                     content.appendChild(eventSpan);
                 });
 
-                if (dayEvents.length > 3) {
+                if (dayEvents.length > 2) {
                     const overflow = document.createElement('div');
                     overflow.classList.add('events-overflow');
                     overflow.textContent = '+' + (dayEvents.length - 2);
@@ -775,11 +816,11 @@
                 closeModal();
             } else {
                 const errorData = await response.text();
-                console.error('Failed to save event:', errorData);
+                console.error('이벤트 저장 실패:', errorData);
                 alert('일정 저장에 실패했습니다: ' + errorData);
             }
         } catch (error) {
-            console.error('Error saving event:', error);
+            console.error('이벤트 저장 오류:', error);
             alert('일정 저장 중 오류가 발생했습니다');
         }
     });
