@@ -476,12 +476,151 @@
         eventListModal.classList.add('show');
     }
 
+    // async function loadDayEvents() {
+    //     try {
+    //         const response = await fetch('/calendar/events');
+    //         const events = await response.json();
+    //
+    //         const dayEvents = events.filter(event => {
+    //             const eventDateKey = event.start_time.split('T')[0];
+    //             return eventDateKey === selectedDate;
+    //         });
+    //
+    //         const eventList = document.getElementById('eventList');
+    //         eventList.innerHTML = '';
+    //
+    //         dayEvents.forEach(event => {
+    //             const timeStr = event.start_time.split('T')[1];
+    //             const formattedTime = timeStr.substring(0, 5);
+    //
+    //             const eventItem = document.createElement('div');
+    //             eventItem.className = 'event-item';
+    //             eventItem.innerHTML = `
+    //            <span style="
+    //                color: #666;
+    //                font-weight: 500;
+    //                background-color: #f5f5f5;
+    //                padding: 2px 6px;
+    //                border-radius: 3px;
+    //                font-size: 0.9em;
+    //            ">${formattedTime}</span>
+    //            <span style="
+    //                margin-left: 8px;
+    //                font-weight: 500;
+    //                color: #333;
+    //                font-size: 1em;
+    //            ">${event.title}</span>
+    //            ${event.post_id ? `
+    //                <a href="/post/detail${event.post_id}" style="
+    //                    display: inline-block;
+    //                    padding: 2px 8px;
+    //                    background-color: #A7C7E7;
+    //                    color: white !important;
+    //                    text-decoration: none;
+    //                    border-radius: 4px;
+    //                    margin-left: 5px;
+    //                    font-size: 0.9em;
+    //                    transition: background-color 0.3s;
+    //                ">게시글로</a>
+    //            ` : ''}`;
+    //
+    //             eventItem.onclick = () => editEvent({
+    //                 id: event.ce_id,
+    //                 title: event.title,
+    //                 start_time: event.start_time
+    //             });
+    //
+    //             const link = eventItem.querySelector('a');
+    //             if (link) {
+    //                 link.onclick = (e) => {
+    //                     e.stopPropagation();
+    //                 };
+    //             }
+    //
+    //             eventList.appendChild(eventItem);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error loading day events:', error);
+    //     }
+    // }
+    // async function loadDayEvents() {
+    //     try {
+    //         const response = await fetch('/calendar/events');
+    //         const events = await response.json();
+    //
+    //         const dayEvents = events.filter(event => {
+    //             const eventDateKey = event.start_time.split('T')[0];
+    //             return eventDateKey === selectedDate;
+    //         });
+    //
+    //         const eventList = document.getElementById('eventList');
+    //         eventList.innerHTML = '';
+    //
+    //         dayEvents.forEach(event => {
+    //             const timeStr = event.start_time.split('T')[1];
+    //             const formattedTime = timeStr.substring(0, 5);
+    //
+    //             const eventItem = document.createElement('div');
+    //             eventItem.className = 'event-item';
+    //             eventItem.style.display = 'grid';
+    //             eventItem.style.gridTemplateColumns = 'auto 1fr auto';
+    //             eventItem.style.gap = '8px';
+    //             eventItem.style.alignItems = 'center';
+    //
+    //             eventItem.innerHTML = `
+    //            <span style="
+    //                color: #666;
+    //                font-weight: 500;
+    //                background-color: #f5f5f5;
+    //                padding: 2px 6px;
+    //                border-radius: 3px;
+    //                font-size: 0.9em;
+    //            ">${formattedTime}</span>
+    //            <span style="
+    //                font-weight: 500;
+    //                color: #333;
+    //                font-size: 1em;
+    //            ">${event.title}</span>
+    //            <span style="justify-self: end;">
+    //                ${event.post_id ? `
+    //                    <a href="/post/detail${event.post_id}" style="
+    //                        display: inline-block;
+    //                        padding: 2px 8px;
+    //                        background-color: #A7C7E7;
+    //                        color: white !important;
+    //                        text-decoration: none;
+    //                        border-radius: 4px;
+    //                        font-size: 0.9em;
+    //                        transition: background-color 0.3s;
+    //                    ">게시글로</a>
+    //                ` : ''}
+    //            </span>`;
+    //
+    //             eventItem.onclick = () => editEvent({
+    //                 id: event.ce_id,
+    //                 title: event.title,
+    //                 start_time: event.start_time
+    //             });
+    //
+    //             const link = eventItem.querySelector('a');
+    //             if (link) {
+    //                 link.onclick = (e) => {
+    //                     e.stopPropagation();
+    //                 };
+    //             }
+    //
+    //             eventList.appendChild(eventItem);
+    //         });
+    //     } catch (error) {
+    //         console.error('Error loading day events:', error);
+    //     }
+    // }
+
     async function loadDayEvents() {
         try {
             const response = await fetch('/calendar/events');
             const events = await response.json();
 
-            // selectedDate가 이제 "YYYY-MM-DD" 형식의 문자열이므로 직접 비교
             const dayEvents = events.filter(event => {
                 const eventDateKey = event.start_time.split('T')[0];
                 return eventDateKey === selectedDate;
@@ -496,13 +635,56 @@
 
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
-                eventItem.innerHTML = `<span>${formattedTime} / ${event.title}</span>`;
+                eventItem.style.display = 'grid';
+                eventItem.style.gridTemplateColumns = 'auto 1fr auto';
+                eventItem.style.gap = '8px';
+                eventItem.style.alignItems = 'center';
+
+                eventItem.innerHTML = `
+          <span style="
+              color: #666;
+              font-weight: 500;
+              background-color: #f5f5f5;
+              padding: 2px 6px;
+              border-radius: 3px;
+              font-size: 0.9em;
+          ">${formattedTime}</span>
+          <span style="
+              font-weight: 500;
+              color: #333;
+              font-size: 1em;
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              max-width: 100%;
+          ">${event.title}</span>
+          <span style="justify-self: end;">
+              ${event.post_id ? `
+                  <a href="/post/detail${event.post_id}" style="
+                      display: inline-block;
+                      padding: 2px 8px;
+                      background-color: #A7C7E7;
+                      color: white !important;
+                      text-decoration: none;
+                      border-radius: 4px;
+                      font-size: 0.9em;
+                      transition: background-color 0.3s;
+                  ">게시글로</a>
+              ` : ''}
+          </span>`;
 
                 eventItem.onclick = () => editEvent({
                     id: event.ce_id,
                     title: event.title,
                     start_time: event.start_time
                 });
+
+                const link = eventItem.querySelector('a');
+                if (link) {
+                    link.onclick = (e) => {
+                        e.stopPropagation();
+                    };
+                }
 
                 eventList.appendChild(eventItem);
             });

@@ -3,6 +3,7 @@ package Team6.Damoyeo.calendar.Entity;
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.User.Entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import jakarta.persistence.*;
@@ -50,4 +51,10 @@ public class CalendarEvent {
     @JoinColumn(name= "post_id")
     @JsonBackReference // 순환 참조 방지
     private Post post;
+
+    // Post ID를 가져오는 메서드 추가
+    @JsonProperty("post_id")
+    public Integer getPostId() {
+        return post != null ? post.getPostId() : null;
+    }
 }
