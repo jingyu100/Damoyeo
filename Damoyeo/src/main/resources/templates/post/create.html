@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${post.postId == null ? '새 글 작성' : '글 수정'}">페이지 제목</title>
-    <link href="/css/sweetalert2.min.css" rel="stylesheet">
+    <!-- 네비게이션 및 푸터 CSS 링크 -->
+    <link rel="stylesheet" href="../css/navfooter.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+<!-- 상단 네비게이션 바 삽입 (topnav.html) -->
+<div th:replace="~{topnav.html}"></div>
+<br><br>
     <style>
-
-
         * {
             margin: 0;
             padding: 0;
@@ -24,11 +28,12 @@
 
         body {
             font-family: 'Pretendard-Regular', sans-serif;
-            height: 140vh;
+            min-height: 100vh; /* 전체 화면 높이를 채움 */
             display: flex;
-            justify-content: center;
-            align-items: center;
+            flex-direction: column; /* 세로 정렬 */
             margin: 0;
+            padding: 0;
+            align-items: center; /* 가로로 가운데 정렬 */
         }
 
         form {
@@ -51,10 +56,12 @@
             justify-content: center;
             align-items: center;
             border-bottom: 0.5px solid lightgrey;
+            width: 40%; /* 선 길이를 화면의 80%로 설정 */
+            margin: 0 auto; /* 가운데 정렬 */
         }
 
         .form-group1 input {
-            width: 95%;
+            width: 80%;
             height: 3rem;
             background-color: #f5f6f8;
             border: none;
@@ -80,22 +87,27 @@
 
         .form-group2 {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: flex-start; /* 자식 요소를 왼쪽 정렬 */
+            align-items: flex-start; /* 텍스트박스 상단 정렬 */
             border-bottom: 0.5px solid lightgrey;
+            width: 40%; /* 선의 길이를 60%로 설정 */
+            margin: 0 auto; /* 부모 컨테이너는 가운데 정렬 */
+            padding-left: 30px; /* 부모 자체에 왼쪽 여백 추가 */
         }
 
         .form-group2 textarea {
-            width: 100%;
+            width: 100%; /* 부모 컨테이너 크기를 따름 */
             height: 300px;
             font-size: 16px;
             font-weight: 400;
-            padding-left: 10px;
+            padding-left: 2px; /* 내부 텍스트 시작을 더 왼쪽으로 이동 */
             padding-top: 10px;
             border: none;
             resize: none;
             font-family: 'Pretendard-Regular', sans-serif;
+            text-align: left; /* 텍스트를 왼쪽 정렬 */
         }
+
 
         .form-group2 textarea:focus {
             outline: none;
@@ -111,37 +123,38 @@
         .form-group-container {
             display: flex;
             justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 600px;
         }
 
 
         .form-group-container input {
-            width: 90%;
+            width: 40%;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
+            font-size: 20px;
             color: lightgray;
         }
 
         .form-group-container select {
-            width: 90%;
+            width: 40%;
             height: 40px;
             border: none;
             border-bottom: 0.5px solid #A7C7E7;
             padding-left: 10px;
             font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
+            font-size: 20px;
             color: lightgray;
         }
 
 
         .form-group-container input::placeholder {
             font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
+            font-size: 20px;
             color: lightgray;
         }
 
@@ -157,7 +170,21 @@
             outline: none;
             border-bottom: 2px solid #A7C7E7;
         }
+        .form-groupss1 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40%;
+            height: 100%;
+        }
 
+        .form-groupss2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
         .form-group-container2 {
             display: flex;
             justify-content: center;
@@ -243,7 +270,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 30px;
+            gap: 20px;
         }
 
         #roadAddress {
@@ -264,7 +291,7 @@
 
         #roadAddress::placeholder {
             font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
+            font-size: 20px;
             color: lightgray;
         }
 
@@ -287,10 +314,7 @@
             height: 400px;
         }
 
-
     </style>
-</head>
-<body>
 <script src="/js/sweetalert2.min.js"></script>
 <!--    사진,사용자ID,조회수,상태 미구현-->
 
@@ -314,7 +338,7 @@
 
         <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
         <div class="form-group">
-            <input type="text" id="readAddress" placeholder="지역을 입력해주세요" th:field="*{roadAddress}" required readonly/>
+            <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly/>
         </div>
 
         <div class="form-group">
@@ -339,7 +363,7 @@
         </div>
 
 
-        <div class="form-group">
+        <div class="form-groupss1">
             <!--                새 글 작성일때-->
             <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
                    placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
@@ -352,7 +376,7 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-groupss2">
             <input type="datetime-local" id="endDate"
                    th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
                    th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
@@ -416,6 +440,7 @@
             }
         </script>
     </div>
+    <br><br>
     <div class="form-group-container2">
         <div class="file-input-container">
             <input type="file" name="photo" id="photoUrl"/>
@@ -425,6 +450,7 @@
         <button type="button" id="createdButton">글 등록</button>
     </div>
 </form>
+
 <script>
 
     document.addEventListener('DOMContentLoaded', function () {
@@ -510,7 +536,10 @@
         endDateInput.dispatchEvent(new Event('input'));
     });
 
-
 </script>
+<br><br>
+
+<!-- 페이지 하단 푸터 삽입 (footer.html) -->
+<div th:replace="~{footer.html}" ></div>
 </body>
 </html>
