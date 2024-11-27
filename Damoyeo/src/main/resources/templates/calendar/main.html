@@ -97,7 +97,7 @@
 
         .day {
             height: 0;
-            padding-bottom: 100%; /* Creates a square aspect ratio */
+            padding-bottom: 100%;
             position: relative;
             border-radius: 16px;
             background: #ffffff;
@@ -105,7 +105,6 @@
             transition: all 0.2s ease;
         }
 
-        /* Inner container for day content */
         .day-content {
             position: absolute;
             top: 0;
@@ -149,13 +148,37 @@
         }
 
         .today {
-            background: #4f46e5;
-            color: white;
+            background: #4f46e5 !important;
+            color: white !important;
+        }
+
+        .today:hover {
+            background: #4338ca !important;
+            border-color: #4f46e5 !important;
+            transform: translateY(-2px);
         }
 
         .today .event-text {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+        .today:hover .event-text {
+            background: rgba(255, 255, 255, 0.25) !important;
+        }
+
+        .today .event-time {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .today .event-title {
+            color: white !important;
+        }
+
+        .day:not(.empty):hover {
+            background: #f8f9ff;
+            border-color: #4f46e5;
+            transform: translateY(-2px);
         }
 
         .events-overflow {
@@ -476,146 +499,6 @@
         eventListModal.classList.add('show');
     }
 
-    // async function loadDayEvents() {
-    //     try {
-    //         const response = await fetch('/calendar/events');
-    //         const events = await response.json();
-    //
-    //         const dayEvents = events.filter(event => {
-    //             const eventDateKey = event.start_time.split('T')[0];
-    //             return eventDateKey === selectedDate;
-    //         });
-    //
-    //         const eventList = document.getElementById('eventList');
-    //         eventList.innerHTML = '';
-    //
-    //         dayEvents.forEach(event => {
-    //             const timeStr = event.start_time.split('T')[1];
-    //             const formattedTime = timeStr.substring(0, 5);
-    //
-    //             const eventItem = document.createElement('div');
-    //             eventItem.className = 'event-item';
-    //             eventItem.innerHTML = `
-    //            <span style="
-    //                color: #666;
-    //                font-weight: 500;
-    //                background-color: #f5f5f5;
-    //                padding: 2px 6px;
-    //                border-radius: 3px;
-    //                font-size: 0.9em;
-    //            ">${formattedTime}</span>
-    //            <span style="
-    //                margin-left: 8px;
-    //                font-weight: 500;
-    //                color: #333;
-    //                font-size: 1em;
-    //            ">${event.title}</span>
-    //            ${event.post_id ? `
-    //                <a href="/post/detail${event.post_id}" style="
-    //                    display: inline-block;
-    //                    padding: 2px 8px;
-    //                    background-color: #A7C7E7;
-    //                    color: white !important;
-    //                    text-decoration: none;
-    //                    border-radius: 4px;
-    //                    margin-left: 5px;
-    //                    font-size: 0.9em;
-    //                    transition: background-color 0.3s;
-    //                ">게시글로</a>
-    //            ` : ''}`;
-    //
-    //             eventItem.onclick = () => editEvent({
-    //                 id: event.ce_id,
-    //                 title: event.title,
-    //                 start_time: event.start_time
-    //             });
-    //
-    //             const link = eventItem.querySelector('a');
-    //             if (link) {
-    //                 link.onclick = (e) => {
-    //                     e.stopPropagation();
-    //                 };
-    //             }
-    //
-    //             eventList.appendChild(eventItem);
-    //         });
-    //     } catch (error) {
-    //         console.error('Error loading day events:', error);
-    //     }
-    // }
-    // async function loadDayEvents() {
-    //     try {
-    //         const response = await fetch('/calendar/events');
-    //         const events = await response.json();
-    //
-    //         const dayEvents = events.filter(event => {
-    //             const eventDateKey = event.start_time.split('T')[0];
-    //             return eventDateKey === selectedDate;
-    //         });
-    //
-    //         const eventList = document.getElementById('eventList');
-    //         eventList.innerHTML = '';
-    //
-    //         dayEvents.forEach(event => {
-    //             const timeStr = event.start_time.split('T')[1];
-    //             const formattedTime = timeStr.substring(0, 5);
-    //
-    //             const eventItem = document.createElement('div');
-    //             eventItem.className = 'event-item';
-    //             eventItem.style.display = 'grid';
-    //             eventItem.style.gridTemplateColumns = 'auto 1fr auto';
-    //             eventItem.style.gap = '8px';
-    //             eventItem.style.alignItems = 'center';
-    //
-    //             eventItem.innerHTML = `
-    //            <span style="
-    //                color: #666;
-    //                font-weight: 500;
-    //                background-color: #f5f5f5;
-    //                padding: 2px 6px;
-    //                border-radius: 3px;
-    //                font-size: 0.9em;
-    //            ">${formattedTime}</span>
-    //            <span style="
-    //                font-weight: 500;
-    //                color: #333;
-    //                font-size: 1em;
-    //            ">${event.title}</span>
-    //            <span style="justify-self: end;">
-    //                ${event.post_id ? `
-    //                    <a href="/post/detail${event.post_id}" style="
-    //                        display: inline-block;
-    //                        padding: 2px 8px;
-    //                        background-color: #A7C7E7;
-    //                        color: white !important;
-    //                        text-decoration: none;
-    //                        border-radius: 4px;
-    //                        font-size: 0.9em;
-    //                        transition: background-color 0.3s;
-    //                    ">게시글로</a>
-    //                ` : ''}
-    //            </span>`;
-    //
-    //             eventItem.onclick = () => editEvent({
-    //                 id: event.ce_id,
-    //                 title: event.title,
-    //                 start_time: event.start_time
-    //             });
-    //
-    //             const link = eventItem.querySelector('a');
-    //             if (link) {
-    //                 link.onclick = (e) => {
-    //                     e.stopPropagation();
-    //                 };
-    //             }
-    //
-    //             eventList.appendChild(eventItem);
-    //         });
-    //     } catch (error) {
-    //         console.error('Error loading day events:', error);
-    //     }
-    // }
-
     async function loadDayEvents() {
         try {
             const response = await fetch('/calendar/events');
@@ -692,24 +575,6 @@
             console.error('Error loading day events:', error);
         }
     }
-
-    // function editEvent(event) {
-    //     selectedEvent = {
-    //         id: event.id,
-    //         ce_id: event.id, // Ensure both id and ce_id are set
-    //         title: event.title,
-    //         start_time: event.start_time
-    //     };
-    //
-    //     const eventDate = new Date(event.start_time);
-    //
-    //     document.getElementById('eventTitle').value = event.title;
-    //     document.getElementById('eventTime').value =
-    //         `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
-    //
-    //     eventListModal.classList.remove('show');
-    //     eventModal.classList.add('show');
-    // }
 
     function editEvent(event) {
         selectedEvent = {
@@ -968,76 +833,6 @@
             alert('일정 저장 중 오류가 발생했습니다');
         }
     });
-
-    // eventForm.addEventListener('submit', async function (e) {
-    //     e.preventDefault();
-    //
-    //     const title = document.getElementById('eventTitle').value;
-    //     const timeStr = document.getElementById('eventTime').value;
-    //     const [hours, minutes] = timeStr.split(':');
-    //
-    //     // KST 날짜 생성
-    //     // const eventDate = new Date(
-    //     //     selectedDate.getFullYear(),
-    //     //     selectedDate.getMonth(),
-    //     //     selectedDate.getDate(),
-    //     //     parseInt(hours),
-    //     //     parseInt(minutes)
-    //     // );
-    //     //
-    //     // const eventData = {
-    //     //     title: title,
-    //     //     description: title,
-    //     //     startTime: eventDate.toISOString(),
-    //     //     endTime: eventDate.toISOString()
-    //     // };
-    //
-    //     const eventDate = new Date(
-    //         selectedDate.getFullYear(),
-    //         selectedDate.getMonth(),
-    //         selectedDate.getDate(),
-    //         parseInt(hours),
-    //         parseInt(minutes)
-    //     );
-    //
-    //     const koreanTime = new Date(eventDate.getTime() + (9 * 60 * 60 * 1000));
-    //     const isoString = koreanTime.toISOString();
-    //
-    //     const eventData = {
-    //         title: title,
-    //         description: title,
-    //         startTime: isoString,
-    //         endTime: isoString
-    //     };
-    //
-    //     try {
-    //         const url = selectedEvent
-    //             ? `/calendar/events/${selectedEvent.ce_id}`
-    //             : '/calendar/events';
-    //
-    //         const method = selectedEvent ? 'PUT' : 'POST';
-    //
-    //         const response = await fetch(url, {
-    //             method: method,
-    //             headers: {
-    //                 'Content-Type': 'application/json'
-    //             },
-    //             body: JSON.stringify(eventData)
-    //         });
-    //
-    //         if (response.ok) {
-    //             await loadEvents();
-    //             closeModal();
-    //         } else {
-    //             const errorData = await response.text();
-    //             console.error('이벤트 저장 실패:', errorData);
-    //             alert('일정 저장에 실패했습니다: ' + errorData);
-    //         }
-    //     } catch (error) {
-    //         console.error('이벤트 저장 오류:', error);
-    //         alert('일정 저장 중 오류가 발생했습니다');
-    //     }
-    // });
 
     document.addEventListener('DOMContentLoaded', async function () {
         await renderCalendar();
