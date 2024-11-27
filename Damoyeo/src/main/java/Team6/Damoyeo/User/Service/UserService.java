@@ -116,4 +116,9 @@ public class UserService {
     public void deleteUser(Integer userId) {
         userRepository.deleteById(userId);
     }
+
+    // 비밀번호 확인 메서드
+    public boolean checkPassword(User user,String password) {
+        return passwordEncoder.matches(password,user.getPassword());
+    }
 }
