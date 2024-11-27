@@ -186,7 +186,7 @@
         </tr>
         <tr>
             <td>
-                <input id="email" type="email" class="text" th:field="*{email}" onchange="checkEmail()"
+                <input id="email" type="email" class="text" th:field="*{email}" oninput="checkEmail()"
                        placeholder="아이디를 입력해주세요.">
                 <p id="emailNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
                 <!--                <button type="button" class="check-btn" onclick="checkEmail()">중복 확인</button>-->
@@ -219,7 +219,7 @@
         </tr>
         <tr>
             <td>
-                <input type="text" id="nickname" class="text" onchange="checkNickname()" th:field="*{nickname}">
+                <input type="text" id="nickname" class="text" oninput="checkNickname()" th:field="*{nickname}">
                 <p id="nicknameNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
                 <!--                <button type="button" class="check-btn" onclick="checkNickname()">중복 확인</button>-->
             </td>
