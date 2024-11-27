@@ -1,7 +1,9 @@
 package Team6.Damoyeo.User.Service;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Entity.PostRequest;
 import Team6.Damoyeo.Post.Repository.PostRepository;
+import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
+    private final PostRequestRepository postRequestRepository;
 
     // 회원가입 처리
     public User registerUser(User user) {
@@ -129,6 +132,12 @@ public class UserService {
                 // 탈퇴한 유저 게시글 상태
                 post.setStatus("0");
                 postRepository.save(post);
+                //탈퇴한 유저 게시글 찾고 해당 게시글의 참가 요청들의 상태를 4로 변환
+                List<PostRequest> postRequests = postRequestRepository.findByPostAndStatusNot(post,"2");
+                for (PostRequest postRequest : postRequests) {
+                    postRequest.setStatus("4");
+                    postRequestRepository.save(postRequest);
+                }
             }
         }
     }

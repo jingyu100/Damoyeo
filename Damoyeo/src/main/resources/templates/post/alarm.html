@@ -220,8 +220,49 @@
     </div>
   </div>
 
+<!--  모임 삭제 됬을때-->
+  <div th:each="deltedPostWithRequest : ${deltedPostWithRequests}"
+       class="notification-card rejected-notification">
+    <a th:href="@{/post/detail{id}(id=${deltedPostWithRequest.post.postId})}" class="post-header" target="_blank">
+      <h3 class="post-title" th:text="${deltedPostWithRequest.post.title}">게시글 제목</h3>
+      <img class="post-image" th:src="@{|/uploads/${deltedPostWithRequest.post.photoUrl}|}" alt="게시글 이미지">
+    </a>
+    <p class="request-message" th:text="${deltedPostWithRequest.post.content}">게시글 내용</p>
+    <p class="user-info">모임이 삭제 되었습니다.</p>
+
+    <div th:each="request : ${deltedPostWithRequest.requests}">
+      <form th:id="rejectedForm + ${request.prId}"
+            th:action="@{'/post/requestRejected/' + ${request.prId}}"
+            method="post"
+            onsubmit="return  handleRejected(event)">
+        <button type="submit" class="confirm-button">확인</button>
+      </form>
+    </div>
+  </div>
+
+<!--  모임게시글 주인이 탈퇴 했을때-->
+  <div th:each="outPostsWithRequest : ${outPostsWithRequests}"
+       class="notification-card rejected-notification">
+    <a th:href="@{/post/detail{id}(id=${outPostsWithRequest.post.postId})}" class="post-header" target="_blank">
+      <h3 class="post-title" th:text="${outPostsWithRequest.post.title}">게시글 제목</h3>
+      <img class="post-image" th:src="@{|/uploads/${outPostsWithRequest.post.photoUrl}|}" alt="게시글 이미지">
+    </a>
+    <p class="request-message" th:text="${outPostsWithRequest.post.content}">게시글 내용</p>
+    <p class="user-info">게시글 작성자가 탈퇴 하여 모임이 취소 되었습니다.</p>
+
+    <div th:each="request : ${outPostsWithRequest.requests}">
+      <form th:id="rejectedForm + ${request.prId}"
+            th:action="@{'/post/requestRejected/' + ${request.prId}}"
+            method="post"
+            onsubmit="return  handleRejected(event)">
+        <button type="submit" class="confirm-button">확인</button>
+      </form>
+    </div>
+  </div>
+
   <!-- 빈 상태 표시 -->
-  <div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()}" class="empty-state">
+  <div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()
+  and deltedPostWithRequests.isEmpty() and outPostsWithRequests.isEmpty()}" class="empty-state">
     <p>새로운 알람이 없습니다.</p>
   </div>
 </div>
@@ -320,6 +361,7 @@
 
     return false;
   }
+
 </script>
 </body>
 </html>
