@@ -1,5 +1,7 @@
 package Team6.Damoyeo.User.Service;
 
+import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Repository.PostRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +18,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PostRepository postRepository;
 
     // 회원가입 처리
     public User registerUser(User user) {
 
         // 비밀번호 암호화
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        user.setStatus("1");
         // User 객체 저장 후 반환
         return userRepository.save(user);
 
@@ -112,13 +115,21 @@ public class UserService {
         byId.ifPresent(existingUser -> userRepository.save(user));
 
     }
-
+    // 탈퇴
     public void deleteUser(Integer userId) {
         Optional<User> ou = userRepository.findById(userId);
         if(!ou.isEmpty()){
             User user = ou.get();
             user.setStatus("0");
             userRepository.save(user);
+            
+            List<Post> postList = postRepository.findByUserAndStatusNot(user,"4");
+            //탈퇴 하면 유저가 적은글 상태 변화 시키게 만들기
+            for (Post post : postList) {
+                // 탈퇴한 유저 게시글 상태
+                post.setStatus("0");
+                postRepository.save(post);
+            }
         }
     }
 }
