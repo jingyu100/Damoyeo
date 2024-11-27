@@ -1,5 +1,6 @@
 package Team6.Damoyeo.calendar.repository;
 
+import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,4 +10,6 @@ import java.util.List;
 
 public interface CalendarRepository extends JpaRepository<CalendarEvent, Integer> {
     List<CalendarEvent> findByUser(User user);
+
+    List<CalendarEvent> findByPost(Post post);
 }

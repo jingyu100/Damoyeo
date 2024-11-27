@@ -134,6 +134,7 @@ public class PostRequestService {
                 .endTime(post.getEndDate()) // 게시물의 종료 날짜 사용
                 .createdDate(LocalDateTime.now()) // 이벤트 생성 날짜
                 .user(postRequest.getUser()) // 요청한 사용자
+                .post(post) // 해당 포스트
                 .build();
         calendarRepository.save(calendarEvent);
 

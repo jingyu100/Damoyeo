@@ -1,5 +1,6 @@
 package Team6.Damoyeo.calendar.service;
 
+import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
@@ -76,5 +77,13 @@ public class CalendarService {
                 .build();
 
         return eventRepository.save(updatedEvent);
+    }
+
+    public void deleteEventByPostId(Post post) {
+
+        List<CalendarEvent> calendarEventList = eventRepository.findByPost(post);
+
+        eventRepository.deleteAll(calendarEventList);
+
     }
 }

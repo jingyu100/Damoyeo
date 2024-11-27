@@ -8,6 +8,7 @@ import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.Post.dto.PostWithRequest;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Service.UserService;
+import Team6.Damoyeo.calendar.service.CalendarService;
 import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -61,6 +62,8 @@ public class PostController {
     private final AlarmService alarmService;
 
     private final ChatService chatService;
+
+    private final CalendarService calendarService;
 
     // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
@@ -291,6 +294,10 @@ public class PostController {
 
             if (post.getUser().getUserId().equals(userId)) {
                 postService.deletePost(post);
+
+                // postId로 event 다 찾고 삭제
+                calendarService.deleteEventByPostId(post);
+
                 return "redirect:/post/main";
             } else {
                 return "redirect:/post/main";

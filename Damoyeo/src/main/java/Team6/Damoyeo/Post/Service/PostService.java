@@ -51,6 +51,9 @@ public class PostService {
         post.setCreatedDate(LocalDateTime.now());
         post.setUser(user);
 
+        // 게시글 저장
+        postRepository.save(post);
+
         CalendarEvent calendarEvent = CalendarEvent.builder()
                 .title(post.getTitle()) // 게시물 제목
                 .description(post.getTitle()) // 게시물 설명
@@ -58,11 +61,11 @@ public class PostService {
                 .endTime(post.getEndDate()) // 게시물의 종료 날짜 사용
                 .createdDate(LocalDateTime.now()) // 이벤트 생성 날짜
                 .user(post.getUser()) // 요청한 사용자
+                .post(post)
                 .build();
         calendarRepository.save(calendarEvent);
 
-        // 게시글 저장
-        return postRepository.save(post);
+        return post;
 
     }
 

@@ -1,5 +1,6 @@
 package Team6.Damoyeo.calendar.Entity;
 
+import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.User.Entity.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -44,4 +45,9 @@ public class CalendarEvent {
     @JoinColumn(name = "user_id")
     @JsonBackReference // 순환 참조 방지
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "post_id")
+    @JsonBackReference // 순환 참조 방지
+    private Post post;
 }
