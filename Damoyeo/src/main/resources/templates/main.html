@@ -8,6 +8,13 @@
     <!-- header 부분 시작-->
     <style>
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
         .post-container {
             display: flex;
             flex-wrap: wrap;
@@ -103,13 +110,14 @@
 
         header {
             width: 100%;
-            background-color: #f5f5f5;
+            background-color: white;
         }
 
         .header-banner-wrap {
             background-color: #FFF1AA;
             width: 100%;
             height: 500px;
+            overflow: hidden;
         }
 
         .header-banner {
@@ -143,24 +151,60 @@
         }
 
         .popular-categories {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f9f9f9;
-            padding: 10px 0;
-            font-family: Roboto;
-            font-size: 16px;
-            font-style: normal;
-            font-weight: 400;
-            line-height: 24px;
-            letter-spacing: -0.3px;
+            margin-top: 30px;
+            width: 100%;
+            background-color: white;
         }
 
-        .popular-categories .highlight {
+        .highlight{
+            margin: 0 auto;
+            width: 1200px;
+            font-size: 25px;
             font-weight: bold;
-            text-decoration: underline;
-            margin-right: 20px;
+            padding-left: 40px;
+            margin-top: 30px;
+            margin-bottom: 30px;
         }
+
+        .categories-container{
+            margin: 0 auto;
+            width: 1200px;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .categories{
+            display: flex;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .categories-wrap{
+           overflow: hidden;
+        }
+
+        .categories-img{
+            width: 160px;
+            height: 160px;
+            background-color: #F2F3F6;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 160px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 0 1px #0017580d;
+        }
+
+        .categories-img img{
+            width: 80px;
+            height: 80px;
+            vertical-align: middle;
+            transform: translateY(-3px);
+        }
+
+        .categories-text{
+            text-align: center;
+            font-weight:bold;
+        }
+
 
         .popular-categories a {
             margin: 0 10px;
@@ -170,6 +214,35 @@
             cursor: pointer;
         }
 
+        .categories-left{
+            position: absolute;
+            font-size: 30px;
+            left:16px;
+            top: 30%;
+            font-weight: 400;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px #00000029;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .categories-right{
+            position: absolute;
+            font-size: 30px;
+            right: -24px;
+            top: 30%;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px #00000029;
+            text-align: center;
+            line-height: 50px;
+        }
+
         .header-img{
             display: none;
             width: 100%;
@@ -177,7 +250,7 @@
             position: absolute;
             right: 0px;
             bottom: 0px;
-            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            transition: opacity 0.2s , transform 0.5s;
         }
 
         .left-btn{
@@ -199,7 +272,7 @@
         .header-content{
             display: flex;
             width: calc(100% * 5);
-            transition: transform 0.5s;
+            transition: transform 0.5s ease-in-out;
         }
 
 
@@ -220,6 +293,7 @@
             font-size: 20px;
             font-weight: bold;
         }
+
 
 
 
@@ -312,17 +386,119 @@
             </div>
         </div>
         <div class="popular-categories">
-            <span class="highlight">인기검색어</span>
-            <a th:href="@{/post/main?tag=운동/스포츠}">운동/스포츠</a>
-            <a th:href="@{/post/main?tag=음악/악기}">음악/악기</a>
-            <a th:href="@{/post/main?tag=아웃도어/여행}">아웃도어/여행</a>
-            <a th:href="@{/post/main?tag=게임/오락}">게임/오락</a>
-            <a th:href="@{/post/main?tag=요리/제조}">요리/제조</a>
-            <a th:href="@{/post/main?tag=외국어/언어}">외국어/언어</a>
-            <a th:href="@{/post/main?tag=스포츠관람}">스포츠 관람</a>
-            <a th:href="@{/post/main?tag=인문학/철학}">인문학/철학</a>
-            <a th:href="@{/post/main?tag=자기개발}">자기개발</a>
-            <a th:href="@{/post/main?tag=독서}">독서</a>
+            <div class="highlight">인기 카테고리</div>
+            <div class="categories-container">
+                <div class="categories-wrap">
+                    <div class="categories">
+                        <a th:href="@{/post/main?tag=운동/스포츠}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_3.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    운동/스포츠
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=음악/악기}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_4.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    음악/악기
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=아웃도어/여행}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_5.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    아웃도어/여행
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=게임/오락}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_6.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    게임/오락
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=요리/제조}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_7.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    요리/제조
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=외국어/언어}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_8.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    외국어/언어
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=스포츠관람}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_9.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    스포츠관람
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=인문학/철학}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_10.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    인문학/철학
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=자기개발}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_11.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    자기개발
+                                </div>
+                            </article>
+                        </a>
+                        <a th:href="@{/post/main?tag=독서}">
+                            <article>
+                                <div class="categories-img">
+                                    <img src="/uploads/img_12.png" alt="">
+                                </div>
+                                <div class="categories-text">
+                                    독서
+                                </div>
+                            </article>
+                        </a>
+                    </div>
+                    <div class="categories-left">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </div>
+                    <div class="categories-right">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </header>
@@ -406,6 +582,58 @@
 
         headerBannerWrap.style.backgroundColor = backgroundColors[currentImageIndex];
     }
+
+    const categoriesWrap = document.querySelector('.categories-wrap');
+    const categories = document.querySelector('.categories');
+    const categoriesLeft = document.querySelector('.categories-left');
+    const categoriesRight = document.querySelector('.categories-right');
+
+    let currentCategoriesOffset = 0;
+
+    const containerWidth = categoriesWrap.offsetWidth;
+    const categoriesWidth = categories.scrollWidth;
+    const step = containerWidth / 2;
+
+
+    categoriesWrap.addEventListener('mouseenter', () => {
+        updateArrowVisibility();
+    });
+    categoriesWrap.addEventListener('mouseleave', () => {
+        categoriesLeft.style.display = 'none';
+        categoriesRight.style.display = 'none';
+    });
+
+
+
+
+    function updateArrowVisibility() {
+        if (currentCategoriesOffset >= 0) {
+            categoriesLeft.style.display = 'none';
+        } else {
+            categoriesLeft.style.display = 'block';
+        }
+
+        if (currentCategoriesOffset <= -(categoriesWidth - containerWidth)) {
+            categoriesRight.style.display = 'none';
+        } else {
+            categoriesRight.style.display = 'block';
+        }
+    }
+
+    categoriesLeft.addEventListener('click', () => {
+        currentCategoriesOffset = Math.min(currentCategoriesOffset + step, 0);
+        categories.style.transform = `translateX(${currentCategoriesOffset}px)`;
+        updateArrowVisibility();
+    });
+
+    categoriesRight.addEventListener('click', () => {
+        currentCategoriesOffset = Math.max(currentCategoriesOffset - step, -(categoriesWidth - containerWidth));
+        categories.style.transform = `translateX(${currentCategoriesOffset}px)`;
+        updateArrowVisibility();
+    });
+
+
+    updateArrowVisibility();
 
 
 </script>
