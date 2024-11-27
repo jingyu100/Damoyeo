@@ -387,7 +387,7 @@
 <div id="eventListModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title">일정 목록</h3>
+            <h3 class="modal-title">일정 목록</h3><br>
             <button class="add-event-btn" onclick="openAddEventModal()">+ 새 일정</button>
         </div>
         <div id="eventList" class="event-list"></div>
@@ -496,7 +496,7 @@
 
                 const eventItem = document.createElement('div');
                 eventItem.className = 'event-item';
-                eventItem.innerHTML = `<span>${formattedTime} ${event.title}</span>`;
+                eventItem.innerHTML = `<span>${formattedTime} / ${event.title}</span>`;
 
                 eventItem.onclick = () => editEvent({
                     id: event.ce_id,
