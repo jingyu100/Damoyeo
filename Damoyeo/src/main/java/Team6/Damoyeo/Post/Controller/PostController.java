@@ -251,7 +251,9 @@ public class PostController {
 
         Post post = this.postService.findById(id);  // ID로 게시물 찾기
         if (post.getStatus().equals("4")){
-            return "post/delete_alert";
+            model.addAttribute("title", "삭제된 게시글");
+            model.addAttribute("message","삭제된 게시글 입니다. 메인 화면으로 이동합니다.");
+            return "error_alert";
         }
         // 조회수 업데이트
         postService.updateView(id);

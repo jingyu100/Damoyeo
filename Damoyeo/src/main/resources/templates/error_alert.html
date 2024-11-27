@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>알림</title>
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
+</head>
+<body>
+<!--앞으로 이 잘못된 접근 알림 보내게 할꺼임-->
+<input type="hidden" id="title" th:value="${title}">
+<input type="hidden" id="message" th:value="${message}">
+<script src="/js/sweetalert2.min.js"></script>
+<script>
+    const title = document.getElementById("title").value;
+    const message = document.getElementById("message").value;
+
+    Swal.fire({
+        title: title,
+        text: message,
+        icon: "error",
+        confirmButtonText: "확인",
+        allowOutsideClick: false, // 배경 클릭으로 닫힘 방지
+        allowEscapeKey: false // ESC 키로 닫 방지힘
+    }).then(() => {
+        window.location.href = "/";
+    });
+</script>
+</body>
+</html>
