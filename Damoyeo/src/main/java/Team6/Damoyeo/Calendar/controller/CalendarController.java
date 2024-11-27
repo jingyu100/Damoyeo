@@ -81,8 +81,33 @@ public class CalendarController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/events/{id}")
-    public ResponseEntity<CalendarEvent> updateEvent(@PathVariable Integer id, @RequestBody CalendarEvent event) {
-        return ResponseEntity.ok(calendarService.updateEvent(id, event));
+    @PutMapping("/events/{eventId}")
+    public ResponseEntity<CalendarEvent> updateEvent(
+            @PathVariable("eventId") Integer eventId,
+            @RequestBody Team6.Damoyeo.calendar.dto.CalendarEventDTO eventDto,
+            @SessionAttribute(name = "userId", required = false) Integer userId) {
+
+        if (userId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        User user = userService.findByUser(userId);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        try {
+            CalendarEvent event = CalendarEvent.builder()
+                    .title(eventDto.getTitle())
+                    .description(eventDto.getDescription())
+                    .startTime(eventDto.getStartTime())
+                    .endTime(eventDto.getEndTime())
+                    .build();
+
+            CalendarEvent updatedEvent = calendarService.updateEvent(eventId, event);
+            return ResponseEntity.ok(updatedEvent);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
     }
 }

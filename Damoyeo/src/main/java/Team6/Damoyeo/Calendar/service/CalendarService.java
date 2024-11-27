@@ -61,17 +61,20 @@ public class CalendarService {
     }
 
     public CalendarEvent updateEvent(Integer id, CalendarEvent updateEvent) {
-        CalendarEvent event = eventRepository.findById(id)
+        CalendarEvent existingEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Event not found with id: " + id));
 
-        return eventRepository.save(CalendarEvent.builder()
-                .ceId(event.getCeId())
+        // 기존 이벤트의 불변 데이터 유지
+        CalendarEvent updatedEvent = CalendarEvent.builder()
+                .ceId(existingEvent.getCeId())
                 .title(updateEvent.getTitle())
                 .description(updateEvent.getDescription())
                 .startTime(updateEvent.getStartTime())
                 .endTime(updateEvent.getEndTime())
-                .createdDate(event.getCreatedDate())
-                .user(event.getUser())
-                .build());
+                .createdDate(existingEvent.getCreatedDate())
+                .user(existingEvent.getUser())
+                .build();
+
+        return eventRepository.save(updatedEvent);
     }
 }
