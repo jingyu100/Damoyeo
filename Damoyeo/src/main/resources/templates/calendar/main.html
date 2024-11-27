@@ -462,27 +462,9 @@
     let selectedDate = null;
     let selectedEvent = null;
 
-    function convertToKST(dateStr) {
-        const date = new Date(dateStr);
-        return new Date(date.getTime() + (9 * 60 * 60 * 1000));
-    }
-
-    function toKST(date) {
-        return new Date(date.getTime() + (9 * 60 * 60 * 1000));
-    }
-
-    function toUTC(date) {
-        return new Date(date.getTime() - (9 * 60 * 60 * 1000));
-    }
-
     function showEventList(dayContent) {
         selectedDayContent = dayContent;
         const day = parseInt(dayContent.querySelector('.date-number').textContent);
-        // selectedDate = new Date(
-        //     currentDate.getFullYear(),
-        //     currentDate.getMonth(),
-        //     day
-        // );
 
         // selectedDate 설정 시 dateKey 형식과 동일하게 맞춤
         const year = currentDate.getFullYear();
@@ -499,13 +481,6 @@
             const response = await fetch('/calendar/events');
             const events = await response.json();
 
-            // const dateKey = selectedDate.toISOString().split('T')[0];
-
-            // const dayEvents = events.filter(event => {
-            //     const eventDate = new Date(event.start_time);
-            //     return eventDate.toISOString().split('T')[0] === dateKey;
-            // });
-
             // selectedDate가 이제 "YYYY-MM-DD" 형식의 문자열이므로 직접 비교
             const dayEvents = events.filter(event => {
                 const eventDateKey = event.start_time.split('T')[0];
@@ -514,23 +489,6 @@
 
             const eventList = document.getElementById('eventList');
             eventList.innerHTML = '';
-
-            // dayEvents.forEach(event => {
-            //     const eventDate = new Date(event.start_time);
-            //     const timeStr = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
-            //
-            //     const eventItem = document.createElement('div');
-            //     eventItem.className = 'event-item';
-            //     eventItem.innerHTML = `<span>${timeStr} ${event.title}</span>`;
-            //
-            //     eventItem.onclick = () => editEvent({
-            //         id: event.ce_id,
-            //         title: event.title,
-            //         start_time: event.start_time
-            //     });
-            //
-            //     eventList.appendChild(eventItem);
-            // });
 
             dayEvents.forEach(event => {
                 const timeStr = event.start_time.split('T')[1];
@@ -672,8 +630,6 @@
 
             const eventsByDate = {};
             events.forEach(event => {
-                // const eventDate = new Date(event.start_time);
-                // const dateKey = eventDate.toISOString().split('T')[0];
 
                 // 이미 KST인 데이터이므로 직접 날짜만 추출
                 const dateKey = event.start_time.split('T')[0];
@@ -685,8 +641,6 @@
                 // 시간 직접 파싱
                 const timeStr = event.start_time.split('T')[1];
                 const formattedTime = timeStr.substring(0, 5); // "HH:mm" 형식으로 추출
-
-                // const formattedTime = `${String(eventDate.getHours()).padStart(2, '0')}:${String(eventDate.getMinutes()).padStart(2, '0')}`;
 
                 eventsByDate[dateKey].push({
                     ...event,
@@ -702,10 +656,6 @@
             dayContents.forEach(content => {
                 const existingEvents = content.querySelectorAll('.event-text, .events-overflow');
                 existingEvents.forEach(event => event.remove());
-
-                // const day = parseInt(content.querySelector('.date-number').textContent);
-                // const dateObj = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-                // const dateKey = dateObj.toISOString().split('T')[0];
 
                 const day = parseInt(content.querySelector('.date-number').textContent);
                 const year = currentDate.getFullYear();
@@ -762,23 +712,10 @@
         const timeStr = document.getElementById('eventTime').value;
         const [hours, minutes] = timeStr.split(':');
 
-        // selectedDate가 'YYYY-MM-DD' 형식의 문자열이므로 이를 파싱
-        // const [year, month, day] = selectedDate.split('-').map(num => parseInt(num));
-
         const [year, month, day] = selectedDate.split('-');
-
-        // 새로운 Date 객체 생성 (month는 0-based이므로 1을 빼줌)
-        // const eventDate = new Date(year, month - 1, day, parseInt(hours), parseInt(minutes));
 
         // ISO 문자열 직접 생성 (시간은 그대로 유지)
         const isoString = `${year}-${month}-${day}T${hours}:${minutes}:00`;
-
-        // const eventData = {
-        //     title: title,
-        //     description: title,
-        //     startTime: eventDate.toISOString(),
-        //     endTime: eventDate.toISOString()
-        // };
 
         const eventData = {
             title: title,
