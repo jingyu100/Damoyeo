@@ -37,6 +37,7 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     // 유저가 적은글 찾기
     List<Post> findByUser(User user);
 
+
     
     // 검색어 조회 기능 및 상태로 찾는 기능
     Page<Post> findByTitleContainingAndStatus(String title,String status,Pageable pageable);
@@ -49,6 +50,6 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
     //endDate 이전 찾는
     List<Post> findByEndDateBeforeAndStatus(LocalDateTime now, String status);
 
-    //상대
+    //게시글 상태가 아닌거 찾는거
     List<Post> findByUserAndStatusNot(User user, String status);
 }
