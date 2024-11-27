@@ -110,7 +110,8 @@ public class PostController {
 
     // 게시물 작성 페이지
     @GetMapping("/create")
-    public String createPost(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
+    public String createPost(Model model,
+                             @SessionAttribute(name = "userId", required = false) Integer userId) {
         //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
         if (userId == null) {
             return "redirect:/user/login";
@@ -118,7 +119,7 @@ public class PostController {
         // API 키와 새 Post 객체를 모델에 추가
         model.addAttribute("apiKey", API_KEY);
         model.addAttribute("post", new Post());
-
+        model.addAttribute("userId", userId);
         return "post/create";  // 게시물 작성 페이지로 이동
 
     }
