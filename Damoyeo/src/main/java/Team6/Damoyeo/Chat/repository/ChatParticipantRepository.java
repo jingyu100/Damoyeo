@@ -15,4 +15,7 @@ public interface ChatParticipantRepository extends JpaRepository<ChatParticipant
             "WHERE cp.user.id = :userId AND cp.status = 'ACTIVE'")
     List<ChatParticipant> findAllByUserId(@Param("userId") Integer userId);
 
+    // 채팅방의 모든 참가자 조회
+    List<ChatParticipant> findByChatRoom_Id(Long roomId);
+
 }

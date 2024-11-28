@@ -6,6 +6,7 @@ import Team6.Damoyeo.chat.Entity.ChatMessage;
 import Team6.Damoyeo.chat.dto.ChatMessageDto;
 import Team6.Damoyeo.chat.dto.ChatMessageHistoryDto;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
+import Team6.Damoyeo.chat.dto.ParticipantDto;
 import Team6.Damoyeo.chat.service.ChatMessageService;
 import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -138,5 +139,12 @@ public class ChatController {
         chatMessageDto.setType(ChatMessageDto.MessageType.LEAVE);
 
         return chatMessageDto;
+    }
+
+    @MessageMapping("/chat.getParticipants/{roomId}")
+    @SendTo("/topic/chat/{roomId}/participants")
+    public List<ParticipantDto> getParticipants(@DestinationVariable("roomId") String roomId) {
+        // 채팅방의 현재 참가자 목록을 조회하는 로직
+        return chatService.getRoomParticipants(roomId);
     }
 }
