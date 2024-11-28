@@ -3,6 +3,7 @@
 <head>
     <title>Multi-Room Chat</title>
     <link rel="stylesheet" href="../css/navfooter.css">
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.2/sockjs.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/stompjs@2.3.3/lib/stomp.min.js"></script>
@@ -326,6 +327,7 @@
     </style>
 </head>
 <body>
+<script src="/js/sweetalert2.min.js"></script>
 <!-- 네비게이션 바 포함 -->
 <div th:replace="~{topnav.html}"></div>
 
@@ -359,7 +361,17 @@
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
                     <div class="room-preview">환영합니다!</div>
                 </div>
+                <div class="header-actions">
+                    <form th:action="@{|/chat/getOut/${room.roomId}|}" method="post" id="exitChatRoomForm">
+                        <button type="button" id="exitChatRoomButton" class="action-btn" style="padding: 15px; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" pointer-events="none">
+                                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -376,7 +388,13 @@
             <div class="header-actions">
                 <!--                <button class="action-btn"><i class="fas fa-video"></i></button>-->
                 <!--                <button class="action-btn"><i class="fas fa-phone"></i></button>-->
-                <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+<!--                <form th:action="/chat/getOut" method="post">-->
+<!--                    <button type="submit" class="action-btn">-->
+<!--                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">-->
+<!--                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" fill="currentColor"/>-->
+<!--                        </svg>-->
+<!--                    </button>-->
+<!--                </form>-->
             </div>
         </div>
 
@@ -656,6 +674,40 @@
 
         // WebSocket 연결 초기화
         connect();
+    });
+
+
+    // 나가기를 위한 스위트 알러트
+    document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('click', function (event) {
+            if (event.target.id === 'exitChatRoomButton') {
+                event.preventDefault();
+
+                const form = event.target.closest('form');
+
+                Swal.fire({
+                    title: '채팅방에서 나가시겠습니까?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '나가기',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '채팅방에서 나왔습니다',
+                            icon: 'success',
+                            confirmButtonColor: '#A7C7E7'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 
