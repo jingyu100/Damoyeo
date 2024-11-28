@@ -11,323 +11,358 @@
 <!-- 상단 네비게이션 바 삽입 (topnav.html) -->
 <div th:replace="~{topnav.html}"></div>
 <br><br>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        @font-face {
-            font-family: 'Pretendard-Regular';
-            src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-            font-weight: 400;
-            font-style: normal;
-        }
-
-
-        body {
-            font-family: 'Pretendard-Regular', sans-serif;
-            min-height: 100vh; /* 전체 화면 높이를 채움 */
-            display: flex;
-            flex-direction: column; /* 세로 정렬 */
-            margin: 0;
-            padding: 0;
-            align-items: center; /* 가로로 가운데 정렬 */
-        }
-
-        form {
-            width: 100%;
-            height: 90%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border-radius: 0.5rem;
-        }
-
-        form div {
-            width: 100%;
-            height: 100%;
-
-        }
-
-        .form-group1 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 800px;
-            margin: 0 auto; /* 수평 가운데 정렬 */
-            position: relative; /* 상대 위치 지정 */
-        }
-
-        .form-group1 input {
-            width: 100%;
-            height: 3rem;
-            background-color: #f5f6f8;
-            border: none;
-            font-size: 16px;
-            font-weight: 500;
-            border-radius: 0.5rem;
-            padding-left: 15px;
-            font-family: 'Pretendard-Regular', sans-serif;
-            text-align: left;
-
-        }
+    @font-face {
+        font-family: 'Pretendard-Regular';
+        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
+        font-weight: 400;
+        font-style: normal;
+    }
 
 
-        .form-group1 input::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 16px;
-            color: lightgray;
-        }
+    body {
+        font-family: 'Pretendard-Regular', sans-serif;
+        min-height: 100vh; /* 전체 화면 높이를 채움 */
+        display: flex;
+        flex-direction: column; /* 세로 정렬 */
+        margin: 0;
+        padding: 0;
+        align-items: center; /* 가로로 가운데 정렬 */
+    }
+
+    form {
+        width: 100%;
+        height: 90%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: 0.5rem;
+    }
+
+    form div {
+        width: 100%;
+        height: 100%;
+
+    }
+
+    .form-group1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 1000px;
+        margin: 0 auto; /* 수평 가운데 정렬 */
+        position: relative; /* 상대 위치 지정 */
+    }
+
+    .form-group1 input {
+        width: 100%;
+        height: 3rem;
+        background-color: #f5f6f8;
+        border: none;
+        font-size: 16px;
+        font-weight: 500;
+        border-radius: 0.5rem;
+        padding-left: 15px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        text-align: left;
+
+    }
 
 
-        .form-group1 input:focus {
-            outline: none;
-            border: 2px solid #A7C7E7;
-        }
-
-        .form-group2 {
-            display: flex;
-            justify-content: flex-start; /* 자식 요소를 왼쪽 정렬 */
-            align-items: flex-start; /* 텍스트박스 상단 정렬 */
-            border: 0.5px solid lightgrey; /* 사방에 선 추가 */
-            width: 1000px; /* 박스의 너비 고정 */
-            left: -15px;
-            padding: 15px; /* 내부 여백 추가 */
-            box-sizing: border-box; /* 패딩과 선을 포함한 크기 계산 */
-        }
+    .form-group1 input::placeholder {
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 16px;
+        color: lightgray;
+    }
 
 
+    .form-group1 input:focus {
+        outline: none;
+        border: 2px solid #A7C7E7;
+    }
 
-        .form-group2 textarea {
-            width: 100%; /* 부모 컨테이너 크기를 따름 */
-            height: 300px;
-            font-size: 16px;
-            font-weight: 400;
-            padding-left: 2px; /* 내부 텍스트 시작을 더 왼쪽으로 이동 */
-            padding-top: 10px;
-            border: none;
-            resize: none;
-            font-family: 'Pretendard-Regular', sans-serif;
-            text-align: left; /* 텍스트를 왼쪽 정렬 */
-        }
-
-
-        .form-group2 textarea:focus {
-            outline: none;
-            border: none;
-        }
-
-        .form-group2 textarea::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 16px;
-            color: lightgray;
-        }
-
-        .form-group-container {
-            display: flex;
-            justify-content: center;
-            flex-direction: column;
-            align-items: center;
-            height: 400px;
-        }
+    .form-group2 {
+        display: flex;
+        justify-content: flex-start; /* 자식 요소를 왼쪽 정렬 */
+        align-items: flex-start; /* 텍스트박스 상단 정렬 */
+        border: 0.5px solid lightgrey; /* 사방에 선 추가 */
+        width: 1000px; /* 박스의 너비 고정 */
+        left: -15px;
+        padding: 15px; /* 내부 여백 추가 */
+        box-sizing: border-box; /* 패딩과 선을 포함한 크기 계산 */
+    }
 
 
-        .form-group-container input {
-            width: 40%;
-            height: 40px;
-            border: none;
-            border-bottom: 0.5px solid #A7C7E7;
-            padding-left: 10px;
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 20px;
-            color: lightgray;
-        }
 
-        .form-group-container select {
-            width: 40%;
-            height: 40px;
-            border: none;
-            border-bottom: 0.5px solid #A7C7E7;
-            padding-left: 10px;
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 20px;
-            color: lightgray;
-        }
+    .form-group2 textarea {
+        width: 100%; /* 부모 컨테이너 크기를 따름 */
+        height: 300px;
+        font-size: 16px;
+        font-weight: 400;
+        padding-left: 2px; /* 내부 텍스트 시작을 더 왼쪽으로 이동 */
+        padding-top: 10px;
+        border: none;
+        resize: none;
+        font-family: 'Pretendard-Regular', sans-serif;
+        text-align: left; /* 텍스트를 왼쪽 정렬 */
+    }
 
 
-        .form-group-container input::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 20px;
-            color: lightgray;
-        }
+    .form-group2 textarea:focus {
+        outline: none;
+        border: none;
+    }
 
-        .form-grouparea1 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 1200px; /* 고정된 픽셀 값 */
-            height: 200px; /* 고정된 픽셀 값 */
-            position: relative; /* 위치 조정 */
-            gap: 40px; /* 자식 요소 간 간격 */
-        }
+    .form-group2 textarea::placeholder {
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 16px;
+        color: lightgray;
+    }
 
-
-        .form-grouptag {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 1200px;
-            height: 200px;
-            position: relative; /* 위치를 조정하기 위해 추가 */
-            gap: 40px;
-        }
-        .form-group input:focus {
-            outline: none;
-            border-bottom: 2px solid #A7C7E7;
-        }
-        .form-groupss1 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 1200px;
-            height: 200px;
-            position: relative; /* 위치를 조정하기 위해 추가 */
-            gap: 40px;
-        }
+    .form-group-container {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        height: 400px;
+    }
 
 
-        .form-group-container2 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 40px;
-        }
+    .form-group-container input {
+        width: 40%;
+        height: 40px;
+        border: none;
+        border-bottom: 0.5px solid #A7C7E7;
+        padding-left: 10px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 20px;
+        color: lightgray;
+    }
 
-        .file-input-container {
-            width: 10%;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            position: relative; /* 위치를 조정하기 위해 추가 */
-        }
-
-        .file-input-container :hover {
-            cursor: pointer;
-
-        }
-
-
-        .file-input-container input[type="file"] {
-            display: none;
-        }
-
-        .file-input-container label {
-            display: block;
-            color: white;
-            width: 120px;
-            height: 50px;
-            background-color: #A7C7E7;
-            border: none;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 0.5rem;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-family: 'Pretendard-Regular', sans-serif;
-        }
-
-        .file-input-container label:hover {
-            background-color: #8FAFD1;
-        }
+    .form-group-container select {
+        width: 40%;
+        height: 40px;
+        border: none;
+        border-bottom: 0.5px solid #A7C7E7;
+        padding-left: 10px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 16px;
+        color: lightgray;
+    }
 
 
-        .file-input-container label i {
-            font-size: 24px;
-            color: white;
-            margin-right: 10px;
-        }
+    .form-group-container input::placeholder {
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 15px;
+        color: lightgray;
+    }
+
+    .form-grouparea1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 800px; /* 고정된 픽셀 값 */
+        height: 200px; /* 고정된 픽셀 값 */
+        position: relative; /* 위치 조정 */
+        gap: 40px; /* 자식 요소 간 간격 */
+    }
 
 
-        button {
-            width: 200px;
-            height: 50px;
-            color: white;
-            background-color: #A7C7E7;
-            font-weight: 800;
-            font-size: 1.4rem;
-            font-family: 'Pretendard-Regular', sans-serif;
-            border: none;
-            border-radius: 0.5rem;
-        }
+    .form-grouptag {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        width: 1000px;
+        height: auto; /* 높이를 컨텐츠에 맞게 자동 조정 */
+        padding: 10px; /* 내부 여백 추가 */
+        background-color: #ffffff; /* 배경색 */
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 14px;
+        color: #A7C7E7; /* 텍스트 색상 */
+        gap: 50px;
+    }
 
-        button:hover {
-            background-color: #8FAFD1;
-            cursor: pointer;
-        }
+    .form-grouptag select {
+        width: 100%; /* 부모 요소에 맞게 크기 조정 */
+        height: 40px;
+        border: none;
+        background-color: #FFFFFF; /* 배경색을 부모 요소에 맞게 설정 */
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 14px;
+        border-bottom: 2px solid #A7C7E7;
+        color: lightgray;
+    }
+    input[type="number"],
+    input[type="datetime-local"] {
+        width: 100%; /* 부모 요소에 맞게 크기 조정 */
+        height: 40px;
+        border: none;
+        background-color: #FFFFFF; /* 배경색을 부모 요소에 맞게 설정 */
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 16px;
+        border-bottom: 2px solid #A7C7E7;
+        color: lightgray;
+    }
 
-        .form-group-container2 #roadAddress {
-            width: 30px;
-            height: 40px;
-            border: none;
-            border-bottom: 0.5px solid #A7C7E7;
-            padding-left: 10px;
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
-            color: lightgray;
-        }
+    /* 포커스 상태 */
+    input[type="number"]:focus,
+    input[type="datetime-local"]:focus {
+        outline: none;
+        border-color: #8FAFD1; /* 포커스 시 테두리 색상 변경 */
+        background-color: #ffffff; /* 포커스 시 배경색 변경 */
+    }
 
-        .form-group-map {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+    /* placeholder 스타일 */
+    input[type="number"]::placeholder,
+    input[type="datetime-local"]::placeholder {
+        font-family: 'Pretendard-Regular', sans-serif;
+        color: lightgray; /* placeholder 색상 */
+    }
 
-        #roadAddress {
-            width: 300px;
-            height: 40px;
-            border: none;
-            border-bottom: 0.5px solid #A7C7E7;
-            padding-left: 10px;
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 12px;
-            color: lightgray;
-        }
+    .form-group input:focus {
+        outline: none;
+        border-bottom: 2px solid #A7C7E7;
+    }
 
-        #roadAddress:focus {
-            outline: none;
-            border-bottom: 2px solid #A7C7E7;
-        }
+    .form-group-container2 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 40px;
+    }
 
-        #roadAddress::placeholder {
-            font-family: 'Pretendard-Regular', sans-serif;
-            font-size: 20px;
-            color: lightgray;
-        }
+    .file-input-container {
+        width: 10%;
+        height: 50px;
+        display: flex;
+        justify-content: center;
+        position: relative; /* 위치를 조정하기 위해 추가 */
+    }
 
+    .file-input-container :hover {
+        cursor: pointer;
 
-        #addressbutton {
-            width: 100px;
-            height: 50px;
-            color: white;
-            background-color: #A7C7E7;
-            font-weight: 800;
-            font-size: 1.3rem;
-            font-family: 'Pretendard-Regular', sans-serif;
-            border: none;
-            border-radius: 0.2rem;
-        }
+    }
 
 
-        #map {
-            width: 700px;
-            height: 400px;
-        }
+    .file-input-container input[type="file"] {
+        display: none;
+    }
 
-    </style>
+    .file-input-container label {
+        display: block;
+        color: white;
+        width: 120px;
+        height: 50px;
+        background-color: #A7C7E7;
+        border: none;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 0.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        font-family: 'Pretendard-Regular', sans-serif;
+    }
+
+    .file-input-container label:hover {
+        background-color: #8FAFD1;
+    }
+
+
+    .file-input-container label i {
+        font-size: 16px;
+        color: white;
+        margin-right: 10px;
+    }
+
+
+    button {
+        width: 160px;
+        height: 50px;
+        color: white;
+        background-color: #A7C7E7;
+        font-weight: 800;
+        font-size: 1.0rem;
+        font-family: 'Pretendard-Regular', sans-serif;
+        border: none;
+        border-radius: 0.5rem;
+    }
+
+    button:hover {
+        background-color: #8FAFD1;
+        cursor: pointer;
+    }
+
+    .form-group-container2 #roadAddress {
+        width: 30px;
+        height: 40px;
+        border: none;
+        border-bottom: 0.5px solid #A7C7E7;
+        padding-left: 10px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 8px;
+        color: lightgray;
+    }
+
+    .form-group-map {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #roadAddress {
+        width: 260px;
+        height: 40px;
+        border: none;
+        border-bottom: 0.5px solid #A7C7E7;
+        padding-left: 10px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 8px;
+        color: lightgray;
+        /*position: relative; !* 부모 요소 기준으로 이동 *!*/
+        /*left: 20px; !* 원하는 거리만큼 오른쪽으로 이동 *!*/
+    }
+
+    #roadAddress:focus {
+        outline: none;
+        border-bottom: 2px solid #A7C7E7;
+    }
+
+    #roadAddress::placeholder {
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 14px;
+        color: lightgray;
+    }
+
+    #addressbutton {
+        width: 100px;
+        height: 50px;
+        color: white;
+        background-color: #A7C7E7;
+        font-weight: 800;
+        font-size: 1.0em;
+        font-family: 'Pretendard-Regular', sans-serif;
+        border: none;
+        border-radius: 0.2rem;
+        position: relative; /* 부모 요소 기준으로 이동 */
+    }
+
+
+    #map {
+        width: 800px;
+        height: 400px;
+    }
+
+</style>
 <script src="/js/sweetalert2.min.js"></script>
 <!--    사진,사용자ID,조회수,상태 미구현-->
 
@@ -340,6 +375,37 @@
 
     <div class="form-group1">
         <input type="text" id="title" placeholder="제목" th:field="*{title}" required/>
+    </div>
+
+    <div class="form-grouptag">
+        <select id="tag" th:field="*{tag}">
+            <!-- 지역 옵션 -->
+            <option value="운동/스포츠">운동/스포츠</option>
+            <option value="음악/악기">음악/악기</option>
+            <option value="아웃도어/여행">아웃도어/여행</option>
+            <option value="게임/오락">게임/오락</option>
+            <option value="요리/제조">요리/제조</option>
+            <option value="외국어/언어">외국어/언어</option>
+            <option value="스포츠 관람">스포츠 관람</option>
+            <option value="인문학/철학">인문학/철학</option>
+            <option value="자기개발">자기개발</option>
+            <option value="독서">독서</option>
+        </select>
+        <!-- 새 글 작성일때 -->
+        <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
+               placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
+        <!-- 글 수정일때 -->
+        <input type="number" id="editPost" th:if="${post.postId != null}" th:min="${post.nowParticipants}"
+               placeholder="최대참가자 수를 입력해주세요"
+               th:field="*{maxParticipants}" th:value="${post.maxParticipants}" required/>
+        <input type="datetime-local" id="endDate"
+               th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
+               th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
+               th:name="endDate"
+               required/>
+        <div class="error-message" th:if="${#fields.hasErrors('maxParticipants')}"
+             th:errors="*{maxParticipants}">Error
+        </div>
     </div>
     <br>
     <div class="form-group2">
@@ -402,60 +468,24 @@
             }
         </script>
     </div>
+    <br>
     <div class="form-group-container">
         <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
         <div class="form-grouparea1">
             <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly/>
             <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
         </div>
+        <div class="form-group-container2">
+            <div class="file-input-container">
+                <input type="file" name="photo" id="photoUrl"/>
+                <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
 
-        <div class="form-grouptag">
-            <select id="tag" th:field="*{tag}">
-                <!-- 지역 옵션 -->
-                <option value="운동/스포츠">운동/스포츠</option>
-                <option value="음악/악기">음악/악기</option>
-                <option value="아웃도어/여행">아웃도어/여행</option>
-                <option value="게임/오락">게임/오락</option>
-                <option value="요리/제조">요리/제조</option>
-                <option value="외국어/언어">외국어/언어</option>
-                <option value="스포츠 관람">스포츠 관람</option>
-                <option value="인문학/철학">인문학/철학</option>
-                <option value="자기개발">자기개발</option>
-                <option value="독서">독서</option>
-            </select>
-                <input type="text" id="hashtag" placeholder="태그를 입력해주세요" >
-        </div>
-        <div class="form-groupss1">
-            <!--                새 글 작성일때-->
-            <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
-                   placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
-            <!--                나중에 글 수정할때-->
-            <input type="number" id="editPost" th:if="${post.postId != null}" th:min="${post.nowParticipants}"
-                   placeholder="최대참가자 수를 입력해주세요"
-                   th:field="*{maxParticipants}" th:value="${post.maxParticipants}" required/>
-            <input type="datetime-local" id="endDate"
-                   th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
-                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
-                   th:name="endDate"
-                   required/>
-            <div class="error-message" th:if="${#fields.hasErrors('maxParticipants')}"
-                 th:errors="*{maxParticipants}">Error
             </div>
+            <button type="button" id="createdButton">글 등록</button>
         </div>
-    </div>
-
-    <div class="form-group-container2">
-        <div class="file-input-container">
-            <input type="file" name="photo" id="photoUrl"/>
-            <label for="photoUrl"><i class="fas fa-upload"></i>파일업로드</label>
-
-        </div>
-        <button type="button" id="createdButton">글 등록</button>
     </div>
 </form>
-
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
         //글 작성하면
         document.addEventListener('click', function(event) {
@@ -483,14 +513,15 @@
         // 새 글 작성 검증
         const newPostInput = document.getElementById('newPost');
         if (newPostInput) {
-            newPostInput.addEventListener('input', function () {
-                const value = parseInt(this.value);
-                if (value < 2) {
-                    this.setCustomValidity('최대 참가자 수는 2명 이상이어야 합니다.');
-                } else {
-                    this.setCustomValidity('');
-                }
-            });
+            newPostInput.addEventListener('input',
+                function () {
+                    const value = parseInt(this.value);
+                    if (value < 2) {
+                        this.setCustomValidity('최대 참가자 수는 2명 이상이어야 합니다.');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
         }
 
         // 글 수정 검증
@@ -540,8 +571,9 @@
     });
 
 </script>
-<br><br>
+<br>
 <!-- 페이지 하단 푸터 삽입 (footer.html) -->
 <div th:replace="~{footer.html}" ></div>
 </body>
 </html>
+
