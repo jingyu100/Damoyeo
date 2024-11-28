@@ -12,6 +12,7 @@ import Team6.Damoyeo.chat.service.ChatService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -19,12 +20,16 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import Team6.Damoyeo.chat.Entity.ChatRoom;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Controller
 @RequiredArgsConstructor
 public class ChatController {
@@ -47,11 +52,11 @@ public class ChatController {
         // 사용자가 참여한 채팅방 목록 조회
         List<ChatRoomDto> chatRooms = chatService.getUserChatRooms(userId);
 
+
         // 사용자 정보와 채팅방 목록을 모델에 추가
         model.addAttribute("userId", userId);
         model.addAttribute("user", user);
         model.addAttribute("chatRooms", chatRooms);
-
         // 세션에 사용자 닉네임 저장
         HttpSession session = request.getSession();
         session.setAttribute("userNickName", userNickName);
@@ -141,10 +146,20 @@ public class ChatController {
         return chatMessageDto;
     }
 
+
     @MessageMapping("/chat.getParticipants/{roomId}")
     @SendTo("/topic/chat/{roomId}/participants")
     public List<ParticipantDto> getParticipants(@DestinationVariable("roomId") String roomId) {
         // 채팅방의 현재 참가자 목록을 조회하는 로직
         return chatService.getRoomParticipants(roomId);
+    }
+
+    @PostMapping("/chat/getOut/{roomId}")
+    public String getOut(@SessionAttribute(name = "userId", required = false) Integer userId,
+                         @PathVariable("roomId") Long roomId) {
+        log.info(String.valueOf(roomId));
+        chatService.getOutChatRoom(roomId, userId);
+        return "redirect:/chat";
+
     }
 }

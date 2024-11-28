@@ -10,4 +10,6 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom, Long> {
 
     Optional<ChatRoom> findByPost(Post post);
 
+    @Override
+    Optional<ChatRoom> findById(Long id);
 }
