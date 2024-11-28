@@ -162,4 +162,14 @@ public class PostRequestService {
             postRequestRepository.delete(pr);
         }
     }
+
+    //거절 메서드인데 일단은 삭제로 함
+    public void kicked(Integer prId) {
+        Optional<PostRequest> opr = postRequestRepository.findById(prId);
+        if (opr.isPresent()) {
+            PostRequest pr = opr.get();
+            pr.setStatus("6");
+            postRequestRepository.save(pr);
+        }
+    }
 }

@@ -569,13 +569,6 @@
                 <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
                 <!--                <button class="action-btn"><i class="fas fa-video"></i></button>-->
                 <!--                <button class="action-btn"><i class="fas fa-phone"></i></button>-->
-<!--                <form th:action="/chat/getOut" method="post">-->
-<!--                    <button type="submit" class="action-btn">-->
-<!--                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">-->
-<!--                            <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" fill="currentColor"/>-->
-<!--                        </svg>-->
-<!--                    </button>-->
-<!--                </form>-->
             </div>
         </div>
 
@@ -857,7 +850,6 @@
         modal.classList.remove('show');
     }
 
-    // 리스트 출력
     function updateParticipantsList(participants) {
         const participantsList = document.getElementById('participantsList');
         participantsList.innerHTML = '';
@@ -873,12 +865,40 @@
             <div class="participant-info">
                 <div class="participant-name">${participant.nickname}</div>
             </div>
-            <button class="kick-button">
-                <i class="fas fa-user"></i>
-                추방
-            </button>
+            <form action="/chat/kickUser/${participant.userId}" method="post">
+                <input type="hidden" name="roomId" value="${currentRoom}"/>
+                <button type="button" class="kick-button" onclick="kickUser(this.form, '${participant.nickname}');">
+                    <i class="fas fa-user"></i>
+                    추방
+                </button>
+            </form>
         `;
             participantsList.appendChild(li);
+        });
+    }
+
+    // 추방 처리를 위한 함수 추가
+    function kickUser(form, nickname) {
+        Swal.fire({
+            title: `${nickname}님을 추방하시겠습니까?`,
+            text: "추방된 사용자는 다시 채팅방에 참여할 수 없습니다.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#A7C7E7',
+            cancelButtonColor: '#d33',
+            confirmButtonText: '추방',
+            cancelButtonText: '취소'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire({
+                    title: '추방되었습니다',
+                    text: `${nickname}님이 채팅방에서 추방되었습니다.`,
+                    icon: 'success',
+                    confirmButtonColor: '#A7C7E7'
+                }).then(() => {
+                    form.submit();
+                });
+            }
         });
     }
 

@@ -87,6 +87,9 @@ public class ChatService {
     // 채팅방 나갈때
     @Transactional
     public void getOutChatRoom(Long id, Integer userId) {
+
+
+
         //1. id로 채팅방 찾고
         Optional<ChatRoom> oc = chatRoomRepository.findById(id);
         if (oc.isEmpty()) {
@@ -133,6 +136,55 @@ public class ChatService {
         postRequestRepository.delete(postRequest);
         chatParticipantRepository.delete(chatParticipant);
 
+    }
+    @Transactional
+    public void kickOutChatRoom(Long id, Integer userId) {
+        //1. id로 채팅방 찾고
+        Optional<ChatRoom> oc = chatRoomRepository.findById(id);
+        if (oc.isEmpty()) {
+            return;
+        }
+        ChatRoom chatRoom = oc.get();
+        // 채팅방에서 게시글 가져와서
+        Post post = chatRoom.getPost();
+        // 게시글 현재 인원 1 줄여주고 최대 인원보다 작아지면 게시글 상태를 1로 변경
+        post.setNowParticipants(post.getNowParticipants() - 1);
+        if (post.getNowParticipants() < post.getMaxParticipants()) {
+            post.setStatus("1");
+        }
+        postRepository.save(post);
+        // 유저 아이디로 유저 찾고
+        Optional<User> ou = userRepository.findById(userId);
+        if (ou.isEmpty()) {
+            return;
+        }
+        User user = ou.get();
+        // 찾은 채팅방 유저로 ChatParticipant 찾고
+        Optional<ChatParticipant> byChatRoomAndUser = chatParticipantRepository.findByChatRoomAndUser(chatRoom, user);
+        if (byChatRoomAndUser.isEmpty()) {
+            return;
+        }
+        ChatParticipant chatParticipant = byChatRoomAndUser.get();
+
+        // 찾은 채팅방 유저로 해당 유저가 보낸 요청 찾아서
+        Optional<PostRequest> byPostAndUser = postRequestRepository.findByPostAndUser(post, user);
+        if (byPostAndUser.isEmpty()) {
+            return;
+        }
+        PostRequest postRequest = byPostAndUser.get();
+        postRequest.setStatus("5");
+
+        // 캘린더에서도 삭제
+        Optional<CalendarEvent> byPostAndUser1 = calendarRepository.findByPostAndUser(post, user);
+        if (byPostAndUser1.isEmpty()) {
+            return;
+        }
+        CalendarEvent calendarEvent = byPostAndUser1.get();
+
+        // 셋다 db에서 삭제시킨다
+        calendarRepository.delete(calendarEvent);
+        postRequestRepository.save(postRequest);
+        chatParticipantRepository.delete(chatParticipant);
     }
 
 }

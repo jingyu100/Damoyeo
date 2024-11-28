@@ -260,9 +260,30 @@
     </div>
   </div>
 
+  <!--  모임게시글 주인이 강퇴 했을때-->
+  <div th:each="kickOutPostsWithRequest : ${kickOutPostsWithRequests}"
+       class="notification-card rejected-notification">
+    <a th:href="@{/post/detail{id}(id=${kickOutPostsWithRequest.post.postId})}" class="post-header" target="_blank">
+      <h3 class="post-title" th:text="${kickOutPostsWithRequest.post.title}">게시글 제목</h3>
+      <img class="post-image" th:src="@{|/uploads/${kickOutPostsWithRequest.post.photoUrl}|}" alt="게시글 이미지">
+    </a>
+    <p class="request-message" th:text="${kickOutPostsWithRequest.post.content}">게시글 내용</p>
+    <p class="user-info">게시글 작성자가 강퇴 하였습니다.</p>
+
+    <div th:each="request : ${kickOutPostsWithRequest.requests}">
+      <form th:id="rejectedForm + ${request.prId}"
+            th:action="@{'/post/requestKick/' + ${request.prId}}"
+            method="post"
+            onsubmit="return  kickedRejected(event)">
+        <button type="submit" class="confirm-button">확인</button>
+      </form>
+    </div>
+  </div>
+
   <!-- 빈 상태 표시 -->
   <div th:if="${postsWithRequests.isEmpty() and rejectedPostsWithRequests.isEmpty()
-  and deltedPostWithRequests.isEmpty() and outPostsWithRequests.isEmpty()}" class="empty-state">
+  and deltedPostWithRequests.isEmpty() and outPostsWithRequests.isEmpty()
+  and kickOutPostsWithRequests.isEmpty()}" class="empty-state">
     <p>새로운 알람이 없습니다.</p>
   </div>
 </div>
@@ -361,6 +382,34 @@
 
     return false;
   }
+
+  function kickedRejected(event) {
+    event.preventDefault();
+    const form = event.target;
+
+    fetch(form.action, {
+      method: 'POST',
+    })
+            .then(response => {
+              if (response.ok) {
+                Toast.fire({
+                  icon: 'success',
+                  title: '아쉽지만 다른 모임을 찾아보세요.'
+                }).then(() => {
+                  location.reload();
+                });
+              }
+            })
+            .catch(error => {
+              Toast.fire({
+                icon: 'error',
+                title: '처리 중 오류가 발생했습니다.'
+              });
+            });
+
+    return false;
+  }
+
 
 </script>
 </body>
