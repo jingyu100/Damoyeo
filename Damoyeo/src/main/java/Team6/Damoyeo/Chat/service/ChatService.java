@@ -1,7 +1,11 @@
 package Team6.Damoyeo.chat.service;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.Post.Entity.PostRequest;
+import Team6.Damoyeo.Post.Repository.PostRepository;
+import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
+import Team6.Damoyeo.User.Repository.UserRepository;
 import Team6.Damoyeo.chat.Entity.ChatParticipant;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
@@ -20,7 +24,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 @Service
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동 생성
 @Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션 설정
