@@ -6,15 +6,19 @@ import Team6.Damoyeo.Post.Repository.PostRepository;
 import Team6.Damoyeo.Post.Repository.PostRequestRepository;
 import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.User.Repository.UserRepository;
+import Team6.Damoyeo.chat.Entity.ChatRoom;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
-
+import Team6.Damoyeo.chat.repository.ChatRoomRepository;
 import java.util.List;
 import java.util.Optional;
 
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
+import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
+import Team6.Damoyeo.chat.Entity.ChatParticipant;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +29,8 @@ public class UserService {
     private final PostRepository postRepository;
     private final PostRequestRepository postRequestRepository;
     private final CalendarRepository calendarRepository;
-
+    private final ChatRoomRepository chatRoomRepository;
+    private final ChatParticipantRepository chatParticipantRepository;
     // 회원가입 처리
     public User registerUser(User user) {
 
@@ -123,6 +128,7 @@ public class UserService {
     }
 
     // 탈퇴
+    @Transactional
     public void deleteUser(Integer userId) {
         Optional<User> ou = userRepository.findById(userId);
         if (!ou.isEmpty()) {
@@ -146,7 +152,41 @@ public class UserService {
                     postRequestRepository.save(postRequest);
                 }
 
+            }
 
+            // 이제는 탈퇴한 유저가 참가한 채팅방에서 나가기..
+            // 모임 참가 요청이 1인거 찾기..
+            List<PostRequest> byUserAndStatus = postRequestRepository.findByUserAndStatus(user, "1");
+            for (PostRequest postRequest : byUserAndStatus) {
+                Optional<ChatRoom> byPost = chatRoomRepository.findByPost(postRequest.getPost());
+                if (byPost.isEmpty()){
+                    return;
+                }
+                ChatRoom chatRoom =  byPost.get();
+                // 게시글 현재 인원 1 줄여주고 최대 인원보다 작아지고 게시글 상태가 2인건 게시글 상태를 1로 변경
+                postRequest.getPost().setNowParticipants(postRequest.getPost().getNowParticipants() - 1);
+                if (postRequest.getPost().getNowParticipants() < postRequest.getPost().getMaxParticipants() &&  postRequest.getPost().getStatus().equals("2")) {
+                    postRequest.getPost().setStatus("1");
+                }
+                postRepository.save(postRequest.getPost());
+                //채팅 룸 찾기
+                Optional<ChatParticipant> byChatRoomAndUser = chatParticipantRepository.findByChatRoomAndUser(chatRoom, user);
+                if (byChatRoomAndUser.isEmpty()) {
+                    return;
+                }
+                ChatParticipant chatParticipant = byChatRoomAndUser.get();
+
+                // 캘린더에서도 삭제
+                Optional<CalendarEvent> byPostAndUser1 = calendarRepository.findByPostAndUser(postRequest.getPost(), user);
+                if (byPostAndUser1.isEmpty()) {
+                    return;
+                }
+                CalendarEvent calendarEvent = byPostAndUser1.get();
+
+                // 셋다 db에서 삭제시킨다
+                calendarRepository.delete(calendarEvent);
+                postRequestRepository.delete(postRequest);
+                chatParticipantRepository.delete(chatParticipant);
             }
         }
     }

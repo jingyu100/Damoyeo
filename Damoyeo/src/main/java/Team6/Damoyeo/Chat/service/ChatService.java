@@ -18,13 +18,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import Team6.Damoyeo.calendar.Entity.CalendarEvent;
+
 @Service
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동 생성
 @Transactional(readOnly = true) // 기본적으로 읽기 전용 트랜잭션 설정
@@ -41,6 +44,7 @@ public class ChatService {
     private final PostRequestRepository postRequestRepository;
 
     private final CalendarRepository calendarRepository;
+
     public List<ChatRoomDto> getUserChatRooms(Integer userId) {
 
         // 사용자의 모든 채팅방 참여 기록을 조회한 후
@@ -87,7 +91,6 @@ public class ChatService {
     // 채팅방 나갈때
     @Transactional
     public void getOutChatRoom(Long id, Integer userId) {
-
 
 
         //1. id로 채팅방 찾고
@@ -137,9 +140,10 @@ public class ChatService {
         chatParticipantRepository.delete(chatParticipant);
 
     }
+    // 강퇴
     @Transactional
-    public void kickOutChatRoom(Long id, Integer userId) {
-        //1. id로 채팅방 찾고
+    public void kickOutChatRoom(Integer postUserId, Long id, Integer userId) {
+        //1. userId로 채팅방 찾고
         Optional<ChatRoom> oc = chatRoomRepository.findById(id);
         if (oc.isEmpty()) {
             return;
@@ -147,9 +151,14 @@ public class ChatService {
         ChatRoom chatRoom = oc.get();
         // 채팅방에서 게시글 가져와서
         Post post = chatRoom.getPost();
-        // 게시글 현재 인원 1 줄여주고 최대 인원보다 작아지면 게시글 상태를 1로 변경
+        // 게시글 작성자가 아니면 강퇴 권환 없음
+        if (post.getUser().getUserId() != postUserId) {
+            return;
+        }
+
+        // 게시글 현재 인원 1 줄여주고 최대 인원보다 작아지고 게시글 상태가 2인거는 게시글 상태를 1로 변경
         post.setNowParticipants(post.getNowParticipants() - 1);
-        if (post.getNowParticipants() < post.getMaxParticipants()) {
+        if (post.getNowParticipants() < post.getMaxParticipants() && post.getStatus().equals("2")) {
             post.setStatus("1");
         }
         postRepository.save(post);
