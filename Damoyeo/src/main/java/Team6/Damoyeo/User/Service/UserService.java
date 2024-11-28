@@ -146,9 +146,5 @@ public class UserService {
         return passwordEncoder.matches(password,user.getPassword());
     }
 
-    // 개인정보 변경 메서드
-    public User updateMypageUser(User user) {
-        user.setPassword(user.getPassword());
-        return userRepository.save(user);
-    }
+
 }
