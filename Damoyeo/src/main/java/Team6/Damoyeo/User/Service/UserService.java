@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -145,5 +144,11 @@ public class UserService {
     // 비밀번호 확인 메서드
     public boolean checkPassword(User user,String password) {
         return passwordEncoder.matches(password,user.getPassword());
+    }
+
+    // 개인정보 변경 메서드
+    public User updateMypageUser(User user) {
+        user.setPassword(user.getPassword());
+        return userRepository.save(user);
     }
 }

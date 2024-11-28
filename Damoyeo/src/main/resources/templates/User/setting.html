@@ -5,8 +5,26 @@
     <title>Title</title>
 </head>
 <body>
-<p>비밀번호 맞췄나보넼ㅋㅋㅋㅋㅋㅋ</p>
-<a th:href="@{/#}">전화번호 변경</a>
-<a th:href="@{/#}">비밀번호 변경</a>
+<h1>개인정보 변경</h1>
+<div th:each="user : ${user}"></div>
+<div class="userId">아이디 : <span th:text="${user.email}"></span></div>
+<div class="userName">이름 : <span th:text="${user.name}"></span></div>
+<div class="userPhone">전화번호 : <span th:text="${user.phone}">전화번호</span></div>
+<div class="userGender">성별 : <span th:text="${user.gender}"></span></div>
+
+
+<form th:action="@{/user/change_user}" method="post">
+    <label for="check_password">현재 비밀번호 : </label>
+    <input type="password" id="check_password" name="check_password" required /><br />
+    <label for="new_password">새 비밀번호 : </label>
+    <input type="password" id="new_password" name="new_password" required /><br />
+    <label for="new_check_password">새 비밀번호 확인: </label>
+    <input type="password" id="new_check_password" name="new_check_password" required /><br />
+    <input type="submit" value="변경">
+</form>
+
+
+    <a th:href="@{/user/check_password}">뒤로</a>
+    <a th:if="${error}" th:text="${error }"></a>
 </body>
 </html>

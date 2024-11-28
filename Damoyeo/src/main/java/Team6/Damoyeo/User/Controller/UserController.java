@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,7 @@ public class UserController {
     private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
     private final HttpSession httpSession;
     private final PostService postService;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입 폼 페이지로 이동
     @GetMapping("/register")
@@ -272,12 +274,14 @@ public class UserController {
         model.addAttribute("userId", userId);
         return "user/mypage";
     }
-
+    
+    // 현재 비밀번호 확인 페이지 이동 메서드
     @GetMapping("/check_password")
     public String checkpassword() {
         return "user/check_password";
     }
-
+    
+    // 현재 비밀번호가 맞으면 설정 페이지로 이동
     @PostMapping("/setting")
     public String setting(@SessionAttribute(name = "userId", required = false) Integer userId,
                                 @RequestParam("password") String password,
@@ -297,9 +301,48 @@ public class UserController {
             return "user/check_password";
         }
     }
-
+    
+    //개인정보설정 페이지로 이동
     @GetMapping("/setting")
-    public String setting() {
+    public String setting(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
+
+        User user = userService.findByUser(userId);
+
+        model.addAttribute("user", user);
+
         return "user/setting";
     }
+
+    @PostMapping("/change_user")
+    public String updatePassword(@SessionAttribute(name = "userId", required = false) Integer userId,
+                                 Model model,
+                                 @RequestParam("check_password") String check_password,
+                                 @RequestParam("new_password") String new_password,
+                                 @RequestParam("new_check_password") String new_change_password,
+                                 @ModelAttribute User user) {
+
+        User myuser = userService.findByUser(userId);
+
+        if(!passwordEncoder.matches(check_password,myuser.getPassword())) {
+            model.addAttribute("error","현재 비밀번호가 일치 하지 않습니다");
+            return "user/setting";
+        }
+
+        if(check_password.equals(new_password)) {
+            model.addAttribute("error","현재 비밀번호와 새 비밀번호가 일치합니다");
+            return "user/setting";
+        }
+
+
+        if(new_password != null && !new_password.equals(new_change_password)) {
+            model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
+            return "user/setting";
+        }
+        
+        myuser.setPassword(passwordEncoder.encode(new_password));
+        userService.updateUser(myuser);
+
+        return "redirect:/user/check_password";
+    }
+
 }
