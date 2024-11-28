@@ -9,10 +9,13 @@ import Team6.Damoyeo.User.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import Team6.Damoyeo.calendar.repository.CalendarRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import Team6.Damoyeo.calendar.Entity.CalendarEvent;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +25,7 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final PostRepository postRepository;
     private final PostRequestRepository postRequestRepository;
+    private final CalendarRepository calendarRepository;
 
     // 회원가입 처리
     public User registerUser(User user) {
@@ -118,32 +122,38 @@ public class UserService {
         byId.ifPresent(existingUser -> userRepository.save(user));
 
     }
+
     // 탈퇴
     public void deleteUser(Integer userId) {
         Optional<User> ou = userRepository.findById(userId);
-        if(!ou.isEmpty()){
+        if (!ou.isEmpty()) {
             User user = ou.get();
             user.setStatus("0");
             userRepository.save(user);
-            
-            List<Post> postList = postRepository.findByUserAndStatusNot(user,"4");
+
+            List<Post> postList = postRepository.findByUserAndStatusNot(user, "4");
             //탈퇴 하면 유저가 적은글 상태 변화 시키게 만들기
             for (Post post : postList) {
                 // 탈퇴한 유저 게시글 상태
                 post.setStatus("0");
                 postRepository.save(post);
+                // 탈퇴하면 탈퇴한 유저의 게시글 모임신청한 유저들의 캘린더 등록된거 삭제
+                List<CalendarEvent> calendarEventList = calendarRepository.findByPost(post);
+                calendarRepository.deleteAll(calendarEventList);
                 //탈퇴한 유저 게시글 찾고 해당 게시글의 참가 요청들의 상태를 4로 변환
-                List<PostRequest> postRequests = postRequestRepository.findByPostAndStatusNot(post,"2");
+                List<PostRequest> postRequests = postRequestRepository.findByPostAndStatusNot(post, "2");
                 for (PostRequest postRequest : postRequests) {
                     postRequest.setStatus("4");
                     postRequestRepository.save(postRequest);
                 }
+
+
             }
         }
     }
 
     // 비밀번호 확인 메서드
-    public boolean checkPassword(User user,String password) {
-        return passwordEncoder.matches(password,user.getPassword());
+    public boolean checkPassword(User user, String password) {
+        return passwordEncoder.matches(password, user.getPassword());
     }
 }
