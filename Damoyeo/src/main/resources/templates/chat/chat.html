@@ -134,16 +134,28 @@
             align-items: center;
         }
 
+        .current-room-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .current-room-info h2 {
             margin: 0;
             font-size: 1.2rem;
             color: #1a1a1a;
         }
 
+
+        .room-title-container {
+            display: flex;
+            flex-direction: column;
+        }
+
         .room-status {
             font-size: 0.85rem;
             color: #2ecc71;
-            margin-left: 8px;
+            margin-top: 4px;
         }
 
         .header-actions {
@@ -323,6 +335,135 @@
             margin-left: 8px;
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eaedef;
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            margin: 0;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+        }
+
+        .participants-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eaedef;
+        }
+
+        .participant-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #e9ecef;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+
+        .participant-info {
+            flex: 1;
+        }
+
+        .participant-name {
+            font-weight: 500;
+            color: #1a1a1a;
+            margin-bottom: 4px;
+        }
+
+        .participant-status {
+            font-size: 0.85rem;
+            color: #2ecc71;
+        }
+
+        .participant-avatar {
+            display: block;
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .participant-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .participants-btn {
+            background-color: #f8f9fa;
+            border: 1px solid #eaedef;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            color: #495057;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            height: 36px;  /* 버튼 높이 고정 */
+        }
+
+        .participants-btn:hover {
+            background-color: #e9ecef;
+            color: #1a73e8;
+        }
+
+        .participants-btn i {
+            font-size: 1rem;
+        }
+
     </style>
 </head>
 <body>
@@ -369,13 +510,17 @@
             <!-- 선택한 채팅방 정보 표시 -->
             <div class="current-room-info">
                 <img id="photoZone" src="" alt="">
-                <h2 id="currentRoomName">일반 채팅방</h2>
-                <span class="room-status">활성화</span>
+                <div class="room-title-container">
+                    <h2 id="currentRoomName">일반 채팅방</h2>
+                    <span class="room-status">활성화</span>
+                </div>
+                <button class="participants-btn" onclick="openParticipantsModal()">
+                    <i class="fas fa-users"></i>
+                    참가자 보기
+                </button>
             </div>
             <!-- 헤더 액션 버튼 -->
             <div class="header-actions">
-                <!--                <button class="action-btn"><i class="fas fa-video"></i></button>-->
-                <!--                <button class="action-btn"><i class="fas fa-phone"></i></button>-->
                 <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
             </div>
         </div>
@@ -408,11 +553,24 @@
     </div>
 </div>
 
+<!--채팅방 참여자 모달-->
+<div id="participantModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title">채팅방 참가자</h3>
+            <button class="close-button" onclick="closeParticipantsModal()">&times;</button>
+        </div>
+        <!-- 참가자 목록 -->
+        <ul id="participantsList" class="participants-list"></ul>
+    </div>
+</div>
+
 <script type="text/javascript" th:inline="javascript">
     let stompClient = null;
     let currentRoom = null;
     let username = null;
     let subscriptions = new Map(); // 현재 구독 중인 채팅방 저장
+    let currentParticipants = new Set();
 
     // 서버 연결 설정
     function connect() {
@@ -447,14 +605,42 @@
     }
 
     // 특정 채팅방 구독
+    // function subscribeToRoom(roomId) {
+    //     if (!subscriptions.has(roomId)) {
+    //         const subscription = stompClient.subscribe('/topic/chat/' + roomId, function (message) {
+    //             const receivedMessage = JSON.parse(message.body);
+    //             console.log('Received message in room', roomId, ':', receivedMessage);
+    //             showMessage(receivedMessage, roomId);
+    //         });
+    //         subscriptions.set(roomId, subscription);
+    //         console.log(`Subscribed to room ${roomId}`);
+    //     }
+    // }
+
+    // 기존 subscribeToRoom 함수에 참가자 목록 구독 추가
     function subscribeToRoom(roomId) {
         if (!subscriptions.has(roomId)) {
-            const subscription = stompClient.subscribe('/topic/chat/' + roomId, function (message) {
+            // 기존 메시지 구독
+            const chatSubscription = stompClient.subscribe('/topic/chat/' + roomId, function (message) {
                 const receivedMessage = JSON.parse(message.body);
                 console.log('Received message in room', roomId, ':', receivedMessage);
                 showMessage(receivedMessage, roomId);
             });
-            subscriptions.set(roomId, subscription);
+
+            // 참가자 목록 업데이트 구독
+            const participantsSubscription = stompClient.subscribe('/topic/chat/' + roomId + '/participants', function (message) {
+                const participants = JSON.parse(message.body);
+                console.log('Received participants update:', participants);
+                currentParticipants = new Set(participants);
+                if (document.getElementById('participantModal').classList.contains('show')) {
+                    updateParticipantsList(participants);
+                }
+            });
+
+            subscriptions.set(roomId, {
+                chat: chatSubscription,
+                participants: participantsSubscription
+            });
             console.log(`Subscribed to room ${roomId}`);
         }
     }
@@ -511,6 +697,7 @@
         console.log(`Joined room ${roomId}`);
     }
 
+    // 채팅방 나가기
     function leaveRoom(roomId) {
         if (!stompClient || !roomId) return;
 
@@ -525,47 +712,7 @@
         console.log(`Left room ${roomId}`);
     }
 
-    // function showMessage(message, roomId) {
-    //     if (roomId !== currentRoom) return;
-    //
-    //     const messageArea = document.getElementById('messageArea');
-    //
-    //     // JOIN 타입이고 채팅 히스토리가 있는 경우, 먼저 히스토리를 표시
-    //     if (message.type === 'JOIN' && message.chatHistory) {
-    //         // 기존 메시지 초기화
-    //         messageArea.innerHTML = '';
-    //
-    //         // 채팅 히스토리 표시
-    //         message.chatHistory.forEach(hist => {
-    //             const historyElement = document.createElement('li');
-    //             historyElement.className = hist.sender === username ? 'my-message' : 'other-message';
-    //             historyElement.innerHTML = `${hist.sender === username ? '' : `<strong>${hist.sender}</strong><br>`}${hist.content}`;
-    //             messageArea.appendChild(historyElement);
-    //         });
-    //     }
-    //
-    //     // 현재 메시지 표시
-    //     const messageElement = document.createElement('li');
-    //
-    //     switch (message.type) {
-    //         case 'JOIN':
-    //             messageElement.className = 'event-message';
-    //             messageElement.textContent = `${message.sender}님이 입장하셨습니다.`;
-    //             break;
-    //         case 'LEAVE':
-    //             messageElement.className = 'event-message';
-    //             messageElement.textContent = `${message.sender}님이 퇴장하셨습니다.`;
-    //             break;
-    //         case 'CHAT':
-    //             messageElement.className = message.sender === username ? 'my-message' : 'other-message';
-    //             messageElement.innerHTML = `${message.sender === username ? '' : `<strong>${message.sender}</strong><br>`}${message.content}`;
-    //             break;
-    //     }
-    //
-    //     messageArea.appendChild(messageElement);
-    //     messageArea.scrollTop = messageArea.scrollHeight;
-    // }
-
+    // 메세지 보이기
     function showMessage(message, roomId) {
         if (roomId !== currentRoom) return;
 
@@ -632,6 +779,56 @@
 
             stompClient.send("/app/chat.sendMessage/" + currentRoom, {}, JSON.stringify(chatMessageDto));
             messageInput.value = ''; // 입력 필드 초기화
+        }
+    }
+
+    // 참여자 리스트 띄우기
+    function openParticipantsModal() {
+        const modal = document.getElementById('participantModal');
+        modal.classList.add('show');
+
+        // 현재 채팅방의 참가자 목록 요청
+        if (currentRoom) {
+            stompClient.send("/app/chat.getParticipants/" + currentRoom, {}, JSON.stringify({
+                sender: username,
+                roomId: currentRoom
+            }));
+        }
+    }
+
+    // 닫기
+    function closeParticipantsModal() {
+        const modal = document.getElementById('participantModal');
+        modal.classList.remove('show');
+    }
+
+    // 리스트 최신화
+    function updateParticipantsList(participants) {
+        const participantsList = document.getElementById('participantsList');
+        participantsList.innerHTML = '';
+
+        participants.forEach(participant => {
+            const li = document.createElement('li');
+            li.className = 'participant-item';
+            li.innerHTML = `
+            <a href="/user/userprofile${participant.userId}" class="participant-avatar">
+                <img src="/uploads/${participant.photoUrl}" alt="${participant.nickname}"
+                     style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+            </a>
+            <div class="participant-info">
+                <div class="participant-name">${participant.nickname}</div>
+<!--                <div class="participant-status">온라인</div>-->
+            </div>
+        `;
+            participantsList.appendChild(li);
+        });
+    }
+
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function (event) {
+        const modal = document.getElementById('participantModal');
+        if (event.target === modal) {
+            closeParticipantsModal();
         }
     }
 

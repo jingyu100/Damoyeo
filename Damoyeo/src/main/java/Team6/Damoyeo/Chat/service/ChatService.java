@@ -1,9 +1,11 @@
 package Team6.Damoyeo.chat.service;
 
 import Team6.Damoyeo.Post.Entity.Post;
+import Team6.Damoyeo.User.Entity.User;
 import Team6.Damoyeo.chat.Entity.ChatParticipant;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 import Team6.Damoyeo.chat.dto.ChatRoomDto;
+import Team6.Damoyeo.chat.dto.ParticipantDto;
 import Team6.Damoyeo.chat.repository.ChatMessageRepository;
 import Team6.Damoyeo.chat.repository.ChatParticipantRepository;
 import Team6.Damoyeo.chat.repository.ChatRoomRepository;
@@ -12,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -49,6 +54,21 @@ public class ChatService {
                 .user(post.getUser()) // Post의 작성자
                 .build();
         chatParticipantRepository.save(participant);
+    }
+
+    // 채팅방의 모든 참가자 목록 조회
+    public List<ParticipantDto> getRoomParticipants(String roomId) {
+        return chatParticipantRepository.findByChatRoom_Id(Long.valueOf(roomId))
+                .stream()
+                .map(participant -> {
+                    User user = participant.getUser();
+                    return ParticipantDto.builder()
+                            .userId(user.getUserId())
+                            .nickname(user.getNickname())
+                            .photoUrl(user.getPhotoUrl())
+                            .build();
+                })
+                .collect(Collectors.toList());
     }
 
 }
