@@ -169,9 +169,8 @@ public class ChatController {
         if (userId == null) {
             return "redirect:/user/login";
         }
-
-        // 강퇴 처리 - 기존 서비스 메소드 사용
-        chatService.kickOutChatRoom(roomId, kickUserId);
+        
+        chatService.kickOutChatRoom(userId, roomId, kickUserId);
         return "redirect:/chat";
     }
 
