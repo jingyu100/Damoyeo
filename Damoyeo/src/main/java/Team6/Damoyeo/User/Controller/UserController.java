@@ -339,10 +339,19 @@ public class UserController {
             return "user/setting";
         }
 
+        if (!isValidPassword(new_password)) {
+            model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
+            return "user/setting";
+        }
+
         myuser.setPassword(passwordEncoder.encode(new_password));
         userService.updateUser(myuser);
 
         return "redirect:/user/check_password";
     }
 
+    public boolean isValidPassword(String password) {
+        String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&^])[A-Za-z\\d@$!%*?&^]{8,}$";
+        return password != null && password.matches(passwordPattern);
+    }
 }

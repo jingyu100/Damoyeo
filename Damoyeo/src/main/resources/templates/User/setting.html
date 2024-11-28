@@ -3,28 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script>
+        // 비밀번호 정규식
+
+        function checkPass() {
+            const password = document.getElementById("new_password");
+            const passwordMessage = document.getElementById("passwordMessage");
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&^])[A-Za-z\d@$!%*?&^]{8,}$/;
+
+            if (!passwordPattern.test(password.value)) {
+                passwordMessage.innerHTML = "비밀번호는 영문,숫자,특수문자 포함 8자 이상이어야 합니다";
+                passwordMessage.style.color = "red";
+            } else {
+                passwordMessage.innerHTML = "사용 가능한 비밀번호 입니다";
+                passwordMessage.style.color = "green";
+            }
+            updateSubmitButton();
+        }
+
+        function checkPassword() {
+            const password = document.getElementById("new_password");
+            const confirmPassword = document.getElementById("new_check_password");
+            const passwordMessageNotice = document.getElementById("passwordMessageNotice");
+
+            if (password.value !== confirmPassword.value) {
+                passwordMessageNotice.innerHTML = "비밀번호가 일치하지 않습니다";
+                passwordMessageNotice.style.color = "red";
+            } else {
+                passwordMessageNotice.innerHTML = "비밀번호가 일치합니다";
+                passwordMessageNotice.style.color = "green";
+            }
+            updateSubmitButton();
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 400px;
+            background: #fff;
+            padding: 25px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-spacing: 0 10px;
+            margin-bottom: 20px;
+        }
+
+        table td {
+            text-align: left;
+            padding: 10px;
+            font-size: 14px;
+        }
+
+        table td:first-child {
+            font-weight: bold;
+            color: #555;
+            width: 35%;
+        }
+
+        input[type="password"],
+        input[type="text"] {
+            width: calc(100% - 10px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 5px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="password"]:focus,
+        input[type="text"]:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-group p {
+            font-size: 12px;
+            margin: 5px 0 10px;
+            color: #999;
+        }
+
+        .btn-group {
+            margin-top: 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 25px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+            transform: scale(1.03);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .message {
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .message.error {
+            color: red;
+        }
+
+        .message.success {
+            color: green;
+        }
+    </style>
 </head>
 <body>
-<h1>개인정보 변경</h1>
-<div th:each="user : ${user}"></div>
-<div class="userId">아이디 : <span th:text="${user.email}"></span></div>
-<div class="userName">이름 : <span th:text="${user.name}"></span></div>
-<div class="userPhone">전화번호 : <span th:text="${user.phone}">전화번호</span></div>
-<div class="userGender">성별 : <span th:text="${user.gender}"></span></div>
+<div class="container">
+    <h1>개인정보 변경</h1>
+    <table>
+        <tr>
+            <td>아이디</td>
+            <td><span th:text="${user.email}"></span></td>
+        </tr>
+        <tr>
+            <td>이름</td>
+            <td><span th:text="${user.name}"></span></td>
+        </tr>
+        <tr>
+            <td>전화번호</td>
+            <td><span th:text="${user.phone}">전화번호</span></td>
+        </tr>
+        <tr>
+            <td>성별</td>
+            <td><span th:text="${user.gender}"></span></td>
+        </tr>
+    </table>
 
+    <form method="post" th:action="@{/user/change_user}">
+        <table>
+            <tr>
+                <td><label for="check_password">현재 비밀번호 : </label></td>
+                <td><input id="check_password" name="check_password" placeholder="현재 비밀번호를 입력해주세요" required
+                           type="password"/></td>
+            </tr>
+            <tr>
+                <td><label for="new_password">새 비밀번호 : </label></td>
+                <td><input id="new_password" name="new_password" oninput="checkPass()" placeholder="영문,숫자,특수문자 포함 8자 이상"
+                           required type="password"/>
+                    <p id="passwordMessage" class="message"></p></td>
+            </tr>
+            <tr>
+                <td><label for="new_check_password">새 비밀번호 확인: </label></td>
+                <td><input id="new_check_password" name="new_check_password" oninput="checkPassword()"
+                           placeholder="새 비밀번호를 다시 입력해주세요" required type="password"/>
+                    <p id="passwordMessageNotice" class="message" ></p></td>
+            </tr>
 
-<form th:action="@{/user/change_user}" method="post">
-    <label for="check_password">현재 비밀번호 : </label>
-    <input type="password" id="check_password" name="check_password" required /><br />
-    <label for="new_password">새 비밀번호 : </label>
-    <input type="password" id="new_password" name="new_password" required /><br />
-    <label for="new_check_password">새 비밀번호 확인: </label>
-    <input type="password" id="new_check_password" name="new_check_password" required /><br />
-    <input type="submit" value="변경">
-</form>
-
-
-    <a th:href="@{/user/check_password}">뒤로</a>
-    <a th:if="${error}" th:text="${error }"></a>
+        </table>
+    </form>
+    <div class="btn-group">
+        <button type="submit" class="btn">변경</button>
+        <a th:href="@{/user/check_password}" class="btn btn-secondary">뒤로</a>
+    </div>
+</div>
 </body>
 </html>

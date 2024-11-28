@@ -251,6 +251,37 @@
                     updateSubmitButton();
                 });
         }
+
+        // 비밀번호 정규식
+        function checkPass() {
+            const password= document.getElementById("password");
+            const passwordMessage = document.getElementById("passwordMessage");
+            const passwordPattern =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&^])[A-Za-z\d@$!%*?&^]{8,}$/;
+
+            if (!passwordPattern.test(password.value)) {
+                passwordMessage.innerHTML = "비밀번호는 영문,숫자,특수문자 포함 8자 이상이어야 합니다";
+                passwordMessage.style.color = "red";
+            } else {
+                passwordMessage.innerHTML = "사용 가능한 비밀번호 입니다";
+                passwordMessage.style.color = "green";
+            }
+            updateSubmitButton();
+        }
+
+        function checkPassword() {
+            const password = document.getElementById("password");
+            const confirmPassword = document.getElementById("confirmPassword");
+            const passwordMessageNotice = document.getElementById("passwordMessageNotice");
+
+            if(password.value !== confirmPassword.value) {
+                passwordMessageNotice.innerHTML = "비밀번호가 일치하지 않습니다";
+                passwordMessageNotice.style.color = "red";
+            }else {
+                passwordMessageNotice.innerHTML = "비밀번호가 일치합니다";
+                passwordMessageNotice.style.color = "green";
+            }
+            updateSubmitButton();
+        }
     </script>
 </head>
 <body>
@@ -287,7 +318,16 @@
             <td>비밀번호</td>
         </tr>
         <tr>
-            <td><input type="password" class="text" th:field="*{password}" placeholder="영문,숫자,특수문자 포함 8자 이상"></td>
+            <td><input type="password" id="password" class="text" th:field="*{password}" placeholder="영문,숫자,특수문자 포함 8자 이상" oninput="checkPass()">
+                <p id="passwordMessage" style="font-size: 0.9rem; margin-top: 5px;"></p></td>
+        </tr>
+
+        <tr>
+            <td>비밀번호 확인</td>
+        </tr>
+        <tr>
+            <td><input type="password" id="confirmPassword" class="text" placeholder="비밀번호를 한번 더 입력해주세요" oninput="checkPassword()">
+                <p id="passwordMessageNotice" style="font-size: 0.9rem; margin-top: 5px;"></p></td>
         </tr>
 
         <tr>
