@@ -554,6 +554,10 @@
                     <th:block th:if="${postRequest.status == '2'}">
                         <p class="chat_mainpage">거절 당했습니다.</p>
                     </th:block>
+                    <!-- status가 6(강퇴)일 때는 참여버튼을 누를 수 없음 버튼 -->
+                    <th:block th:if="${postRequest.status == '6'}">
+                        <p class="chat_mainpage">강퇴 당한 모임 입니다.</p>
+                    </th:block>
                 </th:block>
                 <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
                 <th:block th:if="${userId != post.user.getUserId()}">

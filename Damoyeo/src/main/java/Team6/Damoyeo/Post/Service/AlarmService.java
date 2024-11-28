@@ -79,6 +79,18 @@ public class AlarmService {
         List<PostRequest> rejectedRequests = postRequestRepository.findByUserAndStatus(user, "4");
         return getPostWithRequests(rejectedRequests);
     }
+
+    // 유저가 모임 강퇴당한 상황
+    public List<PostWithRequest> kickOutPostsWithRequests(Integer userId) {
+        Optional<User> ou = userRepository.findById(userId);
+        if (ou.isEmpty()) {
+            return null;
+        }
+        User user = ou.get();
+        // 요청 상태가 5인 거를 찾음 ( 유저가 탈퇴한 상태)
+        List<PostRequest> rejectedRequests = postRequestRepository.findByUserAndStatus(user, "5");
+        return getPostWithRequests(rejectedRequests);
+    }
     
     // 중복이라 메서드 추출했음
     private List<PostWithRequest> getPostWithRequests(List<PostRequest> rejectedRequests) {

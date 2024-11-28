@@ -19,10 +19,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 
 import java.util.ArrayList;
@@ -154,12 +151,28 @@ public class ChatController {
         return chatService.getRoomParticipants(roomId);
     }
 
+    // 나가기
     @PostMapping("/chat/getOut/{roomId}")
     public String getOut(@SessionAttribute(name = "userId", required = false) Integer userId,
                          @PathVariable("roomId") Long roomId) {
-        log.info(String.valueOf(roomId));
         chatService.getOutChatRoom(roomId, userId);
         return "redirect:/chat";
 
     }
+
+    // 강퇴
+    @PostMapping("/chat/kickUser/{kickUserId}")
+    public String kickUser(@SessionAttribute(name = "userId", required = false) Integer userId,
+                           @PathVariable("kickUserId") Integer kickUserId,
+                           @RequestParam("roomId") Long roomId) {
+
+        if (userId == null) {
+            return "redirect:/user/login";
+        }
+
+        // 강퇴 처리 - 기존 서비스 메소드 사용
+        chatService.kickOutChatRoom(roomId, kickUserId);
+        return "redirect:/chat";
+    }
+
 }

@@ -354,11 +354,14 @@ public class PostController {
         List<PostWithRequest> deltedPostWithRequests = alarmService.deltedPostsWithRequests(userId);
         // 4. 모임 게시글이 작성자가 탈퇴한거
         List<PostWithRequest> outPostsWithRequests = alarmService.userOutPostsWithRequests(userId);
+        // 5. 강퇴 당한거
+        List<PostWithRequest> kickOutPostsWithRequests = alarmService.kickOutPostsWithRequests(userId);
 
         model.addAttribute("postsWithRequests", postsWithRequests);
         model.addAttribute("rejectedPostsWithRequests", rejectedPostsWithRequests);
         model.addAttribute("deltedPostWithRequests", deltedPostWithRequests);
         model.addAttribute("outPostsWithRequests", outPostsWithRequests);
+        model.addAttribute("kickOutPostsWithRequests", kickOutPostsWithRequests);
         return "/post/alarm";
     }
 
@@ -381,6 +384,14 @@ public class PostController {
     public String requestRejected(@PathVariable("id") Integer prId) {
         // 일단은 삭제임
         postRequestService.rejected(prId);
+        return "redirect:/post/alarm";
+    }
+
+    //모임 강퇴 당했을때
+    @PostMapping("/requestKick/{id}")
+    public String requestKick(@PathVariable("id") Integer prId) {
+        // 일단은 삭제임
+        postRequestService.kicked(prId);
         return "redirect:/post/alarm";
     }
 
