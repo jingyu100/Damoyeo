@@ -133,8 +133,7 @@ public class UserService {
         Optional<User> ou = userRepository.findById(userId);
         if (!ou.isEmpty()) {
             User user = ou.get();
-            user.setStatus("0");
-            userRepository.save(user);
+
 
             List<Post> postList = postRepository.findByUserAndStatusNot(user, "4");
             //탈퇴 하면 유저가 적은글 상태 변화 시키게 만들기
@@ -160,7 +159,7 @@ public class UserService {
             for (PostRequest postRequest : byUserAndStatus) {
                 Optional<ChatRoom> byPost = chatRoomRepository.findByPost(postRequest.getPost());
                 if (byPost.isEmpty()){
-                    return;
+                    continue;
                 }
                 ChatRoom chatRoom =  byPost.get();
                 // 게시글 현재 인원 1 줄여주고 최대 인원보다 작아지고 게시글 상태가 2인건 게시글 상태를 1로 변경
@@ -172,14 +171,14 @@ public class UserService {
                 //채팅 룸 찾기
                 Optional<ChatParticipant> byChatRoomAndUser = chatParticipantRepository.findByChatRoomAndUser(chatRoom, user);
                 if (byChatRoomAndUser.isEmpty()) {
-                    return;
+                    continue;
                 }
                 ChatParticipant chatParticipant = byChatRoomAndUser.get();
 
                 // 캘린더에서도 삭제
                 Optional<CalendarEvent> byPostAndUser1 = calendarRepository.findByPostAndUser(postRequest.getPost(), user);
                 if (byPostAndUser1.isEmpty()) {
-                    return;
+                    continue;
                 }
                 CalendarEvent calendarEvent = byPostAndUser1.get();
 
@@ -188,6 +187,9 @@ public class UserService {
                 postRequestRepository.delete(postRequest);
                 chatParticipantRepository.delete(chatParticipant);
             }
+
+            user.setStatus("0");
+            userRepository.save(user);
         }
     }
 
