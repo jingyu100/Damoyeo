@@ -186,6 +186,7 @@
 /*footer css*/
 footer {
     display: flex;
+    width: 100%;
     justify-content: center;
     background-color: #f8f8f8;
     padding: 20px;
@@ -200,7 +201,7 @@ footer {
 }
 
 .footer-container {
-    width: 50%;
+    width: 100%;
 }
 
 .footer-box1 {
