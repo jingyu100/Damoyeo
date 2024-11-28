@@ -55,13 +55,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            border-bottom: 0.5px solid lightgrey;
-            width: 40%; /* 선 길이를 화면의 80%로 설정 */
-            margin: 0 auto; /* 가운데 정렬 */
+            width: 63%; /* 박스 너비 */
+            margin: 0 auto; /* 수평 가운데 정렬 */
+            position: relative; /* 상대 위치 지정 */
         }
 
         .form-group1 input {
-            width: 80%;
+            width: 100%;
             height: 3rem;
             background-color: #f5f6f8;
             border: none;
@@ -70,6 +70,8 @@
             border-radius: 0.5rem;
             padding-left: 15px;
             font-family: 'Pretendard-Regular', sans-serif;
+            text-align: left;
+
         }
 
 
@@ -89,11 +91,14 @@
             display: flex;
             justify-content: flex-start; /* 자식 요소를 왼쪽 정렬 */
             align-items: flex-start; /* 텍스트박스 상단 정렬 */
-            border-bottom: 0.5px solid lightgrey;
-            width: 40%; /* 선의 길이를 60%로 설정 */
-            margin: 0 auto; /* 부모 컨테이너는 가운데 정렬 */
-            padding-left: 30px; /* 부모 자체에 왼쪽 여백 추가 */
+            border: 0.5px solid lightgrey; /* 사방에 선 추가 */
+            width: 63%; /* 박스의 너비 고정 */
+            left: -15px;
+            padding: 15px; /* 내부 여백 추가 */
+            box-sizing: border-box; /* 패딩과 선을 포함한 크기 계산 */
         }
+
+
 
         .form-group2 textarea {
             width: 100%; /* 부모 컨테이너 크기를 따름 */
@@ -125,7 +130,7 @@
             justify-content: center;
             flex-direction: column;
             align-items: center;
-            height: 600px;
+            height: 400px;
         }
 
 
@@ -158,14 +163,25 @@
             color: lightgray;
         }
 
-        .form-group {
+        .form-grouparea1 {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
+            width: 70%;
             height: 100%;
+            position: relative; /* 위치를 조정하기 위해 추가 */
+            gap: 40px;
         }
 
+        .form-grouptag {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 70%;
+            height: 100%;
+            position: relative; /* 위치를 조정하기 위해 추가 */
+            gap: 40px;
+        }
         .form-group input:focus {
             outline: none;
             border-bottom: 2px solid #A7C7E7;
@@ -174,17 +190,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 40%;
+            width: 60%;
             height: 100%;
+            position: relative; /* 위치를 조정하기 위해 추가 */
+            gap: 40px;
         }
 
-        .form-groupss2 {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            height: 100%;
-        }
+
         .form-group-container2 {
             display: flex;
             justify-content: center;
@@ -197,6 +209,7 @@
             height: 50px;
             display: flex;
             justify-content: center;
+            position: relative; /* 위치를 조정하기 위해 추가 */
         }
 
         .file-input-container :hover {
@@ -266,11 +279,10 @@
             color: lightgray;
         }
 
-        .form-group-container1 {
+        .form-group-map {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
         }
 
         #roadAddress {
@@ -297,12 +309,12 @@
 
 
         #addressbutton {
-            width: 70px;
-            height: 30px;
+            width: 100px;
+            height: 50px;
             color: white;
             background-color: #A7C7E7;
             font-weight: 800;
-            font-size: 0.7rem;
+            font-size: 1.3rem;
             font-family: 'Pretendard-Regular', sans-serif;
             border: none;
             border-radius: 0.2rem;
@@ -328,63 +340,12 @@
     <div class="form-group1">
         <input type="text" id="title" placeholder="제목" th:field="*{title}" required/>
     </div>
-
+    <br>
     <div class="form-group2">
         <textarea id="content" placeholder="내용을 입력하세요" th:field="*{content}" rows="5" required></textarea>
     </div>
-
-
-    <div class="form-group-container">
-
-        <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
-        <div class="form-group">
-            <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly/>
-        </div>
-
-        <div class="form-group">
-            <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
-        </div>
-
-        <div class="form-group">
-            <select id="tag" th:field="*{tag}">
-                <!-- 지역 옵션 -->
-                <option value="운동/스포츠">운동/스포츠</option>
-                <option value="음악/악기">음악/악기</option>
-                <option value="아웃도어/여행">아웃도어/여행</option>
-                <option value="게임/오락">게임/오락</option>
-                <option value="요리/제조">요리/제조</option>
-                <option value="외국어/언어">외국어/언어</option>
-                <option value="스포츠 관람">스포츠 관람</option>
-                <option value="인문학/철학">인문학/철학</option>
-                <option value="자기개발">자기개발</option>
-                <option value="독서">독서</option>
-                <!-- 다른 지역들 추가 -->
-            </select>
-        </div>
-
-
-        <div class="form-groupss1">
-            <!--                새 글 작성일때-->
-            <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
-                   placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
-            <!--                나중에 글 수정할때-->
-            <input type="number" id="editPost" th:if="${post.postId != null}" th:min="${post.nowParticipants}"
-                   placeholder="최대참가자 수를 입력해주세요"
-                   th:field="*{maxParticipants}" th:value="${post.maxParticipants}" required/>
-            <div class="error-message" th:if="${#fields.hasErrors('maxParticipants')}"
-                 th:errors="*{maxParticipants}">Error
-            </div>
-        </div>
-
-        <div class="form-groupss2">
-            <input type="datetime-local" id="endDate"
-                   th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
-                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
-                   th:name="endDate"
-                   required/>
-        </div>
-    </div>
-    <div class="form-group-container1">
+    <br>
+    <div class="form-group-map">
         <input style="display: none" type="text" id="roadAddress" readonly placeholder="주소 검색">
         <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
         <div id="map" style="display: none;"></div>
@@ -440,7 +401,48 @@
             }
         </script>
     </div>
-    <br><br>
+    <div class="form-group-container">
+        <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
+        <div class="form-grouparea1">
+            <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly/>
+            <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
+        </div>
+
+        <div class="form-grouptag">
+            <select id="tag" th:field="*{tag}">
+                <!-- 지역 옵션 -->
+                <option value="운동/스포츠">운동/스포츠</option>
+                <option value="음악/악기">음악/악기</option>
+                <option value="아웃도어/여행">아웃도어/여행</option>
+                <option value="게임/오락">게임/오락</option>
+                <option value="요리/제조">요리/제조</option>
+                <option value="외국어/언어">외국어/언어</option>
+                <option value="스포츠 관람">스포츠 관람</option>
+                <option value="인문학/철학">인문학/철학</option>
+                <option value="자기개발">자기개발</option>
+                <option value="독서">독서</option>
+            </select>
+                <input type="text" id="hashtag" placeholder="태그를 입력해주세요" >
+        </div>
+        <div class="form-groupss1">
+            <!--                새 글 작성일때-->
+            <input type="number" id="newPost" th:if="${post.postId == null}" th:min="2"
+                   placeholder="최대참가자 수를 입력해주세요" th:field="*{maxParticipants}" required/>
+            <!--                나중에 글 수정할때-->
+            <input type="number" id="editPost" th:if="${post.postId != null}" th:min="${post.nowParticipants}"
+                   placeholder="최대참가자 수를 입력해주세요"
+                   th:field="*{maxParticipants}" th:value="${post.maxParticipants}" required/>
+            <input type="datetime-local" id="endDate"
+                   th:value="${post.endDate != null ? #temporals.format(post.endDate, 'yyyy-MM-dd''T''HH:mm') : ''}"
+                   th:min="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd''T''HH:mm')}"
+                   th:name="endDate"
+                   required/>
+            <div class="error-message" th:if="${#fields.hasErrors('maxParticipants')}"
+                 th:errors="*{maxParticipants}">Error
+            </div>
+        </div>
+    </div>
+
     <div class="form-group-container2">
         <div class="file-input-container">
             <input type="file" name="photo" id="photoUrl"/>
@@ -538,7 +540,6 @@
 
 </script>
 <br><br>
-
 <!-- 페이지 하단 푸터 삽입 (footer.html) -->
 <div th:replace="~{footer.html}" ></div>
 </body>
