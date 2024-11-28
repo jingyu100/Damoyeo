@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import Team6.Damoyeo.calendar.repository.CalendarRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -156,4 +155,6 @@ public class UserService {
     public boolean checkPassword(User user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
     }
+
+
 }
