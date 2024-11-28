@@ -395,8 +395,41 @@
         .participant-item {
             display: flex;
             align-items: center;
-            padding: 10px 0;
+            padding: 12px 16px;
             border-bottom: 1px solid #eaedef;
+            transition: background-color 0.2s ease;
+        }
+
+        .kick-button {
+            background-color: transparent;
+            border: 1px solid #dc3545;
+            color: #dc3545;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .participant-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .participant-info {
+            flex: 1;
+            margin-right: 12px;
+        }
+
+        .kick-button:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .kick-button i {
+            font-size: 0.8rem;
         }
 
         .participant-avatar {
@@ -511,7 +544,7 @@
             <div class="current-room-info">
                 <img id="photoZone" src="" alt="">
                 <div class="room-title-container">
-                    <h2 id="currentRoomName">일반 채팅방</h2>
+                    <h2 id="currentRoomName"></h2>
                     <span class="room-status">활성화</span>
                 </div>
                 <button class="participants-btn" onclick="openParticipantsModal()">
@@ -561,7 +594,8 @@
             <button class="close-button" onclick="closeParticipantsModal()">&times;</button>
         </div>
         <!-- 참가자 목록 -->
-        <ul id="participantsList" class="participants-list"></ul>
+        <ul id="participantsList" class="participants-list">
+        </ul>
     </div>
 </div>
 
@@ -802,7 +836,7 @@
         modal.classList.remove('show');
     }
 
-    // 리스트 최신화
+    // 리스트 출력
     function updateParticipantsList(participants) {
         const participantsList = document.getElementById('participantsList');
         participantsList.innerHTML = '';
@@ -817,8 +851,11 @@
             </a>
             <div class="participant-info">
                 <div class="participant-name">${participant.nickname}</div>
-<!--                <div class="participant-status">온라인</div>-->
             </div>
+            <button class="kick-button">
+                <i class="fas fa-user"></i>
+                추방
+            </button>
         `;
             participantsList.appendChild(li);
         });
