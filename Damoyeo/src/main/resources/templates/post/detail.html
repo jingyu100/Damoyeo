@@ -10,6 +10,14 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
     <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
         .map_wrap {
             position: relative;
             overflow: hidden;
@@ -25,6 +33,7 @@
         /* 지도 타입 컨트롤러 */
         .custom_typecontrol {
             position: absolute;
+            display: flex;
             top: 10px;
             right: 10px;
             overflow: hidden;
@@ -85,17 +94,17 @@
         }
 
         .custom_zoomcontrol span {
-            display: block;
-            width: 36px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 35px;
             height: 40px;
-            text-align: center;
             cursor: pointer;
         }
 
         .custom_zoomcontrol span img {
-            width: 15px;
-            height: 15px;
-            padding: 12px 0;
+            width: 17px;
+            height: 17px;
             border: none;
         }
 
@@ -133,12 +142,19 @@
         }
 
         .section {
-            width: 70%;
-            height: 70%;
-            display: flex;
+            width: 1200px;
+            height:550px;
             margin: 0 auto;
             margin-top: 50px;
             margin-bottom: 50px;
+        }
+
+        .section-wrap{
+            display: flex;
+            margin: 0 auto;
+            width: 900px;
+            height: 100%;
+            align-items: center;
         }
 
         .page_title {
@@ -147,7 +163,6 @@
             justify-content: center;
             width: 50%;
             height: 100%;
-            gap: 65px;
         }
 
 
@@ -175,7 +190,7 @@
         }
 
         #content {
-            height: 300px;
+            height: 200px;
             font-size: 17px;
             font-weight: normal;
         }
@@ -233,6 +248,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+        }
+
+        .profile-container{
+            margin-top: 10px;
         }
 
         .nearBy-post > ul {
@@ -396,198 +415,199 @@
 <input id="joinUrl" th:value="@{|/post/join/${post.postId}|}" type="hidden">
 <input id="outUrl" th:value="@{|/post/out/${post.postId}|}" type="hidden">
 <div class="section">
-    <div class="page_title">
-        <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
-        <div class="profile-container">
-            <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
-                <div class="profile-img">
-                    <img alt="" class="" th:src="@{|/uploads/${post.user.photoUrl}|}">
-                </div>
-            </a>
-            <div class="profile-text">
-                <th:block th:if="${post.user.status == '1'}">
-                    <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
-                        <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
-                    </a>
-                    <div class="profile-address" th:text="${post.user.comment}">사용자 자기소개</div>
-                </th:block>
-                <th:block th:if="${post.user.status != '1'}">
-                    <div class="profile-name">탈퇴한 유저입니다.</div>
-                </th:block>
-            </div>
-
-        </div>
-    </div>
-    <div class="content-section">
-        <div class="content">
-            <div class="row" id="title">
-                <h1 class="value" th:text="${post.title}"></h1>
-                <div class="value" id="participants"
-                     th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
-            </div>
-            <div class="date-container">
-                <!--                날짜 포멧팅-->
-                <div class="date"
-                     th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
-            </div>
-            <div class="row" id="content-container">
-                <div class="value" id="content" th:text="${post.content}"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div th:text="${post.roadAddress}"></div>
-            <div class="value" id="address" th:text="${post.detailAddress}"></div>
-        </div>
-        <div class="map_wrap" style="width:100%; height: 200px;">
-            <div id="map" style="width:100%;height:200px;position:relative;overflow:hidden;"></div>
-            <!-- 지도타입 컨트롤 div 입니다 -->
-            <div class="custom_typecontrol radius_border">
-                <span class="selected_btn" id="btnRoadmap" onclick="setMapType('roadmap')">지도</span>
-                <span class="btn" id="btnSkyview" onclick="setMapType('skyview')">스카이뷰</span>
-            </div>
-            <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
-            <div class="custom_zoomcontrol radius_border">
-            <span onclick="zoomIn()"><img alt="확대"
-                                          src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"></span>
-                <span onclick="zoomOut()"><img
-                        alt="축소"
-                        src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"></span>
-            </div>
-        </div>
-
-        <!-- Thymeleaf를 통해 Kakao Maps API 키를 script 태그의 src에 직접 바인딩 -->
-        <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
-
-        <script th:inline="javascript">
-            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                mapOption = {
-                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                    level: 3 // 지도의 확대 레벨
-                };
-
-            // 지도를 생성합니다
-            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-            function setMapType(maptype) {
-                var roadmapControl = document.getElementById('btnRoadmap');
-                var skyviewControl = document.getElementById('btnSkyview');
-                if (maptype === 'roadmap') {
-                    map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
-                    roadmapControl.className = 'selected_btn';
-                    skyviewControl.className = 'btn';
-                } else {
-                    map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-                    skyviewControl.className = 'selected_btn';
-                    roadmapControl.className = 'btn';
-                }
-            }
-
-            // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-            function zoomIn() {
-                map.setLevel(map.getLevel() - 1);
-            }
-
-            // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
-            function zoomOut() {
-                map.setLevel(map.getLevel() + 1);
-            }
-
-
-            // 주소-좌표 변환 객체를 생성합니다
-            var geocoder = new kakao.maps.services.Geocoder();
-
-            // 아래 코드 건들지 마세요. 건들면 마커 안찍혀요
-            var postAddress = [[${post.roadAddress}]];
-
-            // 주소로 좌표를 검색합니다
-            geocoder.addressSearch(postAddress, function (result, status) {
-
-                // 정상적으로 검색이 완료됐으면
-                if (status === kakao.maps.services.Status.OK) {
-
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-
-                    // 결과값으로 받은 위치를 마커로 표시합니다
-                    var marker = new kakao.maps.Marker({
-                        map: map,
-                        position: coords
-                    });
-
-                    // 인포윈도우로 장소에 대한 설명을 표시합니다
-                    // var infowindow = new kakao.maps.InfoWindow({
-                    //     content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
-                    // });
-                    // infowindow.open(null, marker);
-
-                    // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
-                    map.setCenter(coords);
-                }
-            });
-        </script>
-
-        <div class="row" id="count">
-            <div class="value" id="like-count" th:text="${post.likeCount} + ' 좋아요'"></div>
-            <div class="value" id="view-count" th:text="${post.viewCount} + ' 조회수' "></div>
-        </div>
-
-        <div class="btn_set">
-
-            <!-- 로그인되지 않으면 로그인만 표시-->
-            <th:block th:if="${userId == null}">
-                <a class="chat_mainpage" href="/user/login" id="gotoLogin">로그인</a>
-            </th:block>
-            <!-- 로그인된 상태이면 모임 참여하기 또는 참여 취소 버튼 표시 -->
-            <th:block th:if="${userId != null}">
-                <!-- 로그인했고 참여 신청한 상태인 경우에만 취소 버튼 표시 -->
-                <th:block th:if="${postRequest != null and postRequest.user.userId == userId}">
-                    <!-- status가 0일 때는 채팅방 버튼 -->
-                    <th:block th:if="${postRequest.status == '0'}">
-                        <a class="chat_mainpage" id="partyCancel">참여 취소</a>
-                    </th:block>
-
-                    <!-- status가 1(수락)일 때는 채팅방 버튼 -->
-                    <th:block th:if="${postRequest.status == '1'}">
-                        <a class="chat_mainpage" href="/chat">채팅방으로</a>
-                    </th:block>
-
-                    <!-- status가 2(거절)일 때는 참여버튼을 누를 수 없음 버튼 -->
-                    <th:block th:if="${postRequest.status == '2'}">
-                        <p class="chat_mainpage">거절 당했습니다.</p>
-                    </th:block>
-                </th:block>
-                <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
-                <th:block th:if="${userId != post.user.getUserId()}">
-                    <th:block th:if="${postRequest == null or postRequest.user.userId != userId}">
-                        <th:block th:if="${post.status.equals('1')}">
-                            <a class="chat_mainpage" id="joinParty">모임 참여하기</a>
-                        </th:block>
-                        <th:block th:if="${!post.status.equals('1')}">
-                            <p class="chat_finsh" id="finshParty">모집이 마감 되었습니다.</p>
-                        </th:block>
-                    </th:block>
-                </th:block>
-                <th:block th:if="${userId == post.user.getUserId()}">
-                    <div class="btn-container">
-                        <form method="get" th:action="@{'/post/mositipy/' + ${post.postId}}">
-                            <button class="update-btn" type="button" id="mositipyButton">수정</button>
-                        </form>
-                        <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
-                            <button class="delete-btn" type="button" id="deleteButton">삭제</button>
-                        </form>
+    <div class="section-wrap">
+        <div class="page_title">
+            <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
+            <div class="profile-container">
+                <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
+                    <div class="profile-img">
+                        <img alt="" class="" th:src="@{|/uploads/${post.user.photoUrl}|}">
                     </div>
+                </a>
+                <div class="profile-text">
+                    <th:block th:if="${post.user.status == '1'}">
+                        <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
+                            <div class="profile-name" th:text="${post.user.nickname}">사용자 이름</div>
+                        </a>
+                        <div class="profile-address" th:text="${post.user.comment}">사용자 자기소개</div>
+                    </th:block>
+                    <th:block th:if="${post.user.status != '1'}">
+                        <div class="profile-name">탈퇴한 유저입니다.</div>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <div class="content-section">
+            <div class="content">
+                <div class="row" id="title">
+                    <h1 class="value" th:text="${post.title}"></h1>
+                    <div class="value" id="participants"
+                         th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
+                </div>
+                <div class="date-container">
+                    <!--                날짜 포멧팅-->
+                    <div class="date"
+                         th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
+                </div>
+                <div class="row" id="content-container">
+                    <div class="value" id="content" th:text="${post.content}"></div>
+                </div>
+            </div>
+            <div class="row">
+                <div th:text="${post.roadAddress}"></div>
+                <div class="value" id="address" th:text="${post.detailAddress}"></div>
+            </div>
+            <div class="map_wrap" style="width:100%; height: 150px;">
+                <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+                <!-- 지도타입 컨트롤 div 입니다 -->
+                <div class="custom_typecontrol radius_border">
+                    <span class="selected_btn" id="btnRoadmap" onclick="setMapType('roadmap')">지도</span>
+                    <span class="btn" id="btnSkyview" onclick="setMapType('skyview')">스카이뷰</span>
+                </div>
+                <!-- 지도 확대, 축소 컨트롤 div 입니다 -->
+                <div class="custom_zoomcontrol radius_border">
+                <span onclick="zoomIn()"><img alt="확대"
+                                              src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_plus.png"></span>
+                    <span onclick="zoomOut()"><img
+                            alt="축소"
+                            src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/ico_minus.png"></span>
+                </div>
+            </div>
+
+            <!-- Thymeleaf를 통해 Kakao Maps API 키를 script 태그의 src에 직접 바인딩 -->
+            <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
+
+            <script th:inline="javascript">
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+                        level: 3 // 지도의 확대 레벨
+                    };
+
+                // 지도를 생성합니다
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                function setMapType(maptype) {
+                    var roadmapControl = document.getElementById('btnRoadmap');
+                    var skyviewControl = document.getElementById('btnSkyview');
+                    if (maptype === 'roadmap') {
+                        map.setMapTypeId(kakao.maps.MapTypeId.ROADMAP);
+                        roadmapControl.className = 'selected_btn';
+                        skyviewControl.className = 'btn';
+                    } else {
+                        map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+                        skyviewControl.className = 'selected_btn';
+                        roadmapControl.className = 'btn';
+                    }
+                }
+
+                // 지도 확대, 축소 컨트롤에서 확대 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+                function zoomIn() {
+                    map.setLevel(map.getLevel() - 1);
+                }
+
+                // 지도 확대, 축소 컨트롤에서 축소 버튼을 누르면 호출되어 지도를 확대하는 함수입니다
+                function zoomOut() {
+                    map.setLevel(map.getLevel() + 1);
+                }
+
+
+                // 주소-좌표 변환 객체를 생성합니다
+                var geocoder = new kakao.maps.services.Geocoder();
+
+                // 아래 코드 건들지 마세요. 건들면 마커 안찍혀요
+                var postAddress = [[${post.roadAddress}]];
+
+                // 주소로 좌표를 검색합니다
+                geocoder.addressSearch(postAddress, function (result, status) {
+
+                    // 정상적으로 검색이 완료됐으면
+                    if (status === kakao.maps.services.Status.OK) {
+
+                        var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                        // 결과값으로 받은 위치를 마커로 표시합니다
+                        var marker = new kakao.maps.Marker({
+                            map: map,
+                            position: coords
+                        });
+
+                        // 인포윈도우로 장소에 대한 설명을 표시합니다
+                        // var infowindow = new kakao.maps.InfoWindow({
+                        //     content: '<div style="width:150px;text-align:center;padding:6px 0;">우리회사</div>'
+                        // });
+                        // infowindow.open(null, marker);
+
+                        // 지도의 중심을 결과값으로 받은 위치로 이동시킵니다
+                        map.setCenter(coords);
+                    }
+                });
+            </script>
+
+            <div class="row" id="count">
+                <div class="value" id="like-count" th:text="${post.likeCount} + ' 좋아요'"></div>
+                <div class="value" id="view-count" th:text="${post.viewCount} + ' 조회수' "></div>
+            </div>
+
+            <div class="btn_set">
+
+                <!-- 로그인되지 않으면 로그인만 표시-->
+                <th:block th:if="${userId == null}">
+                    <a class="chat_mainpage" href="/user/login" id="gotoLogin">로그인</a>
+                </th:block>
+                <!-- 로그인된 상태이면 모임 참여하기 또는 참여 취소 버튼 표시 -->
+                <th:block th:if="${userId != null}">
+                    <!-- 로그인했고 참여 신청한 상태인 경우에만 취소 버튼 표시 -->
+                    <th:block th:if="${postRequest != null and postRequest.user.userId == userId}">
+                        <!-- status가 0일 때는 채팅방 버튼 -->
+                        <th:block th:if="${postRequest.status == '0'}">
+                            <a class="chat_mainpage" id="partyCancel">참여 취소</a>
+                        </th:block>
+
+                        <!-- status가 1(수락)일 때는 채팅방 버튼 -->
+                        <th:block th:if="${postRequest.status == '1'}">
+                            <a class="chat_mainpage" href="/chat">채팅방으로</a>
+                        </th:block>
+
+                        <!-- status가 2(거절)일 때는 참여버튼을 누를 수 없음 버튼 -->
+                        <th:block th:if="${postRequest.status == '2'}">
+                            <p class="chat_mainpage">거절 당했습니다.</p>
+                        </th:block>
+                    </th:block>
+                    <!-- 로그인했고 참여 신청하지 않은 경우 참여하기 버튼 표시 -->
+                    <th:block th:if="${userId != post.user.getUserId()}">
+                        <th:block th:if="${postRequest == null or postRequest.user.userId != userId}">
+                            <th:block th:if="${post.status.equals('1')}">
+                                <a class="chat_mainpage" id="joinParty">모임 참여하기</a>
+                            </th:block>
+                            <th:block th:if="${!post.status.equals('1')}">
+                                <p class="chat_finsh" id="finshParty">모집이 마감 되었습니다.</p>
+                            </th:block>
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${userId == post.user.getUserId()}">
+                        <div class="btn-container">
+                            <form method="get" th:action="@{'/post/mositipy/' + ${post.postId}}">
+                                <button class="update-btn" type="button" id="mositipyButton">수정</button>
+                            </form>
+                            <form method="post" th:action="@{'/post/delete/' + ${post.postId}}">
+                                <button class="delete-btn" type="button" id="deleteButton">삭제</button>
+                            </form>
+                        </div>
+                    </th:block>
+
+
+                    <!-- 좋아요 버튼 게시글 상태가 0일 때 숨기기 -->
+                    <th:block th:if="${post.status != '0'}">
+                        <button class="like-button" id="like-button"
+                                th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
+                            <i class="far fa-heart" id="like-icon"></i>
+                        </button>
+                    </th:block>
                 </th:block>
 
-
-                <!-- 좋아요 버튼 게시글 상태가 0일 때 숨기기 -->
-                <th:block th:if="${post.status != '0'}">
-                    <button class="like-button" id="like-button"
-                            th:onclick="|toggleLike(${post.postId}, ${post.user.userId})|">
-                        <i class="far fa-heart" id="like-icon"></i>
-                    </button>
-                </th:block>
-            </th:block>
-
-            <a class="post_mainpage" th:href="@{/post/main}"><i class="fa-solid fa-house"></i></a>
+                <a class="post_mainpage" th:href="@{/post/main}"><i class="fa-solid fa-house"></i></a>
+            </div>
         </div>
     </div>
 </div>
