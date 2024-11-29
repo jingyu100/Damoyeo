@@ -68,44 +68,47 @@ public class PostController {
     // 파일 업로드 경로 상수
     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
 
-    // 메인 페이지
     @GetMapping("/main")
-    public String showMainPage(@RequestParam(name = "page", defaultValue = "0") int page,
-                               @SessionAttribute(name = "userId", required = false) Integer userId, Model model,
-                               @Nullable @RequestParam(name = "search") String search,
-                               @RequestParam(name = "tag", required = false) String tag) {
+    public String showMainPage(
+            @RequestParam(name = "page", defaultValue = "0") int page,
+            @SessionAttribute(name = "userId", required = false) Integer userId,
+            Model model,
+            @Nullable @RequestParam(name = "search") String search,
+            @Nullable @RequestParam(name = "location") String location,
+            @Nullable @RequestParam(name = "tag") String tag,
+            @Nullable @RequestParam(name = "sort") String sort) {
 
-        int pageSize = 6;  // 페이지당 게시물 수
+        int pageSize = 6;
         Page<Post> postPage;
 
-        // 검색 조건에 따라 페이지 요청
         if (search != null && !search.isEmpty()) {
             postPage = postService.searchPostsByTitle(search, PageRequest.of(page, pageSize));
-        } else if (tag != null && !tag.isEmpty()) {
-            postPage = postService.searchPostByTag(tag, PageRequest.of(page, pageSize));
         } else {
-            postPage = postService.findPostsByPage(page, pageSize);
+            // 필터링과 정렬 조건을 적용한 검색
+            postPage = postService.findFilteredPosts(location, tag, sort, PageRequest.of(page, pageSize));
         }
-
-        List<Post> posts = postPage.getContent();  // 현재 페이지의 게시물 목록
-        boolean hasNextPage = postPage.hasNext();  // 다음 페이지 여부
+        // 현재 페이지의 게시물 목록
+        List<Post> posts = postPage.getContent();
+        // 다음 페이지 여부
+        boolean hasNextPage = postPage.hasNext();
         // 프로필 사진 넣기를 위한 user생성
         User user = null;
 
         if (userId != null) {
             user = userService.findByUser(userId);
         }
-        // 모델에 데이터 추가
+        //모델에 데이터 추가
         model.addAttribute("user", user);
         model.addAttribute("posts", posts);
         model.addAttribute("page", page);
         model.addAttribute("hasNextPage", hasNextPage);
         model.addAttribute("userId", userId);
         model.addAttribute("search", search);
+        model.addAttribute("location", location);
         model.addAttribute("tag", tag);
+        model.addAttribute("sort", sort);
 
-        return "post/main";  // 메인 페이지로 이동
-
+        return "post/main";
     }
 
     // 게시물 작성 페이지

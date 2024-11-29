@@ -13,7 +13,7 @@
             font-style: normal;
         }
 
-        body{
+        body {
             font-family: 'Pretendard-Regular', 'sans-serif';
         }
 
@@ -49,14 +49,14 @@
             color: #333; /* 페이지 번호 색상 */
         }
 
-        .post-container{
+        .post-container {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             row-gap: 48px;
             column-gap: 16px;
         }
 
-        .section{
+        .section {
             width: 1200px;
             margin: 0 auto;
             display: flex;
@@ -64,42 +64,42 @@
             gap: 50px;
         }
 
-        .filter-container{
+        .filter-container {
             display: flex;
             flex-direction: column;
             width: 250px;
         }
 
-        .post{
+        .post {
             width: 200px;
         }
 
-        .post img{
+        .post img {
             width: 100%;
         }
 
 
-        .post-detail{
+        .post-detail {
             font-size: 10px;
         }
 
-        .filter-header{
+        .filter-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .filter-text{
+        .filter-text {
             font-size: 20px;
             font-weight: 600;
         }
 
-        .position{
+        .position {
             font-size: 17px;
             font-weight: 600;
         }
 
-        .checkbox-container{
+        .checkbox-container {
             display: flex;
             overflow: hidden;
             flex-direction: column;
@@ -129,7 +129,7 @@
         }
 
 
-        .filter-box1{
+        .filter-box1 {
             display: flex;
             flex-direction: column;
             margin-top: 20px;
@@ -137,7 +137,7 @@
             border-bottom: 0.2px solid #0017580d;
         }
 
-        .filter-box2{
+        .filter-box2 {
             display: flex;
             flex-direction: column;
             margin-top: 20px;
@@ -145,14 +145,13 @@
             border-bottom: 0.2px solid #0017580d;
         }
 
-        .filter-box3{
+        .filter-box3 {
             display: flex;
             flex-direction: column;
             margin-top: 20px;
             margin-bottom: 20px;
             border-bottom: 0.2px solid #0017580d;
         }
-
 
 
         .checkbox {
@@ -164,19 +163,19 @@
             color: black;
         }
 
-        .checkbox-btn{
+        .checkbox-btn {
             width: 20px;
             height: 20px;
             border: 1px solid #dcdee3;;
             border-radius: 50%;
         }
 
-        .checkbox span{
+        .checkbox span {
             font-size: 17px;
-            font-weight:200;
+            font-weight: 200;
         }
 
-        .show-more-btn{
+        .show-more-btn {
             all: unset;
             margin-bottom: 10px;
             cursor: pointer;
@@ -185,15 +184,15 @@
             color: #A7C7E7;
         }
 
-        .checkbox-selected{
+        .checkbox-selected {
             background-color: white;
             border-width: 0;
             width: 1.25rem;
             height: 1.25rem;
-            border : 6px solid #A7C7E7;
+            border: 6px solid #A7C7E7;
         }
 
-        .checkbox-container2{
+        .checkbox-container2 {
             display: flex;
             flex-direction: column;
             row-gap: 10px;
@@ -202,7 +201,7 @@
             padding-bottom: 20px;
         }
 
-        .checkbox-container3{
+        .checkbox-container3 {
             display: flex;
             flex-direction: column;
             row-gap: 10px;
@@ -210,172 +209,171 @@
             margin-top: 1.5rem;
             padding-bottom: 20px;
         }
-
 
 
     </style>
 </head>
 <body>
 <div th:replace="~{topnav.html}"></div>
-    <div class="section">
-        <div class="filter-container">
-            <div class="filter-header">
-                <div class="filter-text">필터</div>
-                <div class="filter-reset">초기화</div>
-            </div>
-            <div class="filter-body">
-                <div class="filter-box1">
-                    <h3 class="position">위치</h3>
-                    <div class="checkbox-container">
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn checkbox-selected"></div>
-                            <span>서울</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>인천</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>경기</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>강원</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>충남</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>세종</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>대전</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>충북</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>경북</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>대구</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>울산</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>경남</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>부산</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>전북</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>광주</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>전남</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>제주</span>
-                        </a>
-                    </div>
-                    <button class="show-more-btn">더보기</button>
-                </div>
-                <div class="filter-box2">
-                    <h3 class="position">카테고리</h3>
-                    <div class="checkbox-container2">
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn checkbox-selected"></div>
-                            <span>운동/스포츠</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>음악/악기</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>아웃도어/여행</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>게임/오락</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>요리/제조</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>외국어/언어</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>스포츠관람</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>인문학/철학</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>자기개발</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>독서</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="filter-box3">
-                    <h3 class="position">정렬</h3>
-                    <div class="checkbox-container3">
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn checkbox-selected"></div>
-                            <span>최신순</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>인기순</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+<div class="section">
+    <div class="filter-container">
+        <div class="filter-header">
+            <div class="filter-text">필터</div>
+            <div class="filter-reset">초기화</div>
         </div>
-            <div class="post-container">
-                <div th:each="post, iterStat : ${posts}" class="post">
-                    <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-                        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
-                        <div class="post-title" th:text="${post.title}">제목</div>
-                        <div class="post-info"> <span th:text="${post.roadAddress}">지역</span></div>
-                        <div class="post-info"> <span th:text="${post.detailAddress}">상세주소</span></div>
-                        <div class="post-info"> <span th:text="${post.nowParticipants}">0</span>/<span
-                                th:text="${post.maxParticipants}">0</span></div>
-                        <div class="post-info"><span
-                                th:if="${post.nowParticipants}==${post.maxParticipants}">모집완료</span>
-                        </div>
-                        <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
-                        </div>
+        <div class="filter-body">
+            <div class="filter-box1">
+                <h3 class="position">위치</h3>
+                <div class="checkbox-container">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>서울</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인천</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경기</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>강원</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>충남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>세종</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>대전</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>충북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>대구</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>울산</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>부산</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>전북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>광주</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>전남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>제주</span>
+                    </a>
+                </div>
+                <button class="show-more-btn">더보기</button>
+            </div>
+            <div class="filter-box2">
+                <h3 class="position">카테고리</h3>
+                <div class="checkbox-container2">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>운동/스포츠</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>음악/악기</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>아웃도어/여행</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>게임/오락</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>요리/제조</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>외국어/언어</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>스포츠관람</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인문학/철학</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>자기개발</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>독서</span>
                     </a>
                 </div>
             </div>
+            <div class="filter-box3">
+                <h3 class="position">정렬</h3>
+                <div class="checkbox-container3">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>최신순</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인기순</span>
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
+    <div class="post-container">
+        <div th:each="post, iterStat : ${posts}" class="post">
+            <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
+                <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
+                <div class="post-title" th:text="${post.title}">제목</div>
+                <div class="post-info"><span th:text="${post.roadAddress}">지역</span></div>
+                <div class="post-info"><span th:text="${post.detailAddress}">상세주소</span></div>
+                <div class="post-info"><span th:text="${post.nowParticipants}">0</span>/<span
+                        th:text="${post.maxParticipants}">0</span></div>
+                <div class="post-info"><span
+                        th:if="${post.nowParticipants}==${post.maxParticipants}">모집완료</span>
+                </div>
+                <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
 <!--로그인했을떄만-->
 <th:block th:if="${userId != null}">
     <div><a th:href="@{/post/create}">게시글 작성</a></div>
@@ -391,27 +389,93 @@
 <div th:replace="~{footer.html}"></div>
 
 <script>
-    const showMoreBtn = document.querySelector('.show-more-btn');
-    const checkboxContainer = document.querySelector('.checkbox-container');
-
-
-    document.addEventListener('DOMContentLoaded', function () {
-        showMoreBtn.addEventListener('click', function () {
-            if (checkboxContainer.style.height === '300px') {
-                checkboxContainer.style.height = '100px';
-                checkboxContainer.style.overflow = 'hidden';
-                showMoreBtn.textContent = '더보기';
-                checkboxContainer.scrollTop = 0;
-            } else {
-                checkboxContainer.style.height = '300px';
-                checkboxContainer.style.overflow = 'auto';
-                showMoreBtn.textContent = '접기';
-            }
-        });
-    });
 
     document.addEventListener('DOMContentLoaded', function () {
         const filterBoxes = document.querySelectorAll('.filter-body > div');
+        const showMoreBtn = document.querySelector('.show-more-btn');
+        const checkboxContainer = document.querySelector('.checkbox-container');
+
+        // URL에서 현재 선택된 필터값들을 가져옴
+        const params = new URLSearchParams(window.location.search);
+        let currentLocation = params.get('location') || '';
+        let currentTag = params.get('tag') || '';
+        let currentSort = params.get('sort') || '최신순';
+
+        // 더보기 버튼의 초기 상태 설정
+        if (checkboxContainer) {
+            checkboxContainer.style.height = '100px';
+            checkboxContainer.style.overflow = 'hidden';
+        }
+
+        // 더보기 버튼 기능 설정
+        if (showMoreBtn && checkboxContainer) {
+            showMoreBtn.addEventListener('click', function () {
+                const isExpanded = checkboxContainer.style.height === '300px';
+
+                if (isExpanded) {
+                    checkboxContainer.style.height = '100px';
+                    checkboxContainer.style.overflow = 'hidden';
+                    showMoreBtn.textContent = '더보기';
+                    checkboxContainer.scrollTop = 0;
+                } else {
+                    checkboxContainer.style.height = '300px';
+                    checkboxContainer.style.overflow = 'auto';
+                    showMoreBtn.textContent = '접기';
+                }
+            });
+        }
+
+        // 페이지 로드 시 현재 선택된 필터들을 체크박스에 적용
+        function applyCurrentFilters() {
+            // 기존 선택 상태 모두 제거
+            document.querySelectorAll('.checkbox-btn').forEach(btn => {
+                btn.classList.remove('checkbox-selected');
+            });
+
+            if (currentLocation) {
+                document.querySelectorAll('.filter-box1 .checkbox').forEach(checkbox => {
+                    if (checkbox.querySelector('span').textContent === currentLocation) {
+                        checkbox.querySelector('.checkbox-btn').classList.add('checkbox-selected');
+                    }
+                });
+            }
+
+            if (currentTag) {
+                document.querySelectorAll('.filter-box2 .checkbox').forEach(checkbox => {
+                    if (checkbox.querySelector('span').textContent === currentTag) {
+                        checkbox.querySelector('.checkbox-btn').classList.add('checkbox-selected');
+                    }
+                });
+            }
+
+            if (currentSort) {
+                document.querySelectorAll('.filter-box3 .checkbox').forEach(checkbox => {
+                    if (checkbox.querySelector('span').textContent === currentSort) {
+                        checkbox.querySelector('.checkbox-btn').classList.add('checkbox-selected');
+                    }
+                });
+            }
+        }
+
+        function updateURL() {
+            const params = new URLSearchParams(window.location.search);
+
+            // 현재 페이지 번호 유지
+            const currentPage = params.get('page');
+
+            // 새로운 파라미터 설정
+            params.delete('page'); // 필터 변경시 첫 페이지로 이동
+            if (currentLocation) params.set('location', currentLocation);
+            else params.delete('location');
+
+            if (currentTag) params.set('tag', currentTag);
+            else params.delete('tag');
+
+            if (currentSort && currentSort !== '최신순') params.set('sort', currentSort);
+            else params.delete('sort');
+
+            window.location.href = `${window.location.pathname}?${params.toString()}`;
+        }
 
         filterBoxes.forEach(filterBox => {
             const checkboxes = filterBox.querySelectorAll('.checkbox');
@@ -420,24 +484,52 @@
                 checkbox.addEventListener('click', function (event) {
                     event.preventDefault();
 
+                    const value = this.querySelector('span').textContent;
+                    const boxType = this.closest('div[class^="filter-box"]').className;
 
+                    // 같은 필터 그룹의 다른 체크박스 선택 해제
                     checkboxes.forEach(item => {
                         item.querySelector('.checkbox-btn').classList.remove('checkbox-selected');
                     });
 
+                    // 현재 체크박스 선택
+                    this.querySelector('.checkbox-btn').classList.add('checkbox-selected');
 
-                    const checkboxBtn = this.querySelector('.checkbox-btn');
-                    checkboxBtn.classList.add('checkbox-selected');
+                    // 필터 값 업데이트
+                    if (boxType.includes('filter-box1')) {
+                        currentLocation = value;
+                    } else if (boxType.includes('filter-box2')) {
+                        currentTag = value;
+                    } else if (boxType.includes('filter-box3')) {
+                        currentSort = value;
+                    }
+
+                    updateURL();
                 });
             });
         });
+
+        // 초기화 버튼 이벤트
+        const resetButton = document.querySelector('.filter-reset');
+        if (resetButton) {
+            resetButton.addEventListener('click', function (event) {
+                event.preventDefault();
+                // 모든 체크박스 선택 해제
+                document.querySelectorAll('.checkbox-btn').forEach(btn => {
+                    btn.classList.remove('checkbox-selected');
+                });
+                // 기본값으로 초기화
+                currentLocation = '';
+                currentTag = '';
+                currentSort = '최신순';
+                // 페이지 리로드
+                window.location.href = window.location.pathname;
+            });
+        }
+
+        // 페이지 로드 시 현재 필터 상태 적용
+        applyCurrentFilters();
     });
-
-
-
-
-
-
 
 </script>
 </body>

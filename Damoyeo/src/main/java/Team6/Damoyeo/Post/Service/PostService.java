@@ -189,4 +189,34 @@ public class PostService {
             }
         }
     }
+
+    public Page<Post> findFilteredPosts(String location, String tag, String sort, Pageable pageable) {
+        Sort sorting;
+        // 인자값 받은게 인기순이라면 안가슌 어나러묜 최신순
+        if ("인기순".equals(sort)) {
+            sorting = Sort.by(Sort.Direction.DESC, "likeCount", "postId");
+        } else {
+            // 우리는 최신으로 만든게 숫자가 더 크기 때문에 이게 가능
+            sorting = Sort.by(Sort.Direction.DESC, "postId"); // 최신순
+        }
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sorting);
+
+        // 필터링 조건에 따른 쿼리 실행
+        // 지역, 태그 가 널 아니면
+        if (location != null && !location.isEmpty() && tag != null && !tag.isEmpty()) {
+            return postRepository.findByStatusAndRoadAddressContainingAndTag("1", location, tag, pageable);
+        }
+        //지역만 널아니면
+        else if (location != null && !location.isEmpty()) {
+            return postRepository.findByStatusAndRoadAddressContaining("1", location, pageable);
+        }
+        //태그가 널아니면
+        else if (tag != null && !tag.isEmpty()) {
+            return postRepository.findByStatusAndTag("1", tag, pageable);
+        }
+        //다 널이면
+        else {
+            return postRepository.findByStatus(pageable, "1");
+        }
+    }
 }
