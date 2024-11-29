@@ -312,7 +312,8 @@ public class UserController {
 
         return "user/setting";
     }
-
+    
+    // 비밀번호 수정 메서드
     @PostMapping("/change_user")
     public String updatePassword(@SessionAttribute(name = "userId", required = false) Integer userId,
                                  Model model,
@@ -349,9 +350,16 @@ public class UserController {
 
         return "redirect:/user/check_password";
     }
-
+    
+    // 정규식 비밀번호 메서드
     public boolean isValidPassword(String password) {
         String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&^])[A-Za-z\\d@$!%*?&^]{8,}$";
         return password != null && password.matches(passwordPattern);
+    }
+
+//    Model model, @SessionAttribute(name = "userId", required = false) Integer userId
+    @GetMapping("/change_email")
+    public String changeEmail() {
+        return "user/change_email";
     }
 }

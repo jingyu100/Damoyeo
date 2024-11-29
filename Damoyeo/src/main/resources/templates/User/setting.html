@@ -155,7 +155,8 @@
     <table>
         <tr>
             <td>아이디</td>
-            <td><span th:text="${user.email}"></span></td>
+            <td><span th:text="${user.email}"></span>
+                <a th:href="@{/user/change_email}" class="btn btn-primary">변경</a></td>
         </tr>
         <tr>
             <td>이름</td>
