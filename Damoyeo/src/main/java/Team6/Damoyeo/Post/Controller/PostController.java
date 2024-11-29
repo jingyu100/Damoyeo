@@ -78,7 +78,7 @@ public class PostController {
             @Nullable @RequestParam(name = "tag") String tag,
             @Nullable @RequestParam(name = "sort") String sort) {
 
-        int pageSize = 6;
+        int pageSize = 8;  // 페이지당 게시물 수
         Page<Post> postPage;
 
         if (search != null && !search.isEmpty()) {
