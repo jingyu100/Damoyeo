@@ -75,7 +75,7 @@ public class PostController {
                                @Nullable @RequestParam(name = "search") String search,
                                @RequestParam(name = "tag", required = false) String tag) {
 
-        int pageSize = 6;  // 페이지당 게시물 수
+        int pageSize = 8;  // 페이지당 게시물 수
         Page<Post> postPage;
 
         // 검색 조건에 따라 페이지 요청

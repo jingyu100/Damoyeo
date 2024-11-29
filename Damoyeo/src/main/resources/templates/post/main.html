@@ -50,11 +50,15 @@
         }
 
         .post-container{
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            row-gap: 48px;
-            column-gap: 16px;
+            display: flex;
+            width: 80%;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            row-gap: 30px;
+            column-gap: 15px;
         }
+
+
 
         .section{
             width: 1200px;
@@ -67,26 +71,70 @@
         .filter-container{
             display: flex;
             flex-direction: column;
-            width: 250px;
+            width: 20%;
         }
 
         .post{
             width: 200px;
+            height: 250px;
         }
 
         .post img{
             width: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .post img:hover{
+            transform: scale(1.1);
+        }
+
+        .detail-img{
+            overflow: hidden;
+            border-radius: .375rem;
         }
 
 
         .post-detail{
-            font-size: 10px;
+            display: flex;
+            flex-direction: column;
+            font-size: 15px;
+            color: black;
+            text-decoration: none;
+            row-gap: 2px;
+        }
+
+        .post-info span{
+            display: block;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+
+
+        .detail-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+
+
+        .post-title{
+            font-size: 17px;
+            font-weight: bold;
         }
 
         .filter-header{
             display: flex;
             justify-content: space-between;
             align-items: center;
+        }
+
+        .participants{
+            text-align: right;
         }
 
         .filter-text{
@@ -210,6 +258,8 @@
             margin-top: 1.5rem;
             padding-bottom: 20px;
         }
+
+
 
 
 
@@ -361,16 +411,20 @@
             <div class="post-container">
                 <div th:each="post, iterStat : ${posts}" class="post">
                     <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-                        <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
-                        <div class="post-title" th:text="${post.title}">제목</div>
+                        <div class="detail-img">
+                            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
+                        </div>
+                        <div class="detail-header">
+                            <div class="post-title" th:text="${post.title}">제목</div>
+                            <div class="post-participants"> <span th:text="${post.nowParticipants}">0</span>/<span
+                                    th:text="${post.maxParticipants}">0</span></div>
+                        </div>
                         <div class="post-info"> <span th:text="${post.roadAddress}">지역</span></div>
                         <div class="post-info"> <span th:text="${post.detailAddress}">상세주소</span></div>
-                        <div class="post-info"> <span th:text="${post.nowParticipants}">0</span>/<span
-                                th:text="${post.maxParticipants}">0</span></div>
-                        <div class="post-info"><span
+                        <div class="post-info participants"><span
                                 th:if="${post.nowParticipants}==${post.maxParticipants}">모집완료</span>
                         </div>
-                        <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
+                        <div class="post-info participants"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
                         </div>
                     </a>
                 </div>
@@ -380,7 +434,7 @@
 <th:block th:if="${userId != null}">
     <div><a th:href="@{/post/create}">게시글 작성</a></div>
 </th:block>
-
+<br><br><br><br>
 <div class="page-btn">
     <a th:href="@{/post/main(page=${page - 1})}" th:if="${search == null && page > 0}"> ◀ </a>
     <a th:href="@{/post/main(page=${page - 1}, search=${search})}" th:if="${search != null && page > 0}"> ◀ </a>
