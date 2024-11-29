@@ -49,7 +49,7 @@
             color: #333; /* 페이지 번호 색상 */
         }
 
-        .post-container{
+        .post-container {
             display: flex;
             width: 80%;
             justify-content: flex-start;
@@ -59,8 +59,7 @@
         }
 
 
-
-        .section{
+        .section {
             width: 1200px;
             margin: 0 auto;
             display: flex;
@@ -84,17 +83,17 @@
             transition: transform 0.3s ease-in-out;
         }
 
-        .post img:hover{
+        .post img:hover {
             transform: scale(1.1);
         }
 
-        .detail-img{
+        .detail-img {
             overflow: hidden;
             border-radius: .375rem;
         }
 
 
-        .post-detail{
+        .post-detail {
             display: flex;
             flex-direction: column;
             font-size: 15px;
@@ -103,7 +102,7 @@
             row-gap: 2px;
         }
 
-        .post-info span{
+        .post-info span {
             display: block;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -111,8 +110,7 @@
         }
 
 
-
-        .detail-header{
+        .detail-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -121,8 +119,7 @@
         }
 
 
-
-        .post-title{
+        .post-title {
             font-size: 17px;
             font-weight: bold;
         }
@@ -133,11 +130,11 @@
             align-items: center;
         }
 
-        .participants{
+        .participants {
             text-align: right;
         }
 
-        .filter-text{
+        .filter-text {
             font-size: 20px;
             font-weight: 600;
         }
@@ -258,9 +255,6 @@
             margin-top: 1.5rem;
             padding-bottom: 20px;
         }
-
-
-
 
 
     </style>
@@ -408,28 +402,169 @@
                 </div>
             </div>
         </div>
-            <div class="post-container">
-                <div th:each="post, iterStat : ${posts}" class="post">
-                    <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-                        <div class="detail-img">
-                            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
-                        </div>
-                        <div class="detail-header">
-                            <div class="post-title" th:text="${post.title}">제목</div>
-                            <div class="post-participants"> <span th:text="${post.nowParticipants}">0</span>/<span
-                                    th:text="${post.maxParticipants}">0</span></div>
-                        </div>
-                        <div class="post-info"> <span th:text="${post.roadAddress}">지역</span></div>
-                        <div class="post-info"> <span th:text="${post.detailAddress}">상세주소</span></div>
-                        <div class="post-info participants"><span
-                                th:if="${post.nowParticipants}==${post.maxParticipants}">모집완료</span>
-                        </div>
-                        <div class="post-info participants"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
-                        </div>
+        <div class="filter-body">
+            <div class="filter-box1">
+                <h3 class="position">위치</h3>
+                <div class="checkbox-container">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>서울</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인천</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경기</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>강원</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>충남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>세종</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>대전</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>충북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>대구</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>울산</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>경남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>부산</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>전북</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>광주</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>전남</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>제주</span>
+                    </a>
+                </div>
+                <button class="show-more-btn">더보기</button>
+            </div>
+<<<<<<< Updated upstream
+    </div>
+=======
+            <div class="filter-box2">
+                <h3 class="position">카테고리</h3>
+                <div class="checkbox-container2">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>운동/스포츠</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>음악/악기</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>아웃도어/여행</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>게임/오락</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>요리/제조</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>외국어/언어</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>스포츠관람</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인문학/철학</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>자기개발</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>독서</span>
+                    </a></div>
+            </div>
+
+            <div class="filter-box3">
+                <h3 class="position">정렬</h3>
+                <div class="checkbox-container3">
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn checkbox-selected"></div>
+                        <span>최신순</span>
+                    </a>
+                    <a href="" class="checkbox">
+                        <div class="checkbox-btn"></div>
+                        <span>인기순</span>
                     </a>
                 </div>
             </div>
+        </div>
     </div>
+
+    <div class="post-container">
+        <div th:each="post, iterStat : ${posts}" class="post">
+            <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
+                <div class="detail-img">
+                    <img th:src="@{|/uploads/${post.photoUrl}|}" alt="">
+                </div>
+                <div class="detail-header">
+                    <div class="post-title" th:text="${post.title}">제목</div>
+                    <div class="post-participants"><span th:text="${post.nowParticipants}">0</span>/<span
+                            th:text="${post.maxParticipants}">0</span></div>
+                </div>
+                <div class="post-info"><span th:text="${post.roadAddress}">지역</span></div>
+                <div class="post-info"><span th:text="${post.detailAddress}">상세주소</span></div>
+                <div class="post-info participants"><span
+                        th:if="${post.nowParticipants}==${post.maxParticipants}">모집완료</span>
+                </div>
+                <div class="post-info participants"><span
+                        th:if="${post.nowParticipants}!=${post.maxParticipants}">모집중</span>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+>>>>>>> Stashed changes
 <!--로그인했을떄만-->
 <th:block th:if="${userId != null}">
     <div><a th:href="@{/post/create}">게시글 작성</a></div>
