@@ -50,6 +50,8 @@ public class ChatController {
         List<ChatRoomDto> chatRooms = chatService.getUserChatRooms(userId);
 
 
+        // 포스트의 유저
+
         // 사용자 정보와 채팅방 목록을 모델에 추가
         model.addAttribute("userId", userId);
         model.addAttribute("user", user);

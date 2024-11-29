@@ -529,7 +529,10 @@
             <!-- 채팅방 목록 출력 -->
             <div th:each="room : ${chatRooms}" class="room-item" th:attr="data-room=${room.roomId}">
                 <!--                <div class="room-icon"><i class="fas fa-comments"></i></div>-->
-                <a th:href="@{|post/detail${room.postId}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt=""
+                <input type="hidden" id="king" th:value="${room.post.getUser().getUserId()}">
+                <input type="hidden" id="boo" th:value="${userId}">
+
+                <a th:href="@{|post/detail${room.post}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt=""
                                                                  style="width: 50px; height: 50px"></a>
                 <div class="room-info">
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
@@ -619,6 +622,8 @@
     let username = null;
     let subscriptions = new Map(); // 현재 구독 중인 채팅방 저장
     let currentParticipants = new Set();
+    let userKing = document.getElementById("king").value;
+    let boo = document.getElementById("boo").value;
 
     // 서버 연결 설정
     function connect() {
@@ -850,29 +855,69 @@
         modal.classList.remove('show');
     }
 
+    // function updateParticipantsList(participants) {
+    //     const participantsList = document.getElementById('participantsList');
+    //     participantsList.innerHTML = '';
+    //
+    //
+    //     participants.forEach(participant => {
+    //         console.log("userKing:", userKing);
+    //         console.log("boo:", boo);
+    //         console.log("id:", participant.userId);
+    //         const li = document.createElement('li');
+    //         li.className = 'participant-item';
+    //         li.innerHTML = `
+    //     <a href="/user/userprofile${participant.userId}" class="participant-avatar">
+    //         <img src="/uploads/${participant.photoUrl}" alt="${participant.nickname}"
+    //              style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+    //     </a>
+    //     <div class="participant-info">
+    //         <div class="participant-name">${participant.nickname}</div>
+    //     </div>
+    //     <form action="/chat/kickUser/${participant.userId}" method="post">
+    //         <input type="hidden" name="roomId" value="${currentRoom}"/>
+    //
+    //         ${boo === userKing && boo !== participant.userId ? `
+    //         <button type="button" class="kick-button" onclick="kickUser(this.form, '${participant.nickname}');">
+    //             <i class="fas fa-user"></i>
+    //             추방
+    //         </button>
+    //     ` : ''}
+    //     </form>
+    //     `;
+    //         participantsList.appendChild(li);
+    //     });
+    // }
+
     function updateParticipantsList(participants) {
         const participantsList = document.getElementById('participantsList');
         participantsList.innerHTML = '';
 
         participants.forEach(participant => {
+            console.log("userKing:", userKing);
+            console.log("boo:", boo);
+            console.log("id:", participant.userId);
             const li = document.createElement('li');
             li.className = 'participant-item';
             li.innerHTML = `
-            <a href="/user/userprofile${participant.userId}" class="participant-avatar">
-                <img src="/uploads/${participant.photoUrl}" alt="${participant.nickname}"
-                     style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
-            </a>
-            <div class="participant-info">
-                <div class="participant-name">${participant.nickname}</div>
-            </div>
-            <form action="/chat/kickUser/${participant.userId}" method="post">
-                <input type="hidden" name="roomId" value="${currentRoom}"/>
-                <button type="button" class="kick-button" onclick="kickUser(this.form, '${participant.nickname}');">
-                    <i class="fas fa-user"></i>
-                    추방
-                </button>
-            </form>
-        `;
+    <a href="/user/userprofile${participant.userId}" class="participant-avatar">
+        <img src="/uploads/${participant.photoUrl}" alt="${participant.nickname}"
+             style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;">
+    </a>
+    <div class="participant-info">
+        <div class="participant-name">${participant.nickname}</div>
+    </div>
+    <form action="/chat/kickUser/${participant.userId}" method="post">
+        <input type="hidden" name="roomId" value="${currentRoom}"/>
+
+        ${boo === userKing && participant.userId != boo ? `
+        <button type="button" class="kick-button" onclick="kickUser(this.form, '${participant.nickname}');">
+            <i class="fas fa-user"></i>
+            추방
+        </button>
+    ` : ''}
+    </form>
+    `;
             participantsList.appendChild(li);
         });
     }

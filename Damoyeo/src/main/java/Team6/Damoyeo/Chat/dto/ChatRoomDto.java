@@ -1,5 +1,6 @@
 package Team6.Damoyeo.chat.dto;
 
+import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.chat.Entity.ChatRoom;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +21,9 @@ public class ChatRoomDto {
 
     private String photoUrl;
 
-    private Integer postId;
+//    private Integer postId;
+
+    private Post post;
 
     public static ChatRoomDto from(ChatRoom chatRoom) {
         return ChatRoomDto.builder()
@@ -28,7 +31,7 @@ public class ChatRoomDto {
                 .postTitle(chatRoom.getPost().getTitle())
                 .createdAt(chatRoom.getCreatedAt())
                 .photoUrl(chatRoom.getPost().getPhotoUrl())
-                .postId(chatRoom.getPost().getPostId())
+                .post(chatRoom.getPost())
                 .build();
     }
 

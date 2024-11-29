@@ -55,6 +55,12 @@ public class ChatService {
                 .collect(Collectors.toList());
     }
 
+//    public List<Integer> getPost(ChatRoomDto chatRoomDto) {
+//        Integer postId = chatRoomDto.getPost().getPostId();
+//        Optional<Post> byId = postRepository.findById(postId);
+//        if ()
+//    }
+
     public void createChatRoomForPost(Post post, Integer userId) {
 
         // 1. 채팅방 생성
