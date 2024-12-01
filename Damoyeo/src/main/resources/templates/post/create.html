@@ -53,11 +53,14 @@
 
     .form-group1 {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        width: 1000px;
-        margin: 0 auto; /* 수평 가운데 정렬 */
-        position: relative; /* 상대 위치 지정 */
+        gap: 10px;
+        width: 100%; /* 부모 요소에 맞게 */
+        max-width: 1000px; /* 최대 너비 제한 */
+        margin: 0 auto;
+        position: relative; /* 위치 고정 */
+        z-index: 1; /* 지도보다 위에 위치 */
     }
 
     .form-group1 input {
@@ -130,7 +133,7 @@
         justify-content: center;
         flex-direction: column;
         align-items: center;
-        height: 400px;
+        height: 450px;
     }
 
 
@@ -165,12 +168,27 @@
 
     .form-grouparea1 {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
-        width: 800px; /* 고정된 픽셀 값 */
-        height: 200px; /* 고정된 픽셀 값 */
-        position: relative; /* 위치 조정 */
-        gap: 40px; /* 자식 요소 간 간격 */
+        gap: 10px;
+        width: 100%;
+        max-width: 1000px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        height: 100px; /* 고정 높이를 추가하여 위치가 유지되도록 설정 */
+    }
+
+    #readAddress,#detailAddress {
+        width: 100%; /* 필드의 너비를 부모 요소에 맞게 설정 */
+        max-width: 400px; /* 최대 너비를 400px로 설정 */
+        height: 40px; /* 높이 설정 */
+        border: none;
+        border-bottom: 2px solid #A7C7E7;
+        padding-left: 10px;
+        font-family: 'Pretendard-Regular', sans-serif;
+        font-size: 14px;
+        color: lightgray;
     }
 
 
@@ -257,7 +275,9 @@
     }
 
     .file-input-container label {
-        display: block;
+        display: flex; /* 플렉스 컨테이너로 설정 */
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
         color: white;
         width: 120px;
         height: 50px;
@@ -266,9 +286,6 @@
         font-size: 15px;
         font-weight: bold;
         border-radius: 0.5rem;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         cursor: pointer;
         font-family: 'Pretendard-Regular', sans-serif;
     }
@@ -281,12 +298,12 @@
     .file-input-container label i {
         font-size: 16px;
         color: white;
-        margin-right: 10px;
+        margin-right: 5px;
     }
 
 
     button {
-        width: 160px;
+        width: 120px;
         height: 50px;
         color: white;
         background-color: #A7C7E7;
@@ -303,7 +320,7 @@
     }
 
     .form-group-container2 #roadAddress {
-        width: 30px;
+        width: 100px;
         height: 40px;
         border: none;
         border-bottom: 0.5px solid #A7C7E7;
@@ -320,7 +337,7 @@
     }
 
     #roadAddress {
-        width: 260px;
+        width: 400px;
         height: 40px;
         border: none;
         border-bottom: 0.5px solid #A7C7E7;
@@ -344,22 +361,21 @@
     }
 
     #addressbutton {
-        width: 100px;
-        height: 50px;
+        width: 100px; /* 버튼 너비를 늘림 */
+        height: 40px; /* 높이 필드와 동일 */
         color: white;
         background-color: #A7C7E7;
-        font-weight: 800;
+        font-weight: 600;
         font-size: 1.0em;
-        font-family: 'Pretendard-Regular', sans-serif;
         border: none;
         border-radius: 0.2rem;
-        position: relative; /* 부모 요소 기준으로 이동 */
+        cursor: pointer;
     }
 
 
-    #map {
+    .map {
         width: 800px;
-        height: 400px;
+        height: 600px;
     }
 
 </style>
@@ -412,69 +428,80 @@
         <textarea id="content" placeholder="내용을 입력하세요" th:field="*{content}" rows="5" required></textarea>
     </div>
     <br>
-    <div class="form-group-map">
-        <input style="display: none" type="text" id="roadAddress" readonly placeholder="주소 검색">
-        <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
-        <div id="map" style="display: none;"></div>
-        <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-        <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
-        <script>
-            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-                mapOption = {
-                    center: new kakao.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-                    level: 5 // 지도의 확대 레벨
-                };
-
-            //지도를 미리 생성
-            var map = new kakao.maps.Map(mapContainer, mapOption);
-
-            //주소-좌표 변환 객체를 생성
-            var geocoder = new kakao.maps.services.Geocoder();
-            //마커를 미리 생성
-            var marker = new kakao.maps.Marker({
-                position: new kakao.maps.LatLng(37.537187, 127.005476),
-                map: map
-            });
-
-
-            function sample5_execDaumPostcode() {
-                new daum.Postcode({
-                    oncomplete: function (data) {
-                        var addr = data.address; // 최종 주소 변수
-
-                        // 주소 정보를 해당 필드에 넣는다.
-                        document.getElementById("readAddress").value = addr;
-                        document.getElementById("roadAddress").value = addr;
-                        // 주소로 상세 정보를 검색
-                        geocoder.addressSearch(data.address, function (results, status) {
-                            // 정상적으로 검색이 완료됐으면
-                            if (status === daum.maps.services.Status.OK) {
-
-                                var result = results[0]; //첫번째 결과의 값을 활용
-
-                                // 해당 주소에 대한 좌표를 받아서
-                                var coords = new daum.maps.LatLng(result.y, result.x);
-                                // 지도를 보여준다.
-                                mapContainer.style.display = "block";
-                                map.relayout();
-                                // 지도 중심을 변경한다.
-                                map.setCenter(coords);
-                                // 마커를 결과값으로 받은 위치로 옮긴다.
-                                marker.setPosition(coords)
-                            }
-                        });
-                    }
-                }).open();
-            }
-        </script>
-    </div>
-    <br>
     <div class="form-group-container">
         <!--  리드온리로 해서 여기다 타이핑 못하게 하긴했음  -->
         <div class="form-grouparea1">
-            <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly/>
-            <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required/>
+            <input type="text" id="readAddress" placeholder="지역(주소 검색버튼을 눌러주세요.)" th:field="*{roadAddress}" required readonly />
+            <div class="form-group-map">
+                <input style="display: none" type="text" id="roadAddress" readonly placeholder="주소 검색">
+                <input type="button" id="addressbutton" onclick="sample5_execDaumPostcode()" value="주소 검색"><br>
+            </div>
+            <input type="text" id="detailAddress" placeholder="상세주소를 입력해주세요" th:field="*{detailAddress}" required />
         </div>
+        <div class="map" id="map-container">
+            <div id="map" style="display: none;"></div>
+        </div>
+            <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+            <script th:src="@{'//dapi.kakao.com/v2/maps/sdk.js?appkey=' + ${apiKey} + '&libraries=services'}"></script>
+            <script>
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+                    mapOption = {
+                        center: new kakao.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+                        level: 5 // 지도의 확대 레벨
+                    };
+
+                //지도를 미리 생성
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+
+                //주소-좌표 변환 객체를 생성
+                var geocoder = new kakao.maps.services.Geocoder();
+                //마커를 미리 생성
+                var marker = new kakao.maps.Marker({
+                    position: new kakao.maps.LatLng(37.537187, 127.005476),
+                    map: map
+                });
+
+
+                function sample5_execDaumPostcode() {
+                    new daum.Postcode({
+                        oncomplete: function (data) {
+                            var addr = data.address; // 최종 주소 변수
+
+                            // 주소 정보를 해당 필드에 넣는다.
+                            document.getElementById("readAddress").value = addr;
+                            document.getElementById("roadAddress").value = addr;
+
+                            // 지도 div를 표시
+                            mapContainer.style.display = "block";
+                            mapContainer.style.width = "800px"; // 너비 설정
+                            mapContainer.style.height = "400px"; // 높이 설정
+                            map.relayout(); // 지도 크기 재설정
+
+                            // 주소로 상세 정보를 검색
+                            geocoder.addressSearch(data.address, function (results, status) {
+                                if (status === kakao.maps.services.Status.OK) {
+                                    var result = results[0]; // 첫 번째 결과의 값을 활용
+
+                                    // 해당 주소에 대한 좌표를 받아서
+                                    var coords = new kakao.maps.LatLng(result.y, result.x);
+
+                                    // 지도 중심을 변경
+                                    map.setCenter(coords);
+                                    // 마커를 결과값으로 받은 위치로 이동
+                                    marker.setPosition(coords);
+
+                                    // 지도 위치를 고정
+                                    mapContainer.style.position = "relative";
+                                    mapContainer.style.top = "10px"; // 원하는 위치 조정
+                                }
+                            });
+                        }
+                    }).open();
+                }
+            </script>
+        </div>
+    </div>
+        <br>
         <div class="form-group-container2">
             <div class="file-input-container">
                 <input type="file" name="photo" id="photoUrl"/>
