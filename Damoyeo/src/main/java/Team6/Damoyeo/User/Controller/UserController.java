@@ -37,7 +37,6 @@ public class UserController {
     private final HttpSession httpSession;
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
-    public  final MailService mailService;
 
     // 회원가입 폼 페이지로 이동
     @GetMapping("/register")

@@ -61,7 +61,6 @@ public class MainController {
 
     @PostMapping("/mailSend")
     public ResponseEntity<?> mailSend(@RequestParam("email") String mail) {
-        System.out.println(mail);
         try {
             int number = mailService.sendMail(mail);
             // 해당 이메일의 인증번호 저장
