@@ -54,13 +54,14 @@
             width: 80%;
             justify-content: flex-start;
             flex-wrap: wrap;
-            row-gap: 30px;
-            column-gap: 15px;
+            row-gap: 40px;
+            column-gap: 16px;
+            align-content: flex-start;
         }
 
 
         .section {
-            width: 1200px;
+            width: 1100px;
             margin: 0 auto;
             display: flex;
             margin-top: 20px;
@@ -70,12 +71,14 @@
         .filter-container {
             display: flex;
             flex-direction: column;
-            width: 20%;
+            width: 15%;
         }
 
         .post {
             width: 200px;
-            height: 250px;
+            height: auto;
+            border-radius: 10px;
+            background-color: #fff;
         }
 
         .post img {
@@ -90,6 +93,7 @@
         .detail-img {
             overflow: hidden;
             border-radius: .375rem;
+            outline: 0.1px solid rgba(0, 0, 0, 0.1);
         }
 
 
@@ -255,6 +259,45 @@
             padding-bottom: 20px;
         }
 
+        .create-btn {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .create-btn a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .create-btn a:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .create-btn a:active {
+            background-color: #003f7f;
+            transform: translateY(0);
+        }
+
+        .filter-reset{
+            text-decoration: underline lightgray;
+            color: #868b94;;
+        }
+
+        .filter-reset:hover{
+            cursor: pointer;
+            color: #0056b3;
+            text-decoration: 1px underline #0056b3;
+        }
+
+
 
     </style>
 </head>
@@ -341,64 +384,67 @@
                         </div>
                         <button class="show-more-btn">더보기</button>
                     </div>
-                </div>
-                <div class="filter-box2">
-                    <h3 class="position">카테고리</h3>
-                    <div class="checkbox-container2">
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn checkbox-selected"></div>
-                            <span>운동/스포츠</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>음악/악기</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>아웃도어/여행</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>게임/오락</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>요리/제조</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>외국어/언어</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>스포츠관람</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>인문학/철학</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>자기개발</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>독서</span>
-                        </a>
+                    <div class="filter-box2">
+                        <h3 class="position">카테고리</h3>
+                        <div class="checkbox-container2">
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn checkbox-selected"></div>
+                                <span>운동/스포츠</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>음악/악기</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>아웃도어/여행</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>게임/오락</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>요리/제조</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>외국어/언어</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>스포츠관람</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>인문학/철학</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>자기개발</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>독서</span>
+                            </a>
+                        </div>
                     </div>
-                </div>
-                <div class="filter-box3">
-                    <h3 class="position">정렬</h3>
-                    <div class="checkbox-container3">
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn checkbox-selected"></div>
-                            <span>최신순</span>
-                        </a>
-                        <a href="" class="checkbox">
-                            <div class="checkbox-btn"></div>
-                            <span>인기순</span>
-                        </a>
+                    <div class="filter-box3">
+                        <h3 class="position">정렬</h3>
+                        <div class="checkbox-container3">
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn checkbox-selected"></div>
+                                <span>최신순</span>
+                            </a>
+                            <a href="" class="checkbox">
+                                <div class="checkbox-btn"></div>
+                                <span>인기순</span>
+                            </a>
+                        </div>
                     </div>
+                    <th:block th:if="${userId != null}">
+                        <div class="create-btn"><a th:href="@{/post/create}">게시글 작성</a></div>
+                    </th:block>
                 </div>
             </div>
             <div class="post-container">
@@ -424,10 +470,6 @@
                 </div>
             </div>
         </div>
-
-        <th:block th:if="${userId != null}">
-            <div><a th:href="@{/post/create}">게시글 작성</a></div>
-        </th:block>
         <br><br><br><br>
         <div class="page-btn">
             <a th:href="@{/post/main(page=${page - 1})}" th:if="${search == null && page > 0}"> ◀ </a>
