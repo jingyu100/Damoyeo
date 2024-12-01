@@ -414,13 +414,14 @@ public class UserController {
         return "redirect:/user/check_password";
     }
 
-
+    // 아이디 찾기 페이지로 이동
     @GetMapping("find-email")
     public String findUserEmail() {
 
         return "user/find_email";
     }
 
+    // 아이디 찾는 메서드
     @PostMapping("find-email")
     public String findUserEmail(@RequestParam("name") String name,@RequestParam("phone") String phone, Model model) {
         Optional<User> user = userService.findByUserId(name,phone);
@@ -433,6 +434,23 @@ public class UserController {
             return "user/find_email";
         }
 
+    }
 
+    @GetMapping("find-password")
+    public String findUserPassword() {
+        return "user/find_password";
+    }
+
+    @PostMapping("find-password")
+    public String findUserPassword(@RequestParam("email") String email, @RequestParam("phone")String phone,Model model) {
+        Optional<User> user = userService.findByUserId(email,phone);
+
+        if(user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "user/find_email";
+        }else {
+            model.addAttribute("error","사용자를 찾을 수 없습니다");
+            return "user/find_email";
+        }
     }
 }
