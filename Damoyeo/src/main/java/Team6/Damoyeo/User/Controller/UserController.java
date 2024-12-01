@@ -1,5 +1,6 @@
 package Team6.Damoyeo.User.Controller;
 
+import Team6.Damoyeo.MailService;
 import Team6.Damoyeo.Post.Entity.Post;
 import Team6.Damoyeo.Post.Service.PostService;
 import Team6.Damoyeo.User.Entity.User;
@@ -36,6 +37,7 @@ public class UserController {
     private final HttpSession httpSession;
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
+    public  final MailService mailService;
 
     // 회원가입 폼 페이지로 이동
     @GetMapping("/register")
@@ -305,8 +307,14 @@ public class UserController {
     //개인정보설정 페이지로 이동
     @GetMapping("/setting")
     public String setting(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
+        if(userId == null) {
+            return "redirect:/user/login";
+        }
 
         User user = userService.findByUser(userId);
+        if (user == null) {
+            return "redirect:/user/login";
+        }
 
         model.addAttribute("user", user);
 
@@ -321,25 +329,29 @@ public class UserController {
                                  @RequestParam("new_password") String new_password,
                                  @RequestParam("new_check_password") String new_change_password,
                                  @ModelAttribute User user) {
+//                                 @RequestParam("email") String email) {
 
         User myuser = userService.findByUser(userId);
-
+        
+        //현재 비밀번호가 맞는지 체크
         if(!passwordEncoder.matches(check_password,myuser.getPassword())) {
             model.addAttribute("error","현재 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
-
-        if(check_password.equals(new_password)) {
+        
+        // 현재 비밀번호와 새 비밀번호 비교
+        if(check_password !=null && check_password.equals(new_password)) {
             model.addAttribute("error","현재 비밀번호와 새 비밀번호가 일치합니다");
             return "user/setting";
         }
 
-
-        if(new_password != null && !new_password.equals(new_change_password)) {
+        //새로운 비밀번호 확인 조건
+        if(!new_password.equals(new_change_password)) {
             model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
-
+        
+        // 새로운 비밀번호 정규식
         if (!isValidPassword(new_password)) {
             model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
             return "user/setting";
@@ -357,9 +369,48 @@ public class UserController {
         return password != null && password.matches(passwordPattern);
     }
 
-//    Model model, @SessionAttribute(name = "userId", required = false) Integer userId
-    @GetMapping("/change_email")
-    public String changeEmail() {
-        return "user/change_email";
+    // 정규식 이메일 메서드
+    public boolean isValidEmail(String email) {
+        String EmailPattern = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
+        return email != null && email.matches(EmailPattern);
+    }
+
+
+    @PostMapping("/change_Email")
+    public String updateEmail(@SessionAttribute(name = "userId", required = false) Integer userId,
+                              @RequestParam("email") String email,
+                              @RequestParam("verificationCode") String verificationCode,
+                              Model model) {
+
+        if(userId == null) {
+            return "redirect:/user/login";
+        }
+        System.out.println(userId + "     asdfasdfasdfasdfsadfasdfasdfasd     " + email + "   ahsdfuihasdiufasuidfhasuidfhiasdhfasi   " + verificationCode);
+        User myuser = userService.findByUser(userId);
+
+        // 이메일 변경 처리
+        if (email != null && !email.equals(myuser.getEmail())) {
+            // 이메일 유효성 검사
+            if (!isValidEmail(email)) {
+                model.addAttribute("error", "유효하지 않은 이메일 형식입니다.");
+                return "user/setting";
+            }
+
+            // 이메일 중복 확인
+            if (userService.emailCheck(email)) {
+                model.addAttribute("error", "이미 사용 중인 이메일입니다.");
+                return "user/setting";
+            }
+
+            // 인증번호 검증
+            if (!verificationCode.equals(""+MailService.number)) {
+                model.addAttribute("error", "인증번호가 올바르지 않습니다.");
+                return "user/setting";
+            }
+
+            myuser.setEmail(email);
+            userService.updateUser(myuser);
+        }
+        return "redirect:/user/check_password";
     }
 }

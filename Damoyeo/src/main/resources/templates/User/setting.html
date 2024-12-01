@@ -5,8 +5,14 @@
     <title>Title</title>
     <script>
         // 비밀번호 정규식
+        var emailUnique = false;
+        var emailVerified = false;
+        var passwordUnique = false;
 
+
+        //새비밀번호 정규식 체크
         function checkPass() {
+            const check_password = document.getElementById("check_password");
             const password = document.getElementById("new_password");
             const passwordMessage = document.getElementById("passwordMessage");
             const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&^])[A-Za-z\d@$!%*?&^]{8,}$/;
@@ -14,13 +20,22 @@
             if (!passwordPattern.test(password.value)) {
                 passwordMessage.innerHTML = "비밀번호는 영문,숫자,특수문자 포함 8자 이상이어야 합니다";
                 passwordMessage.style.color = "red";
-            } else {
+                passwordUnique = false;
+            }else if(check_password.value === password.value) {
+                passwordMessage.innerHTML = "현재 비밀번호와 같습니다";
+                passwordMessage.style.color = "red";
+                passwordUnique = false;
+            }else {
                 passwordMessage.innerHTML = "사용 가능한 비밀번호 입니다";
                 passwordMessage.style.color = "green";
+                passwordUnique = true;
             }
+
+
             updateSubmitButton();
         }
 
+        // 새 비밀번호 확인 메서드
         function checkPassword() {
             const password = document.getElementById("new_password");
             const confirmPassword = document.getElementById("new_check_password");
@@ -29,12 +44,188 @@
             if (password.value !== confirmPassword.value) {
                 passwordMessageNotice.innerHTML = "비밀번호가 일치하지 않습니다";
                 passwordMessageNotice.style.color = "red";
+                passwordUnique = false;
             } else {
                 passwordMessageNotice.innerHTML = "비밀번호가 일치합니다";
                 passwordMessageNotice.style.color = "green";
+                passwordUnique = true;
             }
             updateSubmitButton();
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const emailDisplay = document.getElementById("email-display");
+            const emailInput = document.getElementById("email");
+            const chagebtn = document.getElementById("change-btn");
+            const savebtn = document.getElementById("save-btn");
+            const cancelbtn = document.getElementById("cancel-btn");
+            const message = document.getElementById("emailNotice");
+            const verificationCode = document.getElementById("verificationCode");
+            const verificationButton = document.getElementById("verificationButton");
+
+            chagebtn.addEventListener("click", () => {
+               emailInput.value = emailDisplay.textContent;
+               emailDisplay.style.display = "none";
+               emailInput.style.display = "inline-block";
+               chagebtn.style.display = "none";
+               savebtn.style.display = "inline-block";
+               cancelbtn.style.display = "inline-block";
+               message.style.display = "inline-block";
+               verificationCode.style.display = "inline-block";
+               verificationButton.style.display = "inline-block";
+            });
+
+            cancelbtn.addEventListener("click",resetUI);
+
+            function resetUI() {
+                emailDisplay.style.display = "inline-block";
+                emailInput.style.display = "none";
+                chagebtn.style.display = "inline-block";
+                savebtn.style.display = "none";
+                cancelbtn.style.display = "none";
+                message.style.display = "none";
+                verificationCode.style.display = "none";
+                verificationButton.style.display = "none";
+            }
+        });
+
+        function checkEmail() {
+            emailVerified = false;  // 이메일이 변경되면 인증 상태 초기화
+            const email = document.getElementById("email").value;
+            const emailNotice = document.getElementById("emailNotice");
+            const verificationDiv = document.getElementById("verificationDiv");
+            const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+
+            // 이메일 비어있는지 확인
+            // 이메일 입력란이 비어있을 때 인증 입력창 숨기기
+            if (!email) {
+                verificationDiv.style.display = "none";
+                emailNotice.innerHTML = "이메일을 입력해주세요.";
+                emailNotice.style.color = "red";
+                emailUnique = false;
+                updateSubmitButton();
+                return;
+            }
+
+            // 정규식 확인
+            if (!regex.test(email)) {
+                emailNotice.innerHTML = "올바른 이메일 형식을 입력해 주세요.";
+                emailNotice.style.color = "red";
+                emailUnique = false;
+                updateSubmitButton();
+                return;
+            }
+
+            // 이메일 중복 체크
+            fetch(`/user/check-email?email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        emailNotice.innerHTML = "이미 사용 중인 아이디입니다";
+                        emailNotice.style.color = "red";
+                        emailUnique = false;
+                    } else {
+                        emailNotice.innerHTML = "사용 가능한 아이디입니다";
+                        emailNotice.style.color = "green";
+                        emailUnique = true;
+                    }
+                    updateSubmitButton();
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    emailNotice.innerHTML = "이메일 확인 중 오류가 발생했습니다";
+                    emailNotice.style.color = "red";
+                    emailUnique = false;
+                    updateSubmitButton();
+                });
+        }
+
+        function sendEmail() {
+            const email = document.getElementById("email").value;
+            if (!email) {
+                alert("이메일을 입력해주세요.");
+                return;
+            }
+
+            fetch('/mailSend', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Transfer-encoding' : 'chunked',
+                },
+                body: `email=${encodeURIComponent(email)}`
+            })
+                .then(response => {
+                    console.log(response);
+                    if (response.ok) {
+                        alert("인증번호가 발송되었습니다.");
+                        document.getElementById("verificationDiv").style.display = "block";
+                    } else {
+                        alert("인증번호 발송에 실패했습니다.");
+                    }
+                })
+                .catch(error => {
+                    console.log(error);
+                    alert("서버 오류가 발생했습니다.");
+                });
+        }
+
+
+        function verifyCode() {
+            const code = document.getElementById("verificationCode").value;
+            const email = document.getElementById("email").value;
+            const emailSubmit = document.getElementById("emailSubmit");
+
+            if (!code) {
+                alert("인증번호를 입력해주세요.");
+                return;
+            }
+
+            fetch(`/mailCheck?userNumber=${code}&email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    const notice = document.getElementById("verificationNotice");
+                    if (data.verified) {
+                        notice.innerHTML = data.message;
+                        notice.style.color = "green";
+                        document.getElementById("email").readOnly = true;
+                        document.querySelector("button[onclick='sendEmail()']").disabled = true;
+                        document.getElementById("verificationDiv").style.innerHTML = "이메일 인증이 완료되었습니다";
+                        document.getElementById("verificationButton").style.display = "none";
+                        document.getElementById("verificationCode").style.display = "none";
+                        emailSubmit.style.display="block";
+                        emailVerified = true;
+                    } else {
+                        notice.innerHTML = data.message;
+                        notice.style.color = "red";
+                        emailVerified = false;
+                    }
+                    updateSubmitButton();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("서버 오류가 발생했습니다.");
+                    emailVerified = false;
+                    updateSubmitButton();
+                });
+        }
+
+
+        function updateSubmitButton() {
+            const submitButton = document.getElementById("emailSubmit");
+            // 이메일 인증까지 완료되어야 회원가입 버튼 활성화
+            if (emailUnique && emailVerified) {
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = "#A7C7E7";
+                submitButton.style.cursor = "pointer";
+            } else {
+                submitButton.disabled = true;
+                submitButton.style.backgroundColor = "#cccccc";
+                submitButton.style.cursor = "not-allowed";
+            }
+        }
+
     </script>
     <style>
         body {
@@ -153,11 +344,25 @@
 <div class="container">
     <h1>개인정보 변경</h1>
     <table>
+        <form th:action="@{/user/change_Email}" method="post" id="email-form" >
         <tr>
             <td>아이디</td>
-            <td><span th:text="${user.email}"></span>
-                <a th:href="@{/user/change_email}" class="btn btn-primary">변경</a></td>
+            <td><span id="email-display" th:text="${user.email}"></span>
+                <input id="email" name="email" type="text" style="display: none" value="" oninput="checkEmail()"/>
+                <a id="change-btn" class="btn btn-primary" >변경</a>
+                <p id="emailNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
+                <button type="button" id="save-btn" class="btn btn-success" style="display: none" onclick="sendEmail()">이메일 인증</button>
+                <div id="verificationDiv" style="display: none; margin-top: 10px;">
+                    <input type="text" id="verificationCode" name="verificationCode" class="text" style="display: none" placeholder="인증번호 입력">
+                    <button type="button"  onclick="verifyCode()" id="verificationButton" style="display: none" class="btn btn-primary">인증확인</button>
+                    <p id="verificationNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
+                </div>
+                <button id="cancel-btn" class="btn btn-cancel" style="display: none">취소</button>
+
+            </td>
         </tr>
+            <button type="submit" id="emailSubmit" class="btn" style="display: none">이메일 변경</button>
+        </form>
         <tr>
             <td>이름</td>
             <td><span th:text="${user.name}"></span></td>
@@ -172,7 +377,7 @@
         </tr>
     </table>
 
-    <form method="post" th:action="@{/user/change_user}">
+    <form method="post" th:action="@{/user/change_user}" id="password-form">
         <table>
             <tr>
                 <td><label for="check_password">현재 비밀번호 : </label></td>
@@ -194,7 +399,7 @@
 
         </table>
         <div class="btn-group">
-            <button type="submit" class="btn">변경</button>
+            <button type="submit" class="btn">비밀번호 변경</button>
             <a th:href="@{/user/check_password}" class="btn btn-secondary">뒤로</a>
         </div>
     </form>
