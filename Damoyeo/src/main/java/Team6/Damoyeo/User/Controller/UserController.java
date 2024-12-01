@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/user")
@@ -374,7 +375,7 @@ public class UserController {
         return email != null && email.matches(EmailPattern);
     }
 
-
+    // 이메일 변경 메서드
     @PostMapping("/change_Email")
     public String updateEmail(@SessionAttribute(name = "userId", required = false) Integer userId,
                               @RequestParam("email") String email,
@@ -411,5 +412,27 @@ public class UserController {
             userService.updateUser(myuser);
         }
         return "redirect:/user/check_password";
+    }
+
+
+    @GetMapping("find-email")
+    public String findUserEmail() {
+
+        return "user/find_email";
+    }
+
+    @PostMapping("find-email")
+    public String findUserEmail(@RequestParam("name") String name,@RequestParam("phone") String phone, Model model) {
+        Optional<User> user = userService.findByUserId(name,phone);
+
+        if(user.isPresent()) {
+            model.addAttribute("user", user.get());
+            return "user/find_email";
+        }else {
+            model.addAttribute("error","사용자를 찾을 수 없습니다");
+            return "user/find_email";
+        }
+
+
     }
 }

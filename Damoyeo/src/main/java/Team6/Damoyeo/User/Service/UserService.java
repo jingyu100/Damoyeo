@@ -199,4 +199,8 @@ public class UserService {
     }
 
 
+    //사용자 아이디 찾기 메서드
+    public Optional<User> findByUserId(String name, String phone) {
+        return userRepository.findByNameAndPhone(name,phone);
+    }
 }
