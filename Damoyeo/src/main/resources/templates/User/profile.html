@@ -12,6 +12,13 @@
 <br><br>
 <!--메인 시작부분 -->
 <style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
     @font-face {
             font-family: 'Pretendard-Regular';
             src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -34,12 +41,12 @@ body{
 }
     .post-container {
         display: flex;
+        width: 1000px;
         flex-wrap: wrap;
+        justify-content: flex-start;
+        align-content: flex-start;
         gap: 20px;
-        justify-content: center;
-        margin-top: 20px;
-        margin-left: 10%;
-        margin-right: 10%;
+        margin: 0 auto;
     }
 
     .post {
@@ -52,23 +59,34 @@ body{
 
     .post-detail {
         text-decoration: none;
+        overflow: hidden;
     }
 
     .post-title {
         color: black;
         font-weight: bold;
+        font-size: 20px;
         margin-bottom: 10px;
+        text-overflow: ellipsis;
     }
 
     .post-content {
         font-size: 0.9em;
         color: #666;
+        text-overflow: ellipsis;
         margin-bottom: 10px;
     }
 
     .post-info {
-        font-size: 0.8em;
+        font-size: 0.8rem;
         color: #888;
+        overflow: hidden;
+    }
+
+    .post-info span{
+        font-size: 0.8rem;
+        color: #888;
+        text-overflow: ellipsis;
     }
 
     .post img {
@@ -231,15 +249,6 @@ body{
         top: -10px;
     }
 
-    /* 게시물 컨테이너 */
-    .post-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: flex-start; /* 각 줄 왼쪽부터 정렬 */
-        align-content: flex-start; /* 전체 영역도 위쪽부터 정렬 */
-        gap: 20px; 
-    }
-
     /* 게시물 아이템 */
     .post {
         flex: 0 0 calc(33.333% - 20px); /* 고정된 너비로 한 줄에 3개 */
@@ -251,6 +260,34 @@ body{
         width: 100%;
         height: auto;
     }
+
+    .post {
+        position: relative;
+    }
+
+    .overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .completed-overlay {
+        width: 100px;
+        height: auto;
+        z-index: 20;
+    }
+
+    .post-detail[style*="pointer-events: none"] {
+        opacity: 0.7;
+    }
+
 </style>
 
 
@@ -258,21 +295,10 @@ body{
     <span>게시물</span>
 </div>
 <div class="post-container">
-<div th:each=" post : ${posts}" class="post">
-    <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-        <th:block th:if="${post.status.equals('2') or post.status.equals('3')}" >
-            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-            <div class="post-title" th:text="${post.title}">제목</div>
-            <div class="post-content" th:text="${post.content}">내용</div>
-            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
-            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
-            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
-            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
-            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
-            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
-            <div class="post-info"><span>상태: 모집완료</span></div>
-        </th:block>
-        <th:block th:if="${post.status.equals('1')}" >
+    <div th:each="post : ${posts}" class="post" style="position: relative;">
+        <a th:if="${post.status.equals('1')}"
+           th:href="@{|/post/detail${post.getPostId()}|}"
+           class="post-detail">
             <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
             <div class="post-title" th:text="${post.title}">제목</div>
             <div class="post-content" th:text="${post.content}">내용</div>
@@ -283,10 +309,25 @@ body{
             <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
             <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
             <div class="post-info"><span>상태: 모집중</span></div>
-        </th:block>
-    </a>
+        </a>
+        <div th:if="${post.status.equals('2') || post.status.equals('3')}" class="post-detail" style="pointer-events: none;">
+            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+            <div class="post-title" th:text="${post.title}">제목</div>
+            <div class="post-content" th:text="${post.content}">내용</div>
+            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
+            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
+            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
+            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
+            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
+            <div class="post-info"><span>상태: 모집완료</span></div>
+            <div class="overlay">
+                <img src="/uploads/Complete.jpg" alt="모집완료" class="completed-overlay">
+            </div>
+        </div>
+    </div>
 </div>
-</div>
+
 <br>
     <!--메인 게시물 끝 부분-->
 <div th:replace="~{footer.html}"></div>

@@ -166,9 +166,9 @@
         }
 
 
-        .page_title > img {
+        .page_title img{
             width: 100%;
-            height: 80%;
+            height: 100%;
 
         }
 
@@ -203,6 +203,8 @@
         }
 
         #count {
+            display: flex;
+            gap: 10px;
             font-size: 12px;
             color: black;
             margin-top: 15px;
@@ -251,7 +253,7 @@
         }
 
         .profile-container{
-            margin-top: 10px;
+            margin-top: 20px;
         }
 
         .nearBy-post > ul {
@@ -398,6 +400,12 @@
             flex-grow: 1;
         }
 
+        .img-container{
+            overflow: hidden;
+            outline: 0.1px solid rgba(0, 0, 0, 0.1);
+            border-radius: .375rem;
+        }
+
 
     </style>
 </head>
@@ -417,7 +425,9 @@
 <div class="section">
     <div class="section-wrap">
         <div class="page_title">
-            <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
+            <div class="img-container">
+                <img alt="Post Image" th:src="@{|/uploads/${post.photoUrl}|}">
+            </div>
             <div class="profile-container">
                 <a th:href="@{/user/userprofile{id}(id=${post.user.userId})}" class="profile" target="_parent">
                     <div class="profile-img">
