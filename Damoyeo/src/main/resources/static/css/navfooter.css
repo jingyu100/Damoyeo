@@ -198,6 +198,7 @@
         z-index: 999;
         box-sizing: border-box; /* 패딩 포함한 크기 계산 */
         text-align: left;
+        position: relative; /* 컨테이너 내부의 요소 배치 기반 */
     }
 
     /* Footer 안의 링크 스타일 */
