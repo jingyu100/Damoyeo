@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="/css/navfooter.css">
 <head>
     <meta charset="UTF-8">
     <title th:text="${post.postId == null ? '새 글 작성' : '글 수정'}">페이지 제목</title>
     <!-- 네비게이션 및 푸터 CSS 링크 -->
-    <link rel="stylesheet" href="../css/navfooter.css">
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
 </head>
 <body>
@@ -512,6 +513,8 @@
         </div>
     </div>
 </form>
+<br>
+<div th:replace="~{footer.html}" ></div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         //글 작성하면
@@ -598,9 +601,6 @@
     });
 
 </script>
-<br>
-<!-- 페이지 하단 푸터 삽입 (footer.html) -->
-<div th:replace="~{footer.html}" ></div>
 </body>
 </html>
 
