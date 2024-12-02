@@ -17,121 +17,122 @@
         src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
         font-weight: 400;
         font-style: normal;
-}
+    }
 
-body{
- font-family: 'Pretendard-Regular';
-}
+    body {
+        font-family: 'Pretendard-Regular';
+    }
 
-.content {
-    font-family: Arial, sans-serif;
-    width: 700px;
-    margin: 0 auto;
-    padding: 20px; /* 내부 여백 추가 */
-    border: 1px solid; /* 테두리 추가 */
-    border-radius: 10px; /* 모서리를 살짝 둥글게 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /*그림자 효과*/
-    background-color: #ffffff;
-}
+    .content {
+        font-family: Arial, sans-serif;
+        width: 700px;
+        margin: 0 auto;
+        padding: 20px; /* 내부 여백 추가 */
+        /*border: 1px solid; !* 테두리 추가 *!*/
+        border-radius: 10px; /* 모서리를 살짝 둥글게 */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /*그림자 효과*/
+        background-color: #ffffff;
+    }
 
-.profile-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    margin-bottom: 10px;
-}
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 10px;
+    }
 
-.details {
-    margin-top: 10px;
-    font-size: 1.5em;
-    width: 50%; /* 테이블 너비 조정 */
-    border-spacing: 0px 10px; /* 항목 간 간격 조정 */
-}
+    .details {
+        margin-top: 10px;
+        font-size: 1.5em;
+        width: 50%; /* 테이블 너비 조정 */
+        border-spacing: 0px 10px; /* 항목 간 간격 조정 */
+    }
 
-.details th {
-    text-align: left;
-    color: #555;
-    width: 20%; /* 텍스트 칸을 좁게 조정 */
-    padding-right: 5px; /* 텍스트와 입력 필드 간격 조정 */
-    white-space: nowrap; /* 줄바꿈 방지 */
-    vertical-align: top; /* 위쪽 정렬로 고정 */
-}
+    .details th {
+        text-align: left;
+        color: #555;
+        width: 20%; /* 텍스트 칸을 좁게 조정 */
+        padding-right: 5px; /* 텍스트와 입력 필드 간격 조정 */
+        white-space: nowrap; /* 줄바꿈 방지 */
+        vertical-align: top; /* 위쪽 정렬로 고정 */
+    }
 
-.details td {
-    text-align: left;
-    width: 80%; /* 입력 필드 칸을 넓게 조정 */
-}
+    .details td {
+        text-align: left;
+        width: 80%; /* 입력 필드 칸을 넓게 조정 */
+    }
 
-.text {
-    width: 300px;
-    height: 50px;
-    font-size: 1.2em;
-    font-weight: bold;
-    border: 0;
-    border-radius: 15px;
-    outline: none;
-    padding-left: 10px;
-    background-color: #ffffff;
-    border: 1px solid #A7C7E7;
-}
+    .text {
+        width: 300px;
+        height: 50px;
+        font-size: 1.2em;
+        font-weight: bold;
+        border: 0;
+        border-radius: 15px;
+        outline: none;
+        padding-left: 10px;
+        background-color: #ffffff;
+        border: 1px solid #A7C7E7;
+    }
 
-.area {
-    width: 200px;
-    height: 35px;
-    font-size: 15px;
-    border-radius: 15px;
-    padding-left: 10px;
-    background-color: #ffffff;
-    border: 1px solid #A7C7E7;
-}
+    .area {
+        width: 200px;
+        height: 35px;
+        font-size: 15px;
+        border-radius: 15px;
+        padding-left: 10px;
+        background-color: #ffffff;
+        border: 1px solid #A7C7E7;
+    }
 
-.custom-textarea {
-    width: 300px;
-    height: 50px;
-    font-size: 15px;
-    border: 1px solid #A7C7E7;
-    border-radius: 15px;
-    padding: 10px;
-    background-color: #ffffff;
-}
-.interests {
-    width: 200px;
-    height: 35px;
-    font-size: 15px;
-    border: 1px solid #A7C7E7;
-    border-radius: 15px;
-    padding-left: 10px;
-    background-color: #ffffff;
-}
+    .custom-textarea {
+        width: 300px;
+        height: 50px;
+        font-size: 15px;
+        border: 1px solid #A7C7E7;
+        border-radius: 15px;
+        padding: 10px;
+        background-color: #ffffff;
+    }
 
-.profile-photo img {
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
+    .interests {
+        width: 200px;
+        height: 35px;
+        font-size: 15px;
+        border: 1px solid #A7C7E7;
+        border-radius: 15px;
+        padding-left: 10px;
+        background-color: #ffffff;
+    }
 
-#photoUrl {
-    display: none; /* 파일 선택창 숨기기 */
-}
+    .profile-photo img {
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
 
-button {
-    margin-top: 10px;
-    padding: 10px 20px; /* 버튼 크기 조정 */
-    font-size: 1.6em;
-    background-color: #A7C7E7;
-    border: 2px solid #A7C7E7;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
-}
+    #photoUrl {
+        display: none; /* 파일 선택창 숨기기 */
+    }
 
-.form-buttons {
-    margin-top: 10px; /* 자기소개 아래 공간 조정 */
-    text-align: right;
-}
+    button {
+        margin-top: 10px;
+        padding: 10px 20px; /* 버튼 크기 조정 */
+        font-size: 1.6em;
+        background-color: #A7C7E7;
+        border: 2px solid #A7C7E7;
+        color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+
+    .form-buttons {
+        margin-top: 10px; /* 자기소개 아래 공간 조정 */
+        text-align: right;
+    }
 </style>
 
 <div class="content">
@@ -203,7 +204,7 @@ button {
             <button type="submit">수정</button>
         </div>
     </form>
-<!--    탈퇴용으로 임시로 만듬 나중에 지울꺼-->
+    <!--    탈퇴용으로 임시로 만듬 나중에 지울꺼-->
 
 </div>
 
