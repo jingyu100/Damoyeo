@@ -13,20 +13,23 @@
             const check_password = document.getElementById("check_password");
             const check_passwordMessage = document.getElementById("check_passwordMessage");
 
-            if(!check_password) {
+            if (!check_password) {
                 check_passwordMessage.innerHTML = "비밀번호를 입력해주세요";
                 check_passwordMessage.style.color = "red";
+                return; // 비밀번호 입력 필드가 없으면 함수 실행 중지
             }
 
-            fetch('/user/change_user', {
+            // 비밀번호 확인을 위한 POST 요청
+            fetch('/user/verify_password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
-                body: `password=${encodeURIComponent(check_password)}`
+                body: `password=${encodeURIComponent(check_password.value)}`
             })
                 .then(response => response.json())
                 .then(data => {
+                    // 비밀번호가 일치하는지 확인하여 메시지 표시
                     if (data.valid) {
                         check_passwordMessage.innerHTML = "현재 비밀번호가 확인되었습니다.";
                         check_passwordMessage.style.color = "green";
@@ -428,7 +431,7 @@
                 <td><label for="check_password">현재 비밀번호 : </label></td>
                 <td><input id="check_password" name="check_password" placeholder="현재 비밀번호를 입력해주세요" required
                            type="password" oninput="checkP()"/>
-                    <p id="check_passwordMessage" class="message"></p>
+                    <p id="check_passwordMessage" class="message"></p></td>
                 </td>
             </tr>
             <tr>
