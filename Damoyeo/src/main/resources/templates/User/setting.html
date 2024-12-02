@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
     <script>
         // 비밀번호 정규식
         var emailUnique = false;
@@ -21,11 +22,11 @@
                 passwordMessage.innerHTML = "비밀번호는 영문,숫자,특수문자 포함 8자 이상이어야 합니다";
                 passwordMessage.style.color = "red";
                 passwordUnique = false;
-            }else if(check_password.value === password.value) {
+            } else if (check_password.value === password.value) {
                 passwordMessage.innerHTML = "현재 비밀번호와 같습니다";
                 passwordMessage.style.color = "red";
                 passwordUnique = false;
-            }else {
+            } else {
                 passwordMessage.innerHTML = "사용 가능한 비밀번호 입니다";
                 passwordMessage.style.color = "green";
                 passwordUnique = true;
@@ -64,18 +65,18 @@
             const verificationButton = document.getElementById("verificationButton");
 
             chagebtn.addEventListener("click", () => {
-               emailInput.value = emailDisplay.textContent;
-               emailDisplay.style.display = "none";
-               emailInput.style.display = "inline-block";
-               chagebtn.style.display = "none";
-               savebtn.style.display = "inline-block";
-               cancelbtn.style.display = "inline-block";
-               message.style.display = "inline-block";
-               verificationCode.style.display = "inline-block";
-               verificationButton.style.display = "inline-block";
+                emailInput.value = emailDisplay.textContent;
+                emailDisplay.style.display = "none";
+                emailInput.style.display = "inline-block";
+                chagebtn.style.display = "none";
+                savebtn.style.display = "inline-block";
+                cancelbtn.style.display = "inline-block";
+                message.style.display = "inline-block";
+                verificationCode.style.display = "inline-block";
+                verificationButton.style.display = "inline-block";
             });
 
-            cancelbtn.addEventListener("click",resetUI);
+            cancelbtn.addEventListener("click", resetUI);
 
             function resetUI() {
                 emailDisplay.style.display = "inline-block";
@@ -152,7 +153,7 @@
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'Transfer-encoding' : 'chunked',
+                    'Transfer-encoding': 'chunked',
                 },
                 body: `email=${encodeURIComponent(email)}`
             })
@@ -194,7 +195,7 @@
                         document.getElementById("verificationDiv").style.innerHTML = "이메일 인증이 완료되었습니다";
                         document.getElementById("verificationButton").style.display = "none";
                         document.getElementById("verificationCode").style.display = "none";
-                        emailSubmit.style.display="block";
+                        emailSubmit.style.display = "block";
                         emailVerified = true;
                     } else {
                         notice.innerHTML = data.message;
@@ -338,29 +339,58 @@
         .message.success {
             color: green;
         }
+
+        .btn-delete {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #dc3545; /* Bootstrap danger color */
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            margin-top: 20px; /* Adds space above the button */
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333; /* Darker shade for hover effect */
+            transform: scale(1.02);
+        }
+
+        .btn-delete:focus {
+            outline: none;
+        }
     </style>
 </head>
 <body>
+<script src="/js/sweetalert2.min.js"></script>
 <div class="container">
     <h1>개인정보 변경</h1>
     <table>
-        <form th:action="@{/user/change_Email}" method="post" id="email-form" >
-        <tr>
-            <td>아이디</td>
-            <td><span id="email-display" th:text="${user.email}"></span>
-                <input id="email" name="email" type="text" style="display: none" value="" oninput="checkEmail()"/>
-                <a id="change-btn" class="btn btn-primary" >변경</a>
-                <p id="emailNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
-                <button type="button" id="save-btn" class="btn btn-success" style="display: none" onclick="sendEmail()">이메일 인증</button>
-                <div id="verificationDiv" style="display: none; margin-top: 10px;">
-                    <input type="text" id="verificationCode" name="verificationCode" class="text" style="display: none" placeholder="인증번호 입력">
-                    <button type="button"  onclick="verifyCode()" id="verificationButton" style="display: none" class="btn btn-primary">인증확인</button>
-                    <p id="verificationNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
-                </div>
-                <button id="cancel-btn" class="btn btn-cancel" style="display: none">취소</button>
+        <form th:action="@{/user/change_Email}" method="post" id="email-form">
+            <tr>
+                <td>아이디</td>
+                <td><span id="email-display" th:text="${user.email}"></span>
+                    <input id="email" name="email" type="text" style="display: none" value="" oninput="checkEmail()"/>
+                    <a id="change-btn" class="btn btn-primary">변경</a>
+                    <p id="emailNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
+                    <button type="button" id="save-btn" class="btn btn-success" style="display: none"
+                            onclick="sendEmail()">이메일 인증
+                    </button>
+                    <div id="verificationDiv" style="display: none; margin-top: 10px;">
+                        <input type="text" id="verificationCode" name="verificationCode" class="text"
+                               style="display: none" placeholder="인증번호 입력">
+                        <button type="button" onclick="verifyCode()" id="verificationButton" style="display: none"
+                                class="btn btn-primary">인증확인
+                        </button>
+                        <p id="verificationNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
+                    </div>
+                    <button id="cancel-btn" class="btn btn-cancel" style="display: none">취소</button>
 
-            </td>
-        </tr>
+                </td>
+            </tr>
             <button type="submit" id="emailSubmit" class="btn" style="display: none">이메일 변경</button>
         </form>
         <tr>
@@ -394,7 +424,7 @@
                 <td><label for="new_check_password">새 비밀번호 확인: </label></td>
                 <td><input id="new_check_password" name="new_check_password" oninput="checkPassword()"
                            placeholder="새 비밀번호를 다시 입력해주세요" required type="password"/>
-                    <p id="passwordMessageNotice" class="message" ></p></td>
+                    <p id="passwordMessageNotice" class="message"></p></td>
             </tr>
 
         </table>
@@ -404,6 +434,44 @@
         </div>
     </form>
 
+    <form th:action="@{/user/delete}" method="post"  target="_top" th:object="${user}">
+        <button class="btn btn-delete" type="submit" id="deleteAccountButton">계정 삭제</button>
+    </form>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // 탈퇴 버튼 클릭 이벤트
+        document.addEventListener('click', function (event) {
+            if (event.target.id === 'deleteAccountButton') {
+                event.preventDefault();
+                const form = event.target.closest('form');
+                Swal.fire({
+                    title: '정말로 탈퇴하시겠습니까?',
+                    text: "탈퇴 시 모든 데이터가 삭제되며 복구할 수 없습니다.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '탈퇴',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            title: '탈퇴 되었습니다',
+                            text: "그동안 이용해 주셔서 감사합니다.",
+                            icon: 'success',
+                            confirmButtonColor: '#A7C7E7'
+                        }).then((innerResult) => {
+                            if (innerResult.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    });
+
+</script>
 </body>
 </html>
