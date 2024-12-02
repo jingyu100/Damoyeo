@@ -35,7 +35,7 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.thymeleaf.extras:thymeleaf-extras-spring security6'
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 
 	// 웹소켓 통신
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
