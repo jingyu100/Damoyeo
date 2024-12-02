@@ -28,7 +28,8 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/post/requestRefusal/**"),
                                 new AntPathRequestMatcher("/post/requestRejected/**"),
                                 new AntPathRequestMatcher("/post/requestKick/**"),
-                                new AntPathRequestMatcher("/chat/kickUser/**"))
+                                new AntPathRequestMatcher("/chat/kickUser/**"),
+                                new AntPathRequestMatcher("/user/verify_password/**"))
                         .ignoringRequestMatchers("/calendar/events/**")
                         .ignoringRequestMatchers("/mailSend")
                 )  // calendar 엔드포인트에 대한 CSRF 비활성화 추가

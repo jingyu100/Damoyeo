@@ -10,6 +10,43 @@
         var emailVerified = false;
         var passwordUnique = false;
 
+        function checkP() {
+            const check_password = document.getElementById("check_password");
+            const check_passwordMessage = document.getElementById("check_passwordMessage");
+
+            if (!check_password) {
+                check_passwordMessage.innerHTML = "비밀번호를 입력해주세요";
+                check_passwordMessage.style.color = "red";
+                return; // 비밀번호 입력 필드가 없으면 함수 실행 중지
+            }
+
+            // 비밀번호 확인을 위한 POST 요청
+            fetch('/user/verify_password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `password=${encodeURIComponent(check_password.value)}`
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 비밀번호가 일치하는지 확인하여 메시지 표시
+                    if (data.valid) {
+                        check_passwordMessage.innerHTML = "현재 비밀번호가 확인되었습니다.";
+                        check_passwordMessage.style.color = "green";
+                    } else {
+                        check_passwordMessage.innerHTML = "현재 비밀번호가 올바르지 않습니다.";
+                        check_passwordMessage.style.color = "red";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    check_passwordMessage.innerHTML = "서버 오류가 발생했습니다.";
+                    check_passwordMessage.style.color = "red";
+                });
+        }
+
+
 
         //새비밀번호 정규식 체크
         function checkPass() {
@@ -59,7 +96,7 @@
             const emailInput = document.getElementById("email");
             const chagebtn = document.getElementById("change-btn");
             const savebtn = document.getElementById("save-btn");
-            const cancelbtn = document.getElementById("cancel-btn");
+            const cancelBtn = document.getElementById("cancel-btn");
             const message = document.getElementById("emailNotice");
             const verificationCode = document.getElementById("verificationCode");
             const verificationButton = document.getElementById("verificationButton");
@@ -70,24 +107,23 @@
                 emailInput.style.display = "inline-block";
                 chagebtn.style.display = "none";
                 savebtn.style.display = "inline-block";
-                cancelbtn.style.display = "inline-block";
+                cancelBtn.style.display = "inline-block";
                 message.style.display = "inline-block";
                 verificationCode.style.display = "inline-block";
                 verificationButton.style.display = "inline-block";
             });
 
-            cancelbtn.addEventListener("click", resetUI);
-
-            function resetUI() {
+            cancelBtn.addEventListener("click", (e) => {
+                e.preventDefault(); // 기본 이벤트 무시한다는 함수
                 emailDisplay.style.display = "inline-block";
                 emailInput.style.display = "none";
                 chagebtn.style.display = "inline-block";
                 savebtn.style.display = "none";
-                cancelbtn.style.display = "none";
+                cancelBtn.style.display = "none";
                 message.style.display = "none";
                 verificationCode.style.display = "none";
                 verificationButton.style.display = "none";
-            }
+            });
         });
 
         function checkEmail() {
@@ -177,6 +213,9 @@
             const code = document.getElementById("verificationCode").value;
             const email = document.getElementById("email").value;
             const emailSubmit = document.getElementById("emailSubmit");
+            const updateBtn = document.getElementById("update-btn");
+            const cancelBtn = document.getElementById("cancel-btn");
+
 
             if (!code) {
                 alert("인증번호를 입력해주세요.");
@@ -196,10 +235,13 @@
                         document.getElementById("verificationButton").style.display = "none";
                         document.getElementById("verificationCode").style.display = "none";
                         emailSubmit.style.display = "block";
+                        updateBtn.style.display = "inline-block";
+                        cancelBtn.style.display = "none";
                         emailVerified = true;
                     } else {
                         notice.innerHTML = data.message;
                         notice.style.color = "red";
+                        updateBtn.style.display = "none";
                         emailVerified = false;
                     }
                     updateSubmitButton();
@@ -387,7 +429,8 @@
                         </button>
                         <p id="verificationNotice" style="font-size: 0.9rem; margin-top: 5px;"></p>
                     </div>
-                    <button id="cancel-btn" class="btn btn-cancel" style="display: none">취소</button>
+                    <button id="update-btn" type="submit" class="btn btn-save" style="display: none">저장</button>
+                    <button id="cancel-btn" type="button" class="btn btn-cancel" style="display: none">취소</button>
 
                 </td>
             </tr>
@@ -412,7 +455,9 @@
             <tr>
                 <td><label for="check_password">현재 비밀번호 : </label></td>
                 <td><input id="check_password" name="check_password" placeholder="현재 비밀번호를 입력해주세요" required
-                           type="password"/></td>
+                           type="password" oninput="checkP()"/>
+                    <p id="check_passwordMessage" class="message"></p></td>
+                </td>
             </tr>
             <tr>
                 <td><label for="new_password">새 비밀번호 : </label></td>

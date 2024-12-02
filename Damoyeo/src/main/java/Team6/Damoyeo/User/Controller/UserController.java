@@ -9,7 +9,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -332,6 +335,7 @@ public class UserController {
 //                                 @RequestParam("email") String email) {
 
         User myuser = userService.findByUser(userId);
+        model.addAttribute("user", myuser);
         
         //현재 비밀번호가 맞는지 체크
         if(!passwordEncoder.matches(check_password,myuser.getPassword())) {
@@ -356,6 +360,7 @@ public class UserController {
             model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
             return "user/setting";
         }
+
 
         myuser.setPassword(passwordEncoder.encode(new_password));
         userService.updateUser(myuser);
@@ -455,6 +460,7 @@ public class UserController {
             return "user/find_password";
         }
 
+
         //새로운 비밀번호 확인 조건
         if(!new_password.equals(new_check_password)) {
             model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
@@ -472,5 +478,21 @@ public class UserController {
         return "redirect:/user/login";
     }
 
+    @PostMapping("/verify_password")
+    public ResponseEntity<Map<String, Boolean>> verifyPassword(@SessionAttribute(name = "userId", required = false) Integer userId,
+                                                               @RequestParam("password") String password) {
 
+        User user = userService.findByUser(userId);
+
+        Map<String, Boolean> response = new HashMap<>();
+        if (user != null) {
+            // 입력된 비밀번호가 저장된 비밀번호와 일치하는지 확인
+            boolean isValid = passwordEncoder.matches(password, user.getPassword());
+            response.put("valid", isValid);
+        } else {
+            response.put("valid", false); // 유저가 없는 경우 false 반환
+        }
+
+        return ResponseEntity.ok(response);
+    }
 }
