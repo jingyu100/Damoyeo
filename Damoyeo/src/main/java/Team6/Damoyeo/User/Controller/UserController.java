@@ -327,7 +327,7 @@ public class UserController {
                                  Model model,
                                  @RequestParam("check_password") String check_password,
                                  @RequestParam("new_password") String new_password,
-                                 @RequestParam("new_check_password") String new_change_password,
+                                 @RequestParam("new_check_password") String new_check_password,
                                  @ModelAttribute User user) {
 //                                 @RequestParam("email") String email) {
 
@@ -346,7 +346,7 @@ public class UserController {
         }
 
         //새로운 비밀번호 확인 조건
-        if(!new_password.equals(new_change_password)) {
+        if(!new_password.equals(new_check_password)) {
             model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
@@ -414,14 +414,15 @@ public class UserController {
         return "redirect:/user/check_password";
     }
 
-
-    @GetMapping("find-email")
+    // 아이디 찾기 페이지로 이동
+    @GetMapping("find_email")
     public String findUserEmail() {
 
         return "user/find_email";
     }
 
-    @PostMapping("find-email")
+    // 아이디 찾는 메서드
+    @PostMapping("find_email")
     public String findUserEmail(@RequestParam("name") String name,@RequestParam("phone") String phone, Model model) {
         Optional<User> user = userService.findByUserId(name,phone);
 
@@ -433,6 +434,43 @@ public class UserController {
             return "user/find_email";
         }
 
-
     }
+    
+    //비밀번호 찾기 페이지로 이동
+    @GetMapping("find_password")
+    public String findUserPassword() {
+        return "user/find_password";
+    }
+    
+    //비밀번호 찾는 메서드
+    @PostMapping("find_password")
+    public String findUserPassword(@RequestParam("email") String email,
+                                   @RequestParam("new_password") String new_password,
+                                   @RequestParam("new_check_password") String new_check_password,
+                                   Model model) {
+        User user = userService.findByUserEmail(email);
+
+        if(user == null) {
+            model.addAttribute("error","유저를 찾을 수 없습니다");
+            return "user/find_password";
+        }
+
+        //새로운 비밀번호 확인 조건
+        if(!new_password.equals(new_check_password)) {
+            model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
+            return "user/find_password";
+        }
+
+        // 새로운 비밀번호 정규식
+        if (!isValidPassword(new_password)) {
+            model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
+            return "user/find_password";
+        }
+
+        user.setPassword(passwordEncoder.encode(new_password));
+        userService.updateUser(user);
+        return "redirect:/user/login";
+    }
+
+
 }
