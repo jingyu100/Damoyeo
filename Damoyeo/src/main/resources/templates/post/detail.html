@@ -213,6 +213,7 @@
 
         .profile {
             display: flex;
+            height: 100% ;
         }
 
         .profile-img {
@@ -231,7 +232,7 @@
         .profile-name, .profile-address {
             display: flex;
             width: 100%;
-            height: 50%;
+            height: 100%;
             align-items: center;
         }
 
@@ -253,12 +254,20 @@
         }
 
         .profile-container{
+            display: flex;
+            text-align: center;
             margin-top: 20px;
         }
 
         .nearBy-post > ul {
             display: flex;
         }
+
+        .nearBy-post > h3{
+            margin-bottom: 20px;
+        }
+
+
 
 
         .btn_set {
@@ -347,9 +356,20 @@
             color: black;
         }
 
-        .nearBy-post > ul {
-            list-style: none;
+        .nearBy-post{
+            margin: 0 auto;
+            margin-bottom: 50px;
+            width: 1200px;
+        }
 
+        .nearBy-meetings {
+            list-style: none;
+            display: flex;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            row-gap: 20px;
+            column-gap: 16px;
         }
 
         .nearBy-post > ul > li {
@@ -357,7 +377,7 @@
             border: 1px solid #ddd;
             border-radius: 8px;
             text-align: center;
-            margin-right: 5px;
+            width: calc(25% - 16px);
         }
 
         .date-container {
@@ -406,7 +426,38 @@
             border-radius: .375rem;
         }
 
+        .img-container > img{
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
 
+        .img-container > img:hover{
+            transform: scale(1.1);
+        }
+
+        .nearBy-title{
+            font-size: 20px;
+            font-weight: bold;
+            overflow: hidden;
+            text-align: left;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .nearBy-info{
+            overflow: hidden;
+            text-align: left;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .profile-text{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
@@ -455,7 +506,7 @@
                          th:text="${post.nowParticipants} + ' / ' + ${post.maxParticipants}"></div>
                 </div>
                 <div class="date-container">
-                    <!--                날짜 포멧팅-->
+                    <!--날짜 포멧팅-->
                     <div class="date"
                          th:text="${#temporals.format(post.createdDate, 'yyyy/MMM/dd HH:mm')} + ' ~ ' + ${#temporals.format(post.endDate, 'yyyy/MMM/dd HH:mm')}"></div>
                 </div>
@@ -623,16 +674,19 @@
 </div>
 <div class="nearBy-post">
     <h3>주변 모임</h3>
-    <ul>
+    <ul class="nearBy-meetings">
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
-                <img alt="Nearby Post Image"
-                     style="width: 250px; height: 250px;"
+                <div class="img-container">
+                    <img alt="Nearby Post Image"
                      th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}">
-                <div class="nearby-title" th:text="${nearby.title}">제목</div>
-                <div class="nearby-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
-                        th:text="${nearby.maxParticipants}">0</span></div>
-                <div class="nearby-info">상세주소: <span th:text="${nearby.roadAddress}">상세주소</span></div>
+                </div>
+                <div class="title-container">
+                    <div class="nearBy-title" th:text="${nearby.title}">제목</div>
+                    <div class="nearBy-info">참여자: <span th:text="${nearby.nowParticipants}">0</span>/<span
+                            th:text="${nearby.maxParticipants}">0</span></div>
+                    <div class="nearBy-info">상세주소: <span th:text="${nearby.roadAddress}">상세주소</span></div>
+                </div>
             </a>
         </li>
     </ul>
