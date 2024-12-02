@@ -327,7 +327,7 @@ public class UserController {
                                  Model model,
                                  @RequestParam("check_password") String check_password,
                                  @RequestParam("new_password") String new_password,
-                                 @RequestParam("new_check_password") String new_change_password,
+                                 @RequestParam("new_check_password") String new_check_password,
                                  @ModelAttribute User user) {
 //                                 @RequestParam("email") String email) {
 
@@ -346,7 +346,7 @@ public class UserController {
         }
 
         //새로운 비밀번호 확인 조건
-        if(!new_password.equals(new_change_password)) {
+        if(!new_password.equals(new_check_password)) {
             model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
@@ -415,14 +415,14 @@ public class UserController {
     }
 
     // 아이디 찾기 페이지로 이동
-    @GetMapping("find-email")
+    @GetMapping("find_email")
     public String findUserEmail() {
 
         return "user/find_email";
     }
 
     // 아이디 찾는 메서드
-    @PostMapping("find-email")
+    @PostMapping("find_email")
     public String findUserEmail(@RequestParam("name") String name,@RequestParam("phone") String phone, Model model) {
         Optional<User> user = userService.findByUserId(name,phone);
 
@@ -435,22 +435,76 @@ public class UserController {
         }
 
     }
-
-    @GetMapping("find-password")
+    
+    //비밀번호 찾기 페이지로 이동
+    @GetMapping("find_password")
     public String findUserPassword() {
         return "user/find_password";
     }
-
-    @PostMapping("find-password")
+    
+    //비밀번호 찾는 메서드
+    @PostMapping("find_password")
     public String findUserPassword(@RequestParam("email") String email, @RequestParam("phone")String phone,Model model) {
-        Optional<User> user = userService.findByUserId(email,phone);
+        Optional<User> user = userService.findByUserPassword(email,phone);
 
         if(user.isPresent()) {
-            model.addAttribute("user", user.get());
-            return "user/find_email";
+            model.addAttribute("email",email);
+            model.addAttribute("phone",phone);
+            model.addAttribute("success", "인증에 성공 하셨습니다 새로운 비밀번호를 설정하세요");
+            return "user/new_password";
         }else {
             model.addAttribute("error","사용자를 찾을 수 없습니다");
-            return "user/find_email";
+            return "user/find_password";
         }
+    }
+
+//    @RequestParam("email")String email, @RequestParam("phone")String phone,Model model
+    //새로운 비밀번호 설정 페이지로 이동
+    @GetMapping("new_password")
+    public String newPassword() {
+//
+//        if(email.isEmpty() || phone.isEmpty()) {
+//            model.addAttribute("error","사용자를 찾을 수 없습니다");
+//            return "user/find_password";
+//        }
+//
+//        model.addAttribute("email",email);
+//        model.addAttribute("phone",phone);
+        return "user/new_password";
+    }
+
+    @PostMapping("new_password")
+    public String newPassword(@RequestParam("email") String email,
+                              @RequestParam("phone") String phone,
+                              @RequestParam("new_password") String new_password,
+                              @RequestParam("new_check_password")String new_check_password,
+                              Model model) {
+
+        Optional<User> userOptional = userService.findByUserPassword(email,phone);
+
+        if(userOptional.isEmpty()) {
+            model.addAttribute("error","사용자를 찾을 수 없습니다");
+            return "user/new_password";
+        }
+
+        User user = userOptional.get();
+
+        //새로운 비밀번호 확인 조건
+        if(!new_password.equals(new_check_password)) {
+            model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
+            return "user/new_password";
+        }
+
+        // 새로운 비밀번호 정규식
+        if (!isValidPassword(new_password)) {
+            model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
+            return "user/new_password";
+        }
+
+        user.setPassword(passwordEncoder.encode(new_password));
+        userService.updateUser(user);
+
+        model.addAttribute("success", "비밀번호가 성공적으로 변경했습니다");
+        return "user/login";
     }
 }

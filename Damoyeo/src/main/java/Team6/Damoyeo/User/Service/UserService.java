@@ -203,4 +203,13 @@ public class UserService {
     public Optional<User> findByUserId(String name, String phone) {
         return userRepository.findByNameAndPhone(name,phone);
     }
+
+    //사용자 비밀번호 찾기 메서드
+    public Optional<User> findByUserPassword(String email, String phone) {
+        return userRepository.findByEmailAndPhone(email,phone);
+    }
+
+    public Optional<User> findByUserEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }
