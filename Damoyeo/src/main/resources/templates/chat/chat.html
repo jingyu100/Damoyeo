@@ -532,7 +532,7 @@
                 <input type="hidden" id="king" th:value="${room.post.getUser().getUserId()}">
                 <input type="hidden" id="boo" th:value="${userId}">
 
-                <a th:href="@{|post/detail${room.post}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt=""
+                <a th:href="@{|post/detail${room.post.getPostId()}|}"><img th:src="@{|/uploads/${room.photoUrl}|}" alt=""
                                                                style="width: 50px; height: 50px"></a>
                 <div class="room-info">
                     <div class="room-name" th:text="${room.postTitle}">채팅방 제목</div>
