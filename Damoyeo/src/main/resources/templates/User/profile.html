@@ -89,12 +89,6 @@ body{
         text-overflow: ellipsis;
     }
 
-    .post img {
-        width: 60%; /*
-        height: auto; /* 높이는 자동으로 조정 */
-        border-radius: 5px; /* 모서리를 부드럽게 처리 */
-        margin-bottom: 10px; /* 이미지와 게시물 내용 사이에 여백 추가 */
-    }
 
     .page-btn {
         position: fixed;
@@ -255,11 +249,6 @@ body{
         box-sizing: border-box;
     }
 
-    /* 이미지 크기 */
-    .post img {
-        width: 100%;
-        height: auto;
-    }
 
     .post {
         position: relative;
@@ -279,13 +268,27 @@ body{
     }
 
     .completed-overlay {
-        width: 100px;
-        height: auto;
+        width: 250px;
+        height: 250px;
+        position: absolute;
         z-index: 20;
     }
 
     .post-detail[style*="pointer-events: none"] {
         opacity: 0.7;
+    }
+
+    .img-container{
+        position: relative;
+        overflow: hidden;
+    }
+
+    .post-img{
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .post-img:hover{
+        transform: scale(1.1);
     }
 
 </style>
@@ -299,7 +302,9 @@ body{
         <a th:if="${post.status.equals('1')}"
            th:href="@{|/post/detail${post.getPostId()}|}"
            class="post-detail">
-            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+            <div class="img-container">
+                <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;" class="post-img">
+            </div>
             <div class="post-title" th:text="${post.title}">제목</div>
             <div class="post-content" th:text="${post.content}">내용</div>
             <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
@@ -310,20 +315,24 @@ body{
             <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
             <div class="post-info"><span>상태: 모집중</span></div>
         </a>
-        <div th:if="${post.status.equals('2') || post.status.equals('3')}" class="post-detail" style="pointer-events: none;">
-            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-            <div class="post-title" th:text="${post.title}">제목</div>
-            <div class="post-content" th:text="${post.content}">내용</div>
-            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
-            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
-            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
-            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
-            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
-            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
-            <div class="post-info"><span>상태: 모집완료</span></div>
-            <div class="overlay">
-                <img src="/uploads/Complete.jpg" alt="모집완료" class="completed-overlay">
-            </div>
+        <div th:if="${post.status.equals('2') || post.status.equals('3')}" class="post-detail">
+            <a th:href="@{|/post/detail${post.getPostId()}|}"
+               class="post-detail">
+                <div class="img-container">
+                    <img src="/uploads/Complete.jpg" alt="모집완료" class="completed-overlay">
+                    <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
+                </div>
+                <div class="post-title" th:text="${post.title}">제목</div>
+                <div class="post-content" th:text="${post.content}">내용</div>
+                <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
+                <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
+                <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
+                <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
+                <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
+                <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span th:text="${post.maxParticipants}">0</span></div>
+                <div class="post-info"><span>상태: 모집완료</span></div>
+                <div class="overlay"></div>
+            </a>
         </div>
     </div>
 </div>
