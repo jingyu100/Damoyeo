@@ -82,7 +82,7 @@ public class UserController {
         }
         String referer = request.getHeader("Referer");
         // 회원가입 페이지나 로그인 페이지에서 왔을 경우 리다이렉트 URL을 저장하지 않음
-        if (referer != null && !referer.contains("/login") && !referer.contains("/register")) {
+        if (referer != null && !referer.contains("/login") && !referer.contains("/register") && !referer.contains("/find_password") && !referer.contains("/find_email")) {
             request.getSession().setAttribute("redirectUrl", referer);
         }
         return "user/login";
