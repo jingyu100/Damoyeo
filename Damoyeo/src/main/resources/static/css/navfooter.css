@@ -183,49 +183,63 @@
 
 
 
-/*footer css*/
-footer {
-    display: flex;
-    width: 100%;
-    justify-content: center;
-    background-color: #f8f8f8;
-    padding: 20px;
-    font-size: 14px;
-    border-top: 1px solid #eaeaea;
-    z-index: 999;
-}
+    /* Footer 전체 스타일 */
+    footer {
+        display: flex; /* 플렉스박스 사용 */
+        justify-content: center; /* 가로 중앙 정렬 */
+        align-items: center; /* 세로 중앙 정렬 */
+        width: 1200px; /* 양옆에 여백 추가 (100%보다 작게 설정) */
+        margin: 0 auto; /* 가운데 정렬 */
+        background-color: #ffffff; /* 배경색 */
+        color: #514d4d;
+        padding: 20px; /* 안쪽 여백 */
+        font-size: 14px; /* 글씨 크기 */
+        border-top: 2px solid #fcfcfc; /* 위쪽 경계선 */
+        z-index: 999;
+        box-sizing: border-box; /* 패딩 포함한 크기 계산 */
+        text-align: left;
+    }
 
-.top-nav-box2 > a {
-    text-decoration: none;
-    color: black;
-}
+    /* Footer 안의 링크 스타일 */
+    footer a {
+        text-decoration: none; /* 밑줄 제거 */
+        color: inherit; /* 부모 색상 상속 */
+    }
 
-.footer-container {
-    width: 100%;
-}
+    /* Footer 내부 컨테이너 */
+    .footer-container {
+        width: 100%;
+        text-align: left; /* 텍스트 중앙 정렬 */
+    }
 
-.footer-box1 {
-    margin-bottom: 30px;
-}
+    /* Footer 박스 1 */
+    .footer-box1 {
+        margin-bottom: 30px; /* 아래쪽 여백 */
+    }
 
-.footer-box1 a {
-    text-decoration: none;
-    color: inherit;
-    margin-right: 20px;
-}
+    /* Footer 박스 1 안의 링크 */
+    .footer-box1 a {
+        text-decoration: none;
+        color: inherit;
+        margin-right: 20px;
+    }
 
-.footer-box2 {
-    margin-bottom: 50px;
-}
+    /* Footer 박스 2 */
+    .footer-box2 {
+        margin-bottom: 50px; /* 아래쪽 여백 */
+    }
 
-.footer-box2 a {
-    text-decoration: none;
-    color: inherit;
-    margin-right: 20px;
-}
+    /* Footer 박스 2 안의 링크 */
+    .footer-box2 a {
+        text-decoration: none;
+        color: inherit;
+        margin-right: 20px;
+    }
 
-.footer-box3 a {
-    text-decoration: none;
-    color: inherit;
-    white-space: nowrap;
-}
+    /* Footer 박스 3 */
+    .footer-box3 a {
+        text-decoration: none;
+        color: inherit;
+        white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+        margin-right: 20px;
+    }
