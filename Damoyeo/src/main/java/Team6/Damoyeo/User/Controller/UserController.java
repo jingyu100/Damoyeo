@@ -444,67 +444,33 @@ public class UserController {
     
     //비밀번호 찾는 메서드
     @PostMapping("find_password")
-    public String findUserPassword(@RequestParam("email") String email, @RequestParam("phone")String phone,Model model) {
-        Optional<User> user = userService.findByUserPassword(email,phone);
+    public String findUserPassword(@RequestParam("email") String email,
+                                   @RequestParam("new_password") String new_password,
+                                   @RequestParam("new_check_password") String new_check_password,
+                                   Model model) {
+        User user = userService.findByUserEmail(email);
 
-        if(user.isPresent()) {
-            model.addAttribute("email",email);
-            model.addAttribute("phone",phone);
-            model.addAttribute("success", "인증에 성공 하셨습니다 새로운 비밀번호를 설정하세요");
-            return "user/new_password";
-        }else {
-            model.addAttribute("error","사용자를 찾을 수 없습니다");
+        if(user == null) {
+            model.addAttribute("error","유저를 찾을 수 없습니다");
             return "user/find_password";
         }
-    }
-
-//    @RequestParam("email")String email, @RequestParam("phone")String phone,Model model
-    //새로운 비밀번호 설정 페이지로 이동
-    @GetMapping("new_password")
-    public String newPassword() {
-//
-//        if(email.isEmpty() || phone.isEmpty()) {
-//            model.addAttribute("error","사용자를 찾을 수 없습니다");
-//            return "user/find_password";
-//        }
-//
-//        model.addAttribute("email",email);
-//        model.addAttribute("phone",phone);
-        return "user/new_password";
-    }
-
-    @PostMapping("new_password")
-    public String newPassword(@RequestParam("email") String email,
-                              @RequestParam("phone") String phone,
-                              @RequestParam("new_password") String new_password,
-                              @RequestParam("new_check_password")String new_check_password,
-                              Model model) {
-
-        Optional<User> userOptional = userService.findByUserPassword(email,phone);
-
-        if(userOptional.isEmpty()) {
-            model.addAttribute("error","사용자를 찾을 수 없습니다");
-            return "user/new_password";
-        }
-
-        User user = userOptional.get();
 
         //새로운 비밀번호 확인 조건
         if(!new_password.equals(new_check_password)) {
             model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
-            return "user/new_password";
+            return "user/find_password";
         }
 
         // 새로운 비밀번호 정규식
         if (!isValidPassword(new_password)) {
             model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
-            return "user/new_password";
+            return "user/find_password";
         }
 
         user.setPassword(passwordEncoder.encode(new_password));
         userService.updateUser(user);
-
-        model.addAttribute("success", "비밀번호가 성공적으로 변경했습니다");
-        return "user/login";
+        return "redirect:/user/login";
     }
+
+
 }

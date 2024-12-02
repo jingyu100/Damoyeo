@@ -209,7 +209,11 @@ public class UserService {
         return userRepository.findByEmailAndPhone(email,phone);
     }
 
-    public Optional<User> findByUserEmail(String email) {
-        return userRepository.findByEmail(email);
+    public User findByUserEmail(String email) {
+        Optional<User> byEmail = userRepository.findByEmail(email);
+        if (byEmail.isEmpty()) {
+            return null;
+        }
+        return byEmail.get();
     }
 }
