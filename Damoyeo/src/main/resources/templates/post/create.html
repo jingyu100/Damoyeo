@@ -516,12 +516,36 @@
 <div th:replace="~{footer.html}" ></div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        //글 작성하면
+        const endDateInput = document.getElementById('endDate');
+        const form = document.querySelector('form');
+        const readAddress = document.getElementById('readAddress');
+
+        // 글 작성 버튼 클릭 이벤트
         document.addEventListener('click', function(event) {
             if (event.target.id === 'createdButton') {
-                event.preventDefault(); // 폼 제출 기본 동작 중지
+                event.preventDefault();
 
-                const form = event.target.closest('form');
+                const selectedDateTime = new Date(endDateInput.value);
+                const currentDateTime = new Date();
+
+                // 종료 시간 검증 (현재 시간과 분까지 비교)
+                if (!endDateInput.value || selectedDateTime <= currentDateTime) {
+                    Swal.fire({
+                        title: '알림',
+                        text: '종료 시간은 현재 시간보다 이후여야 합니다.',
+                        icon: 'warning'
+                    });
+                    return;
+                }
+
+                if (!readAddress.value.trim()) {
+                    Swal.fire({
+                        title: '알림',
+                        text: '지역을 선택해주세요.',
+                        icon: 'warning'
+                    });
+                    return;
+                }
 
                 Swal.fire({
                     title: '작성을 마치겠습니까?',
@@ -542,15 +566,14 @@
         // 새 글 작성 검증
         const newPostInput = document.getElementById('newPost');
         if (newPostInput) {
-            newPostInput.addEventListener('input',
-                function () {
-                    const value = parseInt(this.value);
-                    if (value < 2) {
-                        this.setCustomValidity('최대 참가자 수는 2명 이상이어야 합니다.');
-                    } else {
-                        this.setCustomValidity('');
-                    }
-                });
+            newPostInput.addEventListener('input', function () {
+                const value = parseInt(this.value);
+                if (value < 2) {
+                    this.setCustomValidity('최대 참가자 수는 2명 이상이어야 합니다.');
+                } else {
+                    this.setCustomValidity('');
+                }
+            });
         }
 
         // 글 수정 검증
@@ -567,9 +590,7 @@
             });
         }
 
-        const endDateInput = document.getElementById('endDate');
-
-        // 현재 시간을 YYYY-MM-DDTHH:mm 형식으로 변환하는 함수
+        // 날짜 포맷팅 함수
         function formatDateTime(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -580,25 +601,41 @@
             return `${year}-${month}-${day}T${hours}:${minutes}`;
         }
 
-        // 현재 시간으로 최소값 설정
-        const now = new Date();
-        endDateInput.min = formatDateTime(now);
+        // 종료 시간 검증
+        if (endDateInput) {
+            const now = new Date();
+            endDateInput.min = formatDateTime(now);
 
-        // 입력값 변경시 검증
-        endDateInput.addEventListener('input', function () {
-            const selectedDate = new Date(this.value);
-            const currentDate = new Date();
+            endDateInput.addEventListener('invalid', function() {
+                if (this.validity.valueMissing) {
+                    this.setCustomValidity('종료 시간을 선택해주세요.');
+                }
+            });
 
-            if (selectedDate < currentDate) {
-                this.setCustomValidity('종료 시간은 현재 시간보다 이후여야 합니다.');
-            } else {
+            endDateInput.addEventListener('input', function() {
                 this.setCustomValidity('');
-            }
-        });
+                const selectedDateTime = new Date(this.value);
+                const currentDateTime = new Date();
 
-        endDateInput.dispatchEvent(new Event('input'));
+                if (!this.value) {
+                    this.setCustomValidity('종료 시간을 선택해주세요.');
+                    return;
+                }
+
+                // 현재 시간과 분까지 비교
+                if (selectedDateTime <= currentDateTime) {
+                    this.setCustomValidity('종료 시간은 현재 시간보다 이후여야 합니다.');
+                    Swal.fire({
+                        title: '알림',
+                        text: '종료 시간은 현재 시간보다 이후여야 합니다.',
+                        icon: 'warning'
+                    });
+                }
+            });
+
+            endDateInput.dispatchEvent(new Event('input'));
+        }
     });
-
 </script>
 </body>
 </html>
