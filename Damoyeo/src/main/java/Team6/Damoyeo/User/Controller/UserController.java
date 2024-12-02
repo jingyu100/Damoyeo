@@ -332,6 +332,7 @@ public class UserController {
 //                                 @RequestParam("email") String email) {
 
         User myuser = userService.findByUser(userId);
+        model.addAttribute("user", myuser);
         
         //현재 비밀번호가 맞는지 체크
         if(!passwordEncoder.matches(check_password,myuser.getPassword())) {
@@ -356,6 +357,7 @@ public class UserController {
             model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
             return "user/setting";
         }
+
 
         myuser.setPassword(passwordEncoder.encode(new_password));
         userService.updateUser(myuser);
@@ -454,6 +456,7 @@ public class UserController {
             model.addAttribute("error","유저를 찾을 수 없습니다");
             return "user/find_password";
         }
+
 
         //새로운 비밀번호 확인 조건
         if(!new_password.equals(new_check_password)) {
