@@ -27,8 +27,8 @@ public interface PostRepository extends JpaRepository<Post, Integer>, JpaSpecifi
     @Query("SELECT p FROM Post p WHERE p.roadAddress LIKE %:keyword% AND p.postId <> :postId")
     List<Post> findByroadAddress(@Param("keyword") String keyword, @Param("postId") int postId);
 
-    // 주변 모임 기능인데 상태 1인거 구하려고 만듬
-    List<Post> findByRoadAddressContainingAndPostIdNotAndStatus(String roadAddress, int postId, String status);
+    // 주변 모임 기능인데 상태 1인거 구하면서 좋아요 갯수 내림차순인데 탑4까지만
+    List<Post> findTop4ByRoadAddressContainingAndPostIdNotAndStatusOrderByLikeCountDesc(String roadAddress, int postId, String status);
     // 검색어 조회 기능
     Page<Post> findByTitleContaining(String title, Pageable pageable);
 

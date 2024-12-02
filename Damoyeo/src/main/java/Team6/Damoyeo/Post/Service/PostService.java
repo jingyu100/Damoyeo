@@ -116,7 +116,7 @@ public class PostService {
         String locationfix = locationParts[0] + " " + locationParts[1];
 
         // 주소를 기준으로 게시물 검색
-        return postRepository.findByRoadAddressContainingAndPostIdNotAndStatus(locationfix, postId, "1");
+        return postRepository.findTop4ByRoadAddressContainingAndPostIdNotAndStatusOrderByLikeCountDesc(locationfix, postId, "1");
 
     }
 
