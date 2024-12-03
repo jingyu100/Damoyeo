@@ -66,8 +66,8 @@ public class PostController {
     private final CalendarService calendarService;
 
     // 파일 업로드 경로 상수
-    private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
-
+   // private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_DIRECTORY = "/home/ec2-user/uploads/";
     @GetMapping("/main")
     public String showMainPage(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -365,7 +365,7 @@ public class PostController {
         model.addAttribute("deltedPostWithRequests", deltedPostWithRequests);
         model.addAttribute("outPostsWithRequests", outPostsWithRequests);
         model.addAttribute("kickOutPostsWithRequests", kickOutPostsWithRequests);
-        return "/post/alarm";
+        return "post/alarm";
     }
 
     //모임참가 수락

@@ -37,7 +37,8 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
+    //private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
+    private static final String UPLOAD_USER = "/home/ec2-user/uploads/";
     private final HttpSession httpSession;
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
