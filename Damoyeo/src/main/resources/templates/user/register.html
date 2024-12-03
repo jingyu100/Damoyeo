@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/sweetalert2.min.css" rel="stylesheet">
+
     <style>
         /* 테이블 레이아웃 */
         table {
@@ -78,7 +80,15 @@
             background-color: #286494;
         }
     </style>
+    <script src="/js/sweetalert2.min.js"></script>
     <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'center-center',
+            showConfirmButton: false,
+            timer: 1000,
+            timerProgressBar: true
+        });
         var emailUnique = false;
         var nicknameUnique = false;
         var emailVerified = false;
@@ -185,12 +195,41 @@
             submitButton.disabled = true;
             submitButton.style.backgroundColor = "#cccccc";
             submitButton.style.cursor = "not-allowed";
+
+            document.querySelector("form").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: '회원가입을 진행하시겠습니까?',
+                    text: "다모아의 회원이 되어주셔서 감사합니다",
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '가입하기',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '회원가입 완료',
+                            text: '다모아의 회원이 되신 것을 환영합니다!',
+                            confirmButtonColor: '#A7C7E7'
+                        }).then(() => {
+                            this.submit();
+                        });
+                    }
+                });
+            });
         });
 
         function sendEmail() {
             const email = document.getElementById("email").value;
             if (!email) {
-                alert("이메일을 입력해주세요.");
+                Toast.fire({
+                    icon: 'warning',
+                    title: '이메일을 입력해주세요'
+                });
                 return;
             }
 
@@ -203,15 +242,24 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        alert("인증번호가 발송되었습니다.");
-                        document.getElementById("verificationDiv").style.display = "block";
+                        Toast.fire({
+                            icon: 'success',
+                            title: '인증번호가 발송되었습니다'
+                        }).then(() => {
+                            document.getElementById("verificationDiv").style.display = "block";
+                        });
                     } else {
-                        alert("인증번호 발송에 실패했습니다.");
+                        Toast.fire({
+                            icon: 'error',
+                            title: '인증번호 발송에 실패했습니다'
+                        });
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert("서버 오류가 발생했습니다.");
+                    Toast.fire({
+                        icon: 'error',
+                        title: '서버 오류가 발생했습니다'
+                    });
                 });
         }
 
@@ -220,7 +268,11 @@
             const email = document.getElementById("email").value;
 
             if (!code) {
-                alert("인증번호를 입력해주세요.");
+                Toast.fire({
+                    icon: 'warning',
+                    title: '인증번호를 입력해주세요',
+                    confirmButtonColor: '#A7C7E7'
+                });
                 return;
             }
 
@@ -229,24 +281,36 @@
                 .then(data => {
                     const notice = document.getElementById("verificationNotice");
                     if (data.verified) {
-                        notice.innerHTML = data.message;
-                        notice.style.color = "green";
-                        document.getElementById("email").readOnly = true;
-                        document.querySelector("button[onclick='sendEmail()']").disabled = true;
-                        document.getElementById("verificationDiv").style.innerHTML = "이메일 인증이 완료되었습니다";
-                        document.getElementById("verificationButton").style.display = "none";
-                        document.getElementById("verificationCode").style.display = "none";
-                        emailVerified = true;
+                        Toast.fire({
+                            icon: 'success',
+                            title: '이메일이 성공적으로 인증되었습니다'
+                        }).then(() => {
+                            notice.innerHTML = data.message;
+                            notice.style.color = "green";
+                            document.getElementById("email").readOnly = true;
+                            document.querySelector("button[onclick='sendEmail()']").disabled = true;
+                            document.getElementById("verificationDiv").style.innerHTML = "이메일 인증이 완료되었습니다";
+                            document.getElementById("verificationButton").style.display = "none";
+                            document.getElementById("verificationCode").style.display = "none";
+                            emailVerified = true;
+                            updateSubmitButton();
+                        });
                     } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: '인증번호가 일치하지 않습니다'
+                        });
                         notice.innerHTML = data.message;
                         notice.style.color = "red";
                         emailVerified = false;
+                        updateSubmitButton();
                     }
-                    updateSubmitButton();
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    alert("서버 오류가 발생했습니다.");
+                    Toast.fire({
+                        icon: 'error',
+                        title: '서버 오류가 발생했습니다'
+                    });
                     emailVerified = false;
                     updateSubmitButton();
                 });
@@ -254,9 +318,9 @@
 
         // 비밀번호 정규식
         function checkPass() {
-            const password= document.getElementById("password");
+            const password = document.getElementById("password");
             const passwordMessage = document.getElementById("passwordMessage");
-            const passwordPattern =  /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&^])[A-Za-z\d@$!%*?&^]{8,}$/;
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&^])[A-Za-z\d@$!%*?&^]{8,}$/;
 
             if (!passwordPattern.test(password.value)) {
                 passwordMessage.innerHTML = "비밀번호는 영문,숫자,특수문자 포함 8자 이상이어야 합니다";
@@ -273,15 +337,17 @@
             const confirmPassword = document.getElementById("confirmPassword");
             const passwordMessageNotice = document.getElementById("passwordMessageNotice");
 
-            if(password.value !== confirmPassword.value) {
+            if (password.value !== confirmPassword.value) {
                 passwordMessageNotice.innerHTML = "비밀번호가 일치하지 않습니다";
                 passwordMessageNotice.style.color = "red";
-            }else {
+            } else {
                 passwordMessageNotice.innerHTML = "비밀번호가 일치합니다";
                 passwordMessageNotice.style.color = "green";
             }
             updateSubmitButton();
         }
+
+
     </script>
 </head>
 <body>
@@ -318,7 +384,8 @@
             <td>비밀번호</td>
         </tr>
         <tr>
-            <td><input type="password" id="password" class="text" th:field="*{password}" placeholder="영문,숫자,특수문자 포함 8자 이상" oninput="checkPass()">
+            <td><input type="password" id="password" class="text" th:field="*{password}"
+                       placeholder="영문,숫자,특수문자 포함 8자 이상" oninput="checkPass()">
                 <p id="passwordMessage" style="font-size: 0.9rem; margin-top: 5px;"></p></td>
         </tr>
 
@@ -326,7 +393,8 @@
             <td>비밀번호 확인</td>
         </tr>
         <tr>
-            <td><input type="password" id="confirmPassword" class="text" placeholder="비밀번호를 한번 더 입력해주세요" oninput="checkPassword()">
+            <td><input type="password" id="confirmPassword" class="text" placeholder="비밀번호를 한번 더 입력해주세요"
+                       oninput="checkPassword()">
                 <p id="passwordMessageNotice" style="font-size: 0.9rem; margin-top: 5px;"></p></td>
         </tr>
 
