@@ -63,14 +63,13 @@
                 passwordMessage.innerHTML = "현재 비밀번호와 같습니다";
                 passwordMessage.style.color = "red";
                 passwordUnique = false;
+                alert("현재 비밀번호가 같습니다");
             } else {
                 passwordMessage.innerHTML = "사용 가능한 비밀번호 입니다";
                 passwordMessage.style.color = "green";
                 passwordUnique = true;
             }
 
-
-            updateSubmitButton();
         }
 
         // 새 비밀번호 확인 메서드
@@ -88,7 +87,6 @@
                 passwordMessageNotice.style.color = "green";
                 passwordUnique = true;
             }
-            updateSubmitButton();
         }
 
         document.addEventListener("DOMContentLoaded", () => {
@@ -268,6 +266,7 @@
                 submitButton.style.cursor = "not-allowed";
             }
         }
+
 
     </script>
     <style>
