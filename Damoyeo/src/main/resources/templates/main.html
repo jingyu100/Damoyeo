@@ -152,6 +152,7 @@
 
         .popular-categories {
             margin-top: 30px;
+            margin-bottom: 70px;
             width: 100%;
             background-color: white;
         }
@@ -250,11 +251,11 @@
 
         .header-img{
             display: none;
-            width: 100%;
-            height: 100%;
+            width: 50%;
+            height: 90%;
             position: absolute;
-            right: 0px;
-            bottom: 0px;
+            right: 100px;
+            bottom: 20px;
             transition: opacity 0.2s , transform 0.5s;
         }
 
@@ -311,19 +312,19 @@
         <div class="header-banner-wrap">
             <div class="header-banner">
                 <span>
-                    <img src="/uploads/sample_image01.png" alt="1" class="header-img" id="header-img0" style="display: block">
+                    <img src="/uploads/일러스트1.png" alt="1" class="header-img" id="header-img0" style="display: block">
                 </span>
                 <span>
-                    <img src="/uploads/sample_image02.png" alt="2" class="header-img" id="header-img1">
+                    <img src="/uploads/일러스트2.png" alt="2" class="header-img" id="header-img1">
                 </span>
                 <span>
-                    <img src="/uploads/sample_image03.png" alt="3" class="header-img" id="header-img2">
+                    <img src="/uploads/일러스트3.png" alt="3" class="header-img" id="header-img2">
                 </span>
                 <span>
-                    <img src="/uploads/sample_image04.png" alt="4" class="header-img" id="header-img3">
+                    <img src="/uploads/일러스트4.png" alt="4" class="header-img" id="header-img3">
                 </span>
                 <span>
-                    <img src="/uploads/sample_image05.png" alt="5" class="header-img" id="header-img4">
+                    <img src="/uploads./일러스트5.png" alt="5" class="header-img" id="header-img4">
                 </span>
                 <div class="header-content">
                     <div class="header-inner">
@@ -506,27 +507,27 @@
     </form>
 </header>
 
-<div class="post-container">
-    <div th:each="post, iterStat : ${posts}" class="post">
-        <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">
-            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">
-            <div class="post-title" th:text="${post.title}">제목</div>
-            <div class="post-content" th:text="${post.content}">내용</div>
-            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>
-            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>
-            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>
-            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>
-            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>
-            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span
-                    th:text="${post.maxParticipants}">0</span></div>
-            <div class="post-info"><span
-                    th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>
-            </div>
-            <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">상태: 모집중</span>
-            </div>
-        </a>
-    </div>
-</div>
+<!--<div class="post-container">-->
+<!--    <div th:each="post, iterStat : ${posts}" class="post">-->
+<!--        <a th:href="@{|/post/detail${post.getPostId()}|}" class="post-detail">-->
+<!--            <img th:src="@{|/uploads/${post.photoUrl}|}" alt="" style="width: 250px; height: 250px;">-->
+<!--            <div class="post-title" th:text="${post.title}">제목</div>-->
+<!--            <div class="post-content" th:text="${post.content}">내용</div>-->
+<!--            <div class="post-info">활동 지역: <span th:text="${post.roadAddress}">지역</span></div>-->
+<!--            <div class="post-info">상세주소: <span th:text="${post.detailAddress}">상세주소</span></div>-->
+<!--            <div class="post-info">분야: <span th:text="${post.tag}">분야</span></div>-->
+<!--            <div class="post-info">조회수: <span th:text="${post.viewCount}">0</span></div>-->
+<!--            <div class="post-info">좋아요: <span th:text="${post.likeCount}">0</span></div>-->
+<!--            <div class="post-info">참여자: <span th:text="${post.nowParticipants}">0</span>/<span-->
+<!--                    th:text="${post.maxParticipants}">0</span></div>-->
+<!--            <div class="post-info"><span-->
+<!--                    th:if="${post.nowParticipants}==${post.maxParticipants}">상태: 모집완료</span>-->
+<!--            </div>-->
+<!--            <div class="post-info"><span th:if="${post.nowParticipants}!=${post.maxParticipants}">상태: 모집중</span>-->
+<!--            </div>-->
+<!--        </a>-->
+<!--    </div>-->
+<!--</div>-->
 
 <script>
     const headerContent = document.querySelector('.header-content');
@@ -540,7 +541,7 @@
     // 슬라이드 배경색 배열
     const backgroundColors = [
         "#FFF1AA",
-        "#FFE2D2",
+        "#FFF1AA",
         "#FFE2D2",
         "#E3EFF9",
         "#DAF4FF"

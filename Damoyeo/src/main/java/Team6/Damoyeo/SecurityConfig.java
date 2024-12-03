@@ -23,6 +23,7 @@ public class SecurityConfig {
                         .ignoringRequestMatchers(new AntPathRequestMatcher("/h2-console/**"),
                                 new AntPathRequestMatcher("/post/join/**"),
                                 new AntPathRequestMatcher("/post/out/**"),
+                                new AntPathRequestMatcher("/post/alarm/**"),
                                 new AntPathRequestMatcher("/likes/**"),
                                 new AntPathRequestMatcher("/user/login/**"),
                                 new AntPathRequestMatcher("/user/register/**"),
