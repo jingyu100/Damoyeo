@@ -66,8 +66,9 @@ public class PostController {
     private final CalendarService calendarService;
 
     // 파일 업로드 경로 상수
-   // private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
+//     private static final String UPLOAD_DIRECTORY = "src/main/resources/static/uploads/";
     private static final String UPLOAD_DIRECTORY = "/home/ec2-user/uploads/";
+
     @GetMapping("/main")
     public String showMainPage(
             @RequestParam(name = "page", defaultValue = "0") int page,
@@ -127,13 +128,12 @@ public class PostController {
 
     }
 
-    // 게시물 저장 처리
     @PostMapping("/create")
     public String savePost(@ModelAttribute("post") Post post, @RequestParam("photo") MultipartFile file,
                            RedirectAttributes redirectAttributes,
                            BindingResult bindingResult,
                            @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
-        // 새 글일때
+        // 새글일때
         if (post.getMaxParticipants() < 2) {
             bindingResult.rejectValue("maxParticipants", "error.maxParticipants",
                     "최대 참가자 수는 2명 이상이어야 합니다.");
@@ -143,37 +143,36 @@ public class PostController {
             return "post/create";
         }
 
-        // 파일 업로드 여부 확인
-        if (file.isEmpty()) {
-            post.setPhotoUrl("nullDefult.png");  // 기본 이미지 설정
-        } else {
+        // 포스트 기본값
+        post.setStatus("1");
+        post.setPhotoUrl("nullDefult.png");
+
+        // 게시물 저장하여 ID 받기 
+        Post savedPost = postService.savePost(post, userId);
+
+        // 파일이 존재한다면
+        if (!file.isEmpty()) {
+            // 파일명 앞에 게시글 ID 추가
+            String newFilename = savedPost.getPostId() + "_" + file.getOriginalFilename();
 
             // 파일을 저장할 경로 설정
-            String uploadDir = UPLOAD_DIRECTORY;
-            Path path = Paths.get(uploadDir + file.getOriginalFilename());
-            Files.createDirectories(path.getParent());  // 폴더가 없으면 생성
+            Path path = Paths.get(UPLOAD_DIRECTORY + newFilename);
+            Files.createDirectories(path.getParent()); // 폴더가 없으면 생성
             file.transferTo(path);  // 파일 저장
 
             // 저장된 이미지의 URL을 Post 객체에 설정
-            post.setPhotoUrl(file.getOriginalFilename());
-            redirectAttributes.addFlashAttribute("message", "File uploaded successfully: " + file.getOriginalFilename());
-
+            savedPost.setPhotoUrl(newFilename);
+            postService.updatePost(savedPost);
         }
 
-        post.setStatus("1");
-
-        // 게시물 저장
-        Post savedPost = postService.savePost(post, userId);
-
+        // 채팅방 생성
         chatService.createChatRoomForPost(savedPost, userId);
-
         return "redirect:/post/main";  // 메인 페이지로 리다이렉트
-
     }
 
     // 게시물 수정 페이지
     @GetMapping("/mositipy/{id}")
-    public String mositipyPost(Model model,@PathVariable("id") Integer id,
+    public String mositipyPost(Model model, @PathVariable("id") Integer id,
                                @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
         //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
         if (userId == null) {
@@ -181,7 +180,7 @@ public class PostController {
         }
         Post post = postService.findById(id);
         User user = userService.findByUser(userId);
-        if (post.getUser() != user){
+        if (post.getUser() != user) {
             return "redirect:/post/main";
         }
 
@@ -199,19 +198,19 @@ public class PostController {
                              BindingResult bindingResult,
                              @RequestParam("photo") MultipartFile file,
                              @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
-
         // 로그인 체크
         if (userId == null) {
             return "redirect:/user/login";
         }
 
-        // 기존 게시물 조회
+        // 기존 게시물 조회 및 권한 확인
         Post testPost = postService.findById(post.getPostId());
         User user = userService.findByUser(userId);
         if (testPost.getUser() != user) {
             return "redirect:/post/main";
         }
 
+        // 참가자 수 검증
         if (post.getMaxParticipants() < testPost.getNowParticipants()) {
             bindingResult.rejectValue("maxParticipants", "error.maxParticipants",
                     "최대 참가자 수는 현재 참가자 수(" + testPost.getNowParticipants() + "명)보다 커야 합니다.");
@@ -221,33 +220,34 @@ public class PostController {
             return "post/create";
         }
 
+        // 파일 업로드 처리
         if (!file.isEmpty()) {
-            String uploadDir = UPLOAD_DIRECTORY;
-            Path path = Paths.get(uploadDir + file.getOriginalFilename());
+            String newFilename = post.getPostId() + "_" + file.getOriginalFilename();
+            Path path = Paths.get(UPLOAD_DIRECTORY + newFilename);
             Files.createDirectories(path.getParent());
             file.transferTo(path);
-            post.setPhotoUrl(file.getOriginalFilename());
+            post.setPhotoUrl(newFilename);
         } else {
             // 기존 이미지 유지
             post.setPhotoUrl(testPost.getPhotoUrl());
         }
 
+        // 기존 정보 유지
         post.setStatus(testPost.getStatus());
         post.setNowParticipants(testPost.getNowParticipants());
         post.setUser(testPost.getUser());
         post.setCreatedDate(testPost.getCreatedDate());
 
         // 이건 게시글 상태가 변경 됬는데 그 게시글의 인원이나 끝나는 시간이 변경되면 상태를 다시 1로 변환
-        if (!post.getEndDate().equals(LocalDateTime.now()) && (post.getNowParticipants() != post.getMaxParticipants())){
+        if (!post.getEndDate().equals(LocalDateTime.now()) && (post.getNowParticipants() != post.getMaxParticipants())) {
             post.setStatus("1");
         }
-        
+
         if (post.getNowParticipants() == post.getMaxParticipants()) {
             post.setStatus("2");
         }
         // 게시물 업데이트
         postService.updatePost(post);
-
         return "redirect:/post/main";
     }
 
@@ -257,9 +257,9 @@ public class PostController {
                              @SessionAttribute(name = "userId", required = false) Integer userId) throws Exception {
 
         Post post = this.postService.findById(id);  // ID로 게시물 찾기
-        if (post.getStatus().equals("4")){
+        if (post.getStatus().equals("4")) {
             model.addAttribute("title", "삭제된 게시글");
-            model.addAttribute("message","삭제된 게시글 입니다. 메인 화면으로 이동합니다.");
+            model.addAttribute("message", "삭제된 게시글 입니다. 메인 화면으로 이동합니다.");
             return "error_alert";
         }
         // 조회수 업데이트

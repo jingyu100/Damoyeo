@@ -37,7 +37,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
-    //private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
+//    private static final String UPLOAD_USER = "src/main/resources/static/uploads/";
     private static final String UPLOAD_USER = "/home/ec2-user/uploads/";
     private final HttpSession httpSession;
     private final PostService postService;
@@ -106,9 +106,9 @@ public class UserController {
             User user = userService.loginUser(userEmail, userPassword);
 
             //탈퇴한 계정이면 로그인 방지
-            if (user.getStatus().equals("0")){
+            if (user.getStatus().equals("0")) {
                 model.addAttribute("title", "탈퇴한 계정");
-                model.addAttribute("message","탈퇴한 계정 입니다. 메인으로 돌아갑니다. ");
+                model.addAttribute("message", "탈퇴한 계정 입니다. 메인으로 돌아갑니다. ");
                 return "error_alert";
             }
             session.setAttribute("userId", user.getUserId());
@@ -190,9 +190,9 @@ public class UserController {
         // 대상 사용자 정보 조회
         User user = userService.findByUser(otherUserId);
 
-        if (user.getStatus().equals("0")){
+        if (user.getStatus().equals("0")) {
             model.addAttribute("title", "탈퇴한 계정 입니다.");
-            model.addAttribute("message","메인 화면으로 이동합니다.");
+            model.addAttribute("message", "메인 화면으로 이동합니다.");
             return "error_alert";
         }
 
@@ -234,14 +234,12 @@ public class UserController {
 
         // 파일 업로드 여부 확인 파일이 존재하면
         if (!file.isEmpty()) {
-            // 파일 업로드 경로 설정
-            String uploadDir = UPLOAD_USER;
-            Path path = Paths.get(uploadDir + file.getOriginalFilename());
-
+            String newFilename = userId + "_" + file.getOriginalFilename();
+            Path path = Paths.get(UPLOAD_USER + newFilename);
             // 폴더 생성
             Files.createDirectories(path.getParent());
             file.transferTo(path);
-            existingUser.setPhotoUrl(file.getOriginalFilename());
+            existingUser.setPhotoUrl(newFilename);
         } else {
             //파일이 존재 하지않다면 기존 파일 유지
             user.setPhotoUrl(existingUser.getPhotoUrl());
@@ -256,7 +254,6 @@ public class UserController {
 
         // 프로필 페이지로 리다이렉트
         return "redirect:/user/userprofile" + userId;
-
     }
 
     @PostMapping("/delete")
@@ -268,7 +265,7 @@ public class UserController {
     }
 
     @GetMapping("/mypage")
-    public String myPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId){
+    public String myPage(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
         //혹시 url로 드갈수도 있으니 들어가면 로그인으로 리다이렉트
         if (userId == null) {
             return "redirect:/user/login";
@@ -280,38 +277,38 @@ public class UserController {
         model.addAttribute("userId", userId);
         return "user/mypage";
     }
-    
+
     // 현재 비밀번호 확인 페이지 이동 메서드
     @GetMapping("/check_password")
     public String checkpassword() {
         return "user/check_password";
     }
-    
+
     // 현재 비밀번호가 맞으면 설정 페이지로 이동
     @PostMapping("/setting")
     public String setting(@SessionAttribute(name = "userId", required = false) Integer userId,
-                                @RequestParam("password") String password,
-                                Model model) {
+                          @RequestParam("password") String password,
+                          Model model) {
 
         User user = userService.findByUser(userId);
 
-        if(userId == null) {
+        if (userId == null) {
             return "redirect:/user/login";
         }
 
 
-        if(userService.checkPassword(user, password)) {
+        if (userService.checkPassword(user, password)) {
             return "redirect:/user/setting";
-        }else {
-            model.addAttribute("error","비밀번호가 올바르지 않습니다");
+        } else {
+            model.addAttribute("error", "비밀번호가 올바르지 않습니다");
             return "user/check_password";
         }
     }
-    
+
     //개인정보설정 페이지로 이동
     @GetMapping("/setting")
     public String setting(Model model, @SessionAttribute(name = "userId", required = false) Integer userId) {
-        if(userId == null) {
+        if (userId == null) {
             return "redirect:/user/login";
         }
 
@@ -324,7 +321,7 @@ public class UserController {
 
         return "user/setting";
     }
-    
+
     // 비밀번호 수정 메서드
     @PostMapping("/change_user")
     public String updatePassword(@SessionAttribute(name = "userId", required = false) Integer userId,
@@ -337,25 +334,25 @@ public class UserController {
 
         User myuser = userService.findByUser(userId);
         model.addAttribute("user", myuser);
-        
+
         //현재 비밀번호가 맞는지 체크
-        if(!passwordEncoder.matches(check_password,myuser.getPassword())) {
-            model.addAttribute("error","현재 비밀번호가 일치 하지 않습니다");
+        if (!passwordEncoder.matches(check_password, myuser.getPassword())) {
+            model.addAttribute("error", "현재 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
-        
+
         // 현재 비밀번호와 새 비밀번호 비교
-        if(check_password !=null && check_password.equals(new_password)) {
-            model.addAttribute("error","현재 비밀번호와 새 비밀번호가 일치합니다");
+        if (check_password != null && check_password.equals(new_password)) {
+            model.addAttribute("error", "현재 비밀번호와 새 비밀번호가 일치합니다");
             return "user/setting";
         }
 
         //새로운 비밀번호 확인 조건
-        if(!new_password.equals(new_check_password)) {
-            model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
+        if (!new_password.equals(new_check_password)) {
+            model.addAttribute("error", "새 비밀번호가 일치 하지 않습니다");
             return "user/setting";
         }
-        
+
         // 새로운 비밀번호 정규식
         if (!isValidPassword(new_password)) {
             model.addAttribute("error", "비밀번호는 영문, 숫자, 특수문자 포함 8자 이상이어야 합니다");
@@ -368,7 +365,7 @@ public class UserController {
 
         return "redirect:/user/check_password";
     }
-    
+
     // 정규식 비밀번호 메서드
     public boolean isValidPassword(String password) {
         String passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*?&^])[A-Za-z\\d@$!%*?&^]{8,}$";
@@ -388,7 +385,7 @@ public class UserController {
                               @RequestParam("verificationCode") String verificationCode,
                               Model model) {
 
-        if(userId == null) {
+        if (userId == null) {
             return "redirect:/user/login";
         }
         System.out.println(userId + "     asdfasdfasdfasdfsadfasdfasdfasd     " + email + "   ahsdfuihasdiufasuidfhasuidfhiasdhfasi   " + verificationCode);
@@ -409,7 +406,7 @@ public class UserController {
             }
 
             // 인증번호 검증
-            if (!verificationCode.equals(""+MailService.number)) {
+            if (!verificationCode.equals("" + MailService.number)) {
                 model.addAttribute("error", "인증번호가 올바르지 않습니다.");
                 return "user/setting";
             }
@@ -429,25 +426,25 @@ public class UserController {
 
     // 아이디 찾는 메서드
     @PostMapping("find_email")
-    public String findUserEmail(@RequestParam("name") String name,@RequestParam("phone") String phone, Model model) {
-        Optional<User> user = userService.findByUserId(name,phone);
+    public String findUserEmail(@RequestParam("name") String name, @RequestParam("phone") String phone, Model model) {
+        Optional<User> user = userService.findByUserId(name, phone);
 
-        if(user.isPresent()) {
+        if (user.isPresent()) {
             model.addAttribute("user", user.get());
             return "user/find_email";
-        }else {
-            model.addAttribute("error","사용자를 찾을 수 없습니다");
+        } else {
+            model.addAttribute("error", "사용자를 찾을 수 없습니다");
             return "user/find_email";
         }
 
     }
-    
+
     //비밀번호 찾기 페이지로 이동
     @GetMapping("find_password")
     public String findUserPassword() {
         return "user/find_password";
     }
-    
+
     //비밀번호 찾는 메서드
     @PostMapping("find_password")
     public String findUserPassword(@RequestParam("email") String email,
@@ -456,15 +453,15 @@ public class UserController {
                                    Model model) {
         User user = userService.findByUserEmail(email);
 
-        if(user == null) {
-            model.addAttribute("error","유저를 찾을 수 없습니다");
+        if (user == null) {
+            model.addAttribute("error", "유저를 찾을 수 없습니다");
             return "user/find_password";
         }
 
 
         //새로운 비밀번호 확인 조건
-        if(!new_password.equals(new_check_password)) {
-            model.addAttribute("error","새 비밀번호가 일치 하지 않습니다");
+        if (!new_password.equals(new_check_password)) {
+            model.addAttribute("error", "새 비밀번호가 일치 하지 않습니다");
             return "user/find_password";
         }
 
