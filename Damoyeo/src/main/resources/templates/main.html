@@ -547,9 +547,7 @@
         "#DAF4FF"
     ];
 
-
     function prebtn() {
-
         currentBannerIndex = (currentBannerIndex - 1 + headerInners.length) % headerInners.length;
 
         headerContent.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
@@ -557,19 +555,16 @@
         headerImages[currentImageIndex].style.transform = "translateX(-10px)";
         headerImages[currentImageIndex].style.opacity = "0";
 
-        currentImageIndex = (currentImageIndex - 1  + headerImages.length) % headerImages.length;
+        currentImageIndex = (currentImageIndex - 1 + headerImages.length) % headerImages.length;
 
         headerImages[currentImageIndex].style.transform = "translateX(10px)";
         headerImages[currentImageIndex].style.display = "block";
         headerImages[currentImageIndex].style.opacity = "1";
 
-
         headerBannerWrap.style.backgroundColor = backgroundColors[currentImageIndex];
     }
 
-
     function nextbtn() {
-
         currentBannerIndex = (currentBannerIndex + 1) % headerInners.length;
 
         headerContent.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
@@ -577,15 +572,26 @@
         headerImages[currentImageIndex].style.transform = "translateX(10px)";
         headerImages[currentImageIndex].style.opacity = "0";
 
-        currentImageIndex = (currentImageIndex + 1  + headerImages.length) % headerImages.length;
+        currentImageIndex = (currentImageIndex + 1 + headerImages.length) % headerImages.length;
 
         headerImages[currentImageIndex].style.transform = "translateX(-10px)";
         headerImages[currentImageIndex].style.display = "block";
         headerImages[currentImageIndex].style.opacity = "1";
 
-
         headerBannerWrap.style.backgroundColor = backgroundColors[currentImageIndex];
     }
+
+    let autoSlideInterval = setInterval(nextbtn, 3000); // 자동 슬라이드
+
+    // 헤더 배너에 마우스를 올렸을 때 자동 슬라이드 중지
+    headerBannerWrap.addEventListener('mouseenter', () => {
+        clearInterval(autoSlideInterval);
+    });
+
+    // 헤더 배너에서 마우스를 뗐을 때 자동 슬라이드 재개
+    headerBannerWrap.addEventListener('mouseleave', () => {
+        autoSlideInterval = setInterval(nextbtn, 3000);
+    });
 
     const categoriesWrap = document.querySelector('.categories-wrap');
     const categories = document.querySelector('.categories');
@@ -598,7 +604,6 @@
     const categoriesWidth = categories.scrollWidth;
     const step = containerWidth / 2;
 
-
     categoriesWrap.addEventListener('mouseenter', () => {
         updateArrowVisibility();
     });
@@ -606,9 +611,6 @@
         categoriesLeft.style.display = 'none';
         categoriesRight.style.display = 'none';
     });
-
-
-
 
     function updateArrowVisibility() {
         if (currentCategoriesOffset >= 0) {
@@ -636,11 +638,9 @@
         updateArrowVisibility();
     });
 
-
     updateArrowVisibility();
-
-
 </script>
+
 </body>
 <!--header 부분 마지막-->
 
