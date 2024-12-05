@@ -108,6 +108,15 @@ public class UserService {
 
     }
 
+    // 이거 탈퇴한 아이디는 비번 못찾게 하려고 만든거임
+    public boolean isEmailCheck(String email){
+        Optional<User> ou = userRepository.findByEmailAndStatus(email, "1");
+        if (ou.isEmpty()) {
+            return false;
+        }
+        return true;
+    }
+
     // 이메일 존재 여부 확인
     public boolean isNicknameExists(String nickname) {
 
@@ -210,7 +219,7 @@ public class UserService {
     }
 
     public User findByUserEmail(String email) {
-        Optional<User> byEmail = userRepository.findByEmail(email);
+        Optional<User> byEmail = userRepository.findByEmailAndStatus(email,"1");
         if (byEmail.isEmpty()) {
             return null;
         }

@@ -148,6 +148,20 @@ public class UserController {
         return ResponseEntity.ok(response);
 
     }
+    // 이건 탈퇴한 유저는 이메일 못찾게 하려고 만든거임
+    @GetMapping("/check-emailTwo")
+    public ResponseEntity<Map<String, Boolean>> checkEmailTwo(@RequestParam("email") String email) {
+
+        // 이메일 중복 여부 확인
+        boolean exists = userService.isEmailCheck(email);
+
+        // 응답 데이터 설정
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+
+        return ResponseEntity.ok(response);
+
+    }
 
     // 이메일 중복 체크 API
     @GetMapping("/check-nickname")

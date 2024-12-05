@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     // 아이디랑 전화번호로 비밀번호 찾는 메서드
     Optional<User> findByEmailAndPhone(String email, String phone);
+
+    Optional<User> findByEmailAndStatus(String email, String status);
 }
