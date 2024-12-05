@@ -247,6 +247,8 @@
         }
 
         .profile-img {
+            width: 70px;
+            height: 70px;
             font-size: 40px;
             display: flex;
             justify-content: center;
@@ -351,9 +353,13 @@
             background-color: #91B9D6;
         }
 
-        a {
+        li > a {
             text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             color: black;
+            flex-direction: column;
         }
 
         .nearBy-post{
@@ -392,7 +398,7 @@
             text-align: center;
             font-weight: bold;
             font-size: 16px;
-            background-color: #4a90e2;
+            background-color:  #3498DB;
             border: none;
             border-radius: 5px;
         }
@@ -404,7 +410,7 @@
             text-align: center;
             font-weight: bold;
             font-size: 16px;
-            background-color: red;
+            background-color:#E74C3C;
             border: none;
             border-radius: 5px;
         }
@@ -421,6 +427,8 @@
         }
 
         .img-container{
+            width: 434px;
+            height: 418px;
             overflow: hidden;
             outline: 0.1px solid rgba(0, 0, 0, 0.1);
             border-radius: .375rem;
@@ -459,9 +467,24 @@
             align-items: center;
         }
 
-        .row{
-            margin-bottom: 5px;
+        .img-container2{
+            width: 235px;
+            height: 231px;
+            overflow: hidden;
+            margin: 0 auto;
         }
+
+        .img-container2 > img{
+            width: 100%;
+            height: 100%;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .img-container2 > img:hover{
+            transform: scale(1.1);
+        }
+
+
     </style>
 </head>
 <body>
@@ -682,7 +705,7 @@
     <ul class="nearBy-meetings">
         <li th:each="nearby : ${nearby}">
             <a th:href="@{|/post/detail${nearby.postId}|}">
-                <div class="img-container">
+                <div class="img-container2">
                     <img alt="Nearby Post Image"
                      th:src="@{|/uploads/${nearby.photoUrl != null ? nearby.photoUrl : 'default-image.jpg'}|}">
                 </div>
