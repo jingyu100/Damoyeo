@@ -191,6 +191,7 @@
         justify-content: center; /* 가로 중앙 정렬 */
         align-items: center; /* 세로 중앙 정렬 */
         width: 1200px; /* 양옆에 여백 추가 (100%보다 작게 설정) */
+        height: 180px;
         margin: 0 auto; /* 가운데 정렬 */
         background-color: #ffffff; /* 배경색 */
         color: #514d4d;
