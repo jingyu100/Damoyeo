@@ -244,6 +244,8 @@
         .profile-address {
             font-size: 16px;
             font-weight: 100;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .profile-img {
@@ -351,6 +353,12 @@
 
         button.like-button:hover {
             background-color: #91B9D6;
+        }
+
+
+        a {
+            text-decoration: none;
+            color: black;
         }
 
         li > a {
@@ -472,9 +480,9 @@
 
         .profile-text{
             display: flex;
+            width: 100%;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
         }
 
         .img-container2{
