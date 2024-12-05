@@ -140,6 +140,8 @@
 
     .top-nav-profile > img{
         margin-right: 10px;
+        border-radius: 50%;
+        object-fit: cover;
     }
 
     .search-icon{
