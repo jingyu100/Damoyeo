@@ -139,16 +139,18 @@
             const email = document.getElementById("email").value;
             const emailNotice = document.getElementById("emailNotice");
             const verificationDiv = document.getElementById("verificationDiv");
+            const saveBtn = document.getElementById("save-btn"); // 이메일 인증 버튼
             const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-
             // 이메일 비어있는지 확인
-            // 이메일 입력란이 비어있을 때 인증 입력창 숨기기
             if (!email) {
                 verificationDiv.style.display = "none";
                 emailNotice.innerHTML = "이메일을 입력해주세요.";
                 emailNotice.style.color = "red";
                 emailUnique = false;
+                saveBtn.disabled = true;
+                saveBtn.style.backgroundColor = "#cccccc";
+                saveBtn.style.cursor = "not-allowed";
                 updateSubmitButton();
                 return;
             }
@@ -158,6 +160,9 @@
                 emailNotice.innerHTML = "올바른 이메일 형식을 입력해 주세요.";
                 emailNotice.style.color = "red";
                 emailUnique = false;
+                saveBtn.disabled = true;
+                saveBtn.style.backgroundColor = "#cccccc";
+                saveBtn.style.cursor = "not-allowed";
                 updateSubmitButton();
                 return;
             }
@@ -170,10 +175,18 @@
                         emailNotice.innerHTML = "이미 사용 중인 아이디입니다";
                         emailNotice.style.color = "red";
                         emailUnique = false;
+                        // 이메일 중복 시 인증 버튼 비활성화
+                        saveBtn.disabled = true;
+                        saveBtn.style.backgroundColor = "#cccccc";
+                        saveBtn.style.cursor = "not-allowed";
                     } else {
                         emailNotice.innerHTML = "사용 가능한 아이디입니다";
                         emailNotice.style.color = "green";
                         emailUnique = true;
+                        // 사용 가능한 이메일일 때 인증 버튼 활성화
+                        saveBtn.disabled = false;
+                        saveBtn.style.backgroundColor = "#A7C7E7";
+                        saveBtn.style.cursor = "pointer";
                     }
                     updateSubmitButton();
                 })
@@ -182,6 +195,9 @@
                     emailNotice.innerHTML = "이메일 확인 중 오류가 발생했습니다";
                     emailNotice.style.color = "red";
                     emailUnique = false;
+                    saveBtn.disabled = true;
+                    saveBtn.style.backgroundColor = "#cccccc";
+                    saveBtn.style.cursor = "not-allowed";
                     updateSubmitButton();
                 });
         }
