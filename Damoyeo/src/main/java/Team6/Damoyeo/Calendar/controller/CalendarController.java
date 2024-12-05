@@ -22,9 +22,10 @@ public class CalendarController {
     public String main(@SessionAttribute(name = "userId", required = false) Integer userId,
                        Model model) {
         User user = null;
-        if (userId != null) {
-            user = userService.findByUser(userId);
+        if (userId == null) {
+            return "redirect:/user/login";
         }
+        user = userService.findByUser(userId);
         model.addAttribute("user", user);
         model.addAttribute("userId", userId);
         return "calendar/main";
