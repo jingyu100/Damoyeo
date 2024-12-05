@@ -2,138 +2,194 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="layout/basic">
 <link rel="stylesheet" href="../css/navfooter.css"></link>
+<link href="/css/sweetalert2.min.css" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
     <title>프로필</title>
-
 </head>
 <body>
+<script src="/js/sweetalert2.min.js"></script>
 <div th:replace="~{topnav.html}"></div>
-<!--메인 수정 부분 시작-->
 <br><br>
 <style>
-    @font-face {
-        font-family: 'Pretendard-Regular';
-        src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
-        font-weight: 400;
-        font-style: normal;
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-        font-family: 'Pretendard-Regular';
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: #f5f7fa;
+        color: #333;
     }
 
     .content {
-        font-family: Arial, sans-serif;
-        width: 700px;
-        margin: 0 auto;
-        padding: 20px; /* 내부 여백 추가 */
-        /*border: 1px solid; !* 테두리 추가 *!*/
-        border-radius: 10px; /* 모서리를 살짝 둥글게 */
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /*그림자 효과*/
-        background-color: #ffffff;
+        width: 800px;
+        margin: 40px auto;
+        padding: 40px;
+        background-color: white;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     }
 
     .profile-header {
         display: flex;
         align-items: center;
-        gap: 20px;
-        margin-bottom: 10px;
+        gap: 40px;
+        margin: 20px 0 30px 0;
     }
 
-    .details {
-        margin-top: 10px;
-        font-size: 1.5em;
-        width: 50%; /* 테이블 너비 조정 */
-        border-spacing: 0px 10px; /* 항목 간 간격 조정 */
-    }
-
-    .details th {
-        text-align: left;
-        color: #555;
-        width: 20%; /* 텍스트 칸을 좁게 조정 */
-        padding-right: 5px; /* 텍스트와 입력 필드 간격 조정 */
-        white-space: nowrap; /* 줄바꿈 방지 */
-        vertical-align: top; /* 위쪽 정렬로 고정 */
-    }
-
-    .details td {
-        text-align: left;
-        width: 80%; /* 입력 필드 칸을 넓게 조정 */
-    }
-
-    .text {
-        width: 300px;
-        height: 50px;
-        font-size: 20px;
-        border: 0;
-        border-radius: 15px;
-        outline: none;
-        padding-left: 10px;
-        background-color: #ffffff;
-        border: 1px solid #A7C7E7;
-    }
-
-    .text1 {
-        width: 300px;
-        height: 35px;
-        font-size: 15px;
-        border: 0;
-        border-radius: 15px;
-        outline: none;
-        padding-left: 10px;
-        background-color: #ffffff;
-        border: 1px solid #A7C7E7;
-    }
-
-    .area {
-        width: 200px;
-        height: 35px;
-        font-size: 15px;
-        border-radius: 15px;
-        padding-left: 10px;
-        background-color: #ffffff;
-        border: 1px solid #A7C7E7;
-    }
-
-
-    .interests {
-        width: 200px;
-        height: 35px;
-        font-size: 15px;
-        border: 1px solid #A7C7E7;
-        border-radius: 15px;
-        padding-left: 10px;
-        background-color: #ffffff;
+    .profile-photo {
+        position: relative;
+        width: 220px;
+        height: 220px;
     }
 
     .profile-photo img {
-        width: 220px;
-        height: 220px;
-        border-radius: 50%;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
+        width: 100%;
+        height: 100%;
+        border-radius: 20px;
+        object-fit: cover;
+        border: 3px solid #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
     }
 
-    #photoUrl {
-        display: none; /* 파일 선택창 숨기기 */
+    .profile-photo:hover img {
+        transform: scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
-    button {
-        margin-top: 10px;
-        padding: 10px 20px; /* 버튼 크기 조정 */
-        font-size: 1.6em;
-        background-color: #A7C7E7;
-        border: 2px solid #A7C7E7;
+    .profile-photo::after {
+        content: '사진 변경';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.6);
         color: white;
+        padding: 8px 0;
+        border-bottom-left-radius: 17px;
+        border-bottom-right-radius: 17px;
+        text-align: center;
+        font-size: 14px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .profile-photo:hover::after {
+        opacity: 1;
+    }
+
+    .details {
+        flex-grow: 1;
+    }
+
+    .details th {
+        padding: 15px 0;
+        font-weight: 500;
+        color: #666;
+        width: 100px;
+        vertical-align: middle;
+    }
+
+    .details td {
+        padding: 10px 0;
+    }
+
+    .text, .area, .interests, .custom-textarea {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #e1e5eb;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+        background-color: #fff;
+        color: #333;
+    }
+
+    .text:focus, .area:focus, .interests:focus, .custom-textarea:focus {
+        border-color: #A7C7E7;
+        box-shadow: 0 0 0 3px rgba(167, 199, 231, 0.2);
+        outline: none;
+    }
+
+    .custom-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .area, .interests {
         cursor: pointer;
-        border-radius: 5px;
-        font-weight: bold;
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23333%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px top 50%;
+        background-size: 12px auto;
+        padding-right: 30px;
     }
 
     .form-buttons {
-        margin-top: 10px; /* 한줄소개 아래 공간 조정 */
+        margin-top: 30px;
         text-align: right;
+    }
+
+    button {
+        padding: 12px 30px;
+        background-color: #A7C7E7;
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    button:hover {
+        background-color: #86b3e0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(167, 199, 231, 0.4);
+    }
+
+    #photoUrl {
+        display: none;
+    }
+
+    .field-label {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 4px;
+        display: block;
+    }
+
+    .char-count {
+        font-size: 12px;
+        color: #666;
+        text-align: right;
+        margin-top: 4px;
+    }
+
+    .char-count.error {
+        color: #ff4444;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .content {
+        animation: fadeIn 0.5s ease-out;
     }
 </style>
 
@@ -143,7 +199,7 @@
             <label for="photoUrl" class="profile-photo">
                 <img id="profileImg" th:src="@{|/uploads/${user.photoUrl}|}" alt="Post Image">
             </label>
-            <input type="file" name="photo" id="photoUrl"/>
+            <input type="file" name="photo" id="photoUrl" accept="image/*"/>
             <table class="details">
                 <tr>
                     <th scope="row">닉네임</th>
@@ -176,15 +232,14 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="text">한줄소개</th>
+                    <th scope="row">자기소개</th>
                     <td>
-                        <input id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required
-                                  class="text1">
-
-                        </input>
+                        <textarea id="content" placeholder="내용을 입력하세요 (최대 32자)" th:field="*{comment}" rows="4" required
+                                  class="custom-textarea" maxlength="32"></textarea>
+                        <div id="charCount" class="char-count">0 / 32자</div>
+                    </td>
                 </tr>
                 <tr>
-                    </td>
                     <th scope="row">관심사</th>
                     <td>
                         <select class="interests" th:field="*{interests}">
@@ -201,19 +256,74 @@
                         </select>
                     </td>
                 </tr>
-                </tr>
             </table>
         </div>
         <div class="form-buttons">
-            <button type="submit">수정</button>
+            <button type="submit">저장</button>
         </div>
     </form>
-    <!--    탈퇴용으로 임시로 만듬 나중에 지울꺼-->
-
 </div>
 
 <br><br><br><br>
-<!--메인 수정 부분 끝-->
 <div th:replace="~{footer.html}"></div>
+<script>
+    // 이미지 프리뷰 기능
+    document.getElementById('photoUrl').addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById('profileImg').src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // 글자수 제한 및 카운터 기능 수정
+    const textarea = document.getElementById('content');
+    const charCount = document.getElementById('charCount');
+    const maxLength = 32;
+
+    // 페이지 로드 시 초기 글자수 표시
+    document.addEventListener('DOMContentLoaded', function () {
+        const currentLength = textarea.value.length;
+        charCount.textContent = currentLength + ' / ' + maxLength + '자';
+    });
+
+    textarea.addEventListener('input', function () {
+        const length = this.value.length;
+        charCount.textContent = length + ' / ' + maxLength + '자';
+
+        if (length > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+            charCount.classList.add('error');
+        } else {
+            charCount.classList.remove('error');
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+        // 프로필 수정 폼 제출 이벤트
+        const profileForm = document.querySelector('form[action="/user/editprofile"]');
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // 기본 제출 동작 중지
+
+                Swal.fire({
+                    title: '프로필을 수정하시겠습니까?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#A7C7E7',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: '확인',
+                    cancelButtonText: '취소'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        profileForm.submit();
+                    }
+                });
+            });
+        }
+    });
+</script>
 </body>
 </html>
