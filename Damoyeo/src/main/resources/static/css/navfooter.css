@@ -226,19 +226,7 @@
     }
 
     /* Footer 박스 2 */
-    .footer-box2 {
-        margin-bottom: 50px; /* 아래쪽 여백 */
-    }
-
-    /* Footer 박스 2 안의 링크 */
     .footer-box2 a {
-        text-decoration: none;
-        color: inherit;
-        margin-right: 20px;
-    }
-
-    /* Footer 박스 3 */
-    .footer-box3 a {
         text-decoration: none;
         color: inherit;
         white-space: nowrap; /* 텍스트 줄바꿈 방지 */

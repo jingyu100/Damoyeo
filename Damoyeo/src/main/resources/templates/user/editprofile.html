@@ -65,8 +65,19 @@
     .text {
         width: 300px;
         height: 50px;
-        font-size: 1.2em;
-        font-weight: bold;
+        font-size: 20px;
+        border: 0;
+        border-radius: 15px;
+        outline: none;
+        padding-left: 10px;
+        background-color: #ffffff;
+        border: 1px solid #A7C7E7;
+    }
+
+    .text1 {
+        width: 300px;
+        height: 35px;
+        font-size: 15px;
         border: 0;
         border-radius: 15px;
         outline: none;
@@ -85,15 +96,6 @@
         border: 1px solid #A7C7E7;
     }
 
-    .custom-textarea {
-        width: 300px;
-        height: 50px;
-        font-size: 15px;
-        border: 1px solid #A7C7E7;
-        border-radius: 15px;
-        padding: 10px;
-        background-color: #ffffff;
-    }
 
     .interests {
         width: 200px;
@@ -130,7 +132,7 @@
     }
 
     .form-buttons {
-        margin-top: 10px; /* 자기소개 아래 공간 조정 */
+        margin-top: 10px; /* 한줄소개 아래 공간 조정 */
         text-align: right;
     }
 </style>
@@ -174,10 +176,12 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">자기소개</th>
+                    <th scope="text">한줄소개</th>
                     <td>
-                        <textarea id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required
-                                  class="custom-textarea"></textarea>
+                        <input id="content" placeholder="내용을 입력하세요" th:field="*{comment}" rows="4" required
+                                  class="text1">
+
+                        </input>
                 </tr>
                 <tr>
                     </td>
