@@ -128,7 +128,7 @@ public class UserController {
             redirectAttributes.addFlashAttribute("message", "로그인에 성공했습니다!");
             return "redirect:" + redirectUrl;
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("message", e.getMessage());
+            redirectAttributes.addFlashAttribute("message", "로그인에 실패하였습니다");
             redirectAttributes.addFlashAttribute("userEmail", userEmail);
             return "redirect:/user/login";
         }
