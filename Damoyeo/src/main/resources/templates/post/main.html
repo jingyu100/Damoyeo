@@ -6,6 +6,10 @@
     <title>메인 화면</title>
     <style>
 
+        .footer {
+            z-index: 10;
+        }
+
         @font-face {
             font-family: 'Pretendard-Regular';
             src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff') format('woff');
@@ -24,6 +28,7 @@
         }
 
         .page-btn {
+            z-index: 9999;
             position: fixed;
             bottom: 20px; /* 화면 하단에서 20px 위 */
             left: 50%; /* 화면 왼쪽에서 50% */
@@ -35,6 +40,8 @@
         }
 
         .page-btn a {
+            text-decoration: none;
+            color: black;
             margin: 0 10px;
             font-size: 1.2em;
         }
@@ -479,7 +486,7 @@
             <a th:href="@{/post/main(page=${page + 1})}" th:if="${search == null && hasNextPage}"> ▶ </a>
             <a th:href="@{/post/main(page=${page + 1}, search=${search})}" th:if="${search != null && hasNextPage}"> ▶ </a>
         </div>
-        <div th:replace="~{footer.html}"></div>
+        <div class="footer" th:replace="~{footer.html}"></div>
 
 <script>
 

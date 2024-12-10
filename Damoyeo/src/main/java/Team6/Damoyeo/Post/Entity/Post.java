@@ -29,7 +29,7 @@ public class Post {
     @Column
     private String title;
 
-    @Column
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     //도로명 주소
